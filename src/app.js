@@ -1,6 +1,8 @@
 import express from 'express';
 import { createServer } from 'http';
 import initSocket from './init/socket.js';
+import userRouter from './routers/users.router.js';
+import errorMiddleware from './middlewares/error.middleware.js';
 
 const app = express();
 const server = createServer(app);
@@ -13,6 +15,10 @@ app.use(express.static('public')); // 정적파일 서빙
 
 // init 폴더
 initSocket(server);
+
+app.use('/api', [userRouter]);
+
+app.use(errorMiddleware);
 
 app.get('/', (req, res, next) => {
   res.send('Hello World! : Tower Defense!');
