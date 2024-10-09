@@ -27,9 +27,6 @@ const getSocket = () => {
 
 const socketConnection = () => {
   socket = io(IP, {
-    auth: {
-      token: 'jwt token url',
-    },
     query: {
       accessToken: `Bearer ${getCookie('accessToken')}`,
     },
