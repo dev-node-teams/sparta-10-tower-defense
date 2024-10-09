@@ -11,6 +11,8 @@ import { StatusCodes } from 'http-status-codes';
 export default function (err, req, res, next) {
   //   logger.error('[ ERR.MIDDLEWARE ] => ', err);
 
+  console.log('[ERROR_MIDDLE_WARE] => ', err);
+
   // JOI
   if (err.name === 'ValidationError') {
     return res.status(StatusCodes.BAD_REQUEST).json({

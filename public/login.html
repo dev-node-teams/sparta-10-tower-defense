@@ -43,18 +43,55 @@
   <div class="form-container">
     <h1>내일배움캠프 Node.js 트랙 타워 디펜스 게임</h1>
     <h2>로그인</h2>
-    <input type="text" id="username" placeholder="아이디" />
+    <input type="text" id="email" placeholder="이메일" />
     <input type="password" id="password" placeholder="비밀번호" />
     <button id="login">로그인</button>
     <button id="back">뒤로가기</button>
   </div>
   <script>
 
+    function signIn(email, password) {
 
+      let isStatusOk = false;
+
+      fetch('http://localhost:3005/api/sign-in', {
+        method: 'POST', // HTTP 메서드를 POST로 설정
+        headers: {
+          'Content-Type': 'application/json', // 요청의 데이터 형식을 JSON으로 설정
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }) // 요청 본문에 JSON 형식의 데이터를 전송
+      })
+        .then(response => {
+          console.log('res =>> ', response);
+          if (response.status === 200) {
+            isStatusOk = true;
+          } else {
+            isStatusOk = false;
+          }
+          return response.json();
+        }) // 응답을 JSON으로 변환
+        .then(data => {
+          if (isStatusOk) {
+            console.log('Success:', data); // 성공 시 응답 데이터를 처리
+            alert('정상적으로 로그인되었습니다.');
+            window.location.href = "index.html";
+          } else {
+            console.log('Fail:', data); // 실패 시 응답 데이터를 처리
+            alert('오류가 발생하였습니다.');
+          }
+
+        })
+        .catch((error) => {
+          console.error('Error:', error); // 에러 발생 시 처리
+        });
     }
 
+
     document.getElementById("login").addEventListener("click", () => {
-      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
 
@@ -62,6 +99,8 @@
         로그인 API 호출 후 로그인 성공 시 index.html로 이동시켜주세요!
         이 때, 엑세스 토큰은 어딘가에 저장을 해놔야겠죠?! 
       */
+      signIn(email, password);
+
     });
 
     document.getElementById("back").addEventListener("click", () => {
