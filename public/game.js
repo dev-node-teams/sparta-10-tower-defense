@@ -271,14 +271,19 @@ Promise.all([
   ...monsterImages.map((img) => new Promise((resolve) => (img.onload = resolve))),
 ]).then(() => {
   /* 서버 접속 코드 (여기도 완성해주세요!) */
-  let somewhere;
-  serverSocket = io('http://localhost:3005', {
+  const socket = io('http://localhost:3005', {
     auth: {
-      token: somewhere, // 토큰이 저장된 어딘가에서 가져와야 합니다!
+      token: 'jwt token url',
     },
   });
 
-  console.log('serverSocket =>>> ', serverSocket);
+  let userId = null;
+  socket.on('connection', (data) => {
+    console.log('연결되었어요: ', data);
+    userId = data; // jwt 토큰이 들어가야 함
+  });
+
+  console.log('serverSocket =>>> ', socket);
   if (!isInitGame) {
     initGame();
   }
