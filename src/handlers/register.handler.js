@@ -14,7 +14,7 @@ const registerHandler = (io) => {
     handleConnection(socket, userId);
 
     // 응답
-    socket.emit('response', 'res');
+    //socket.emit('response', 'res');
 
     // event handler 호출
     socket.on('event', (data) => handlerEvent(io, socket, data));

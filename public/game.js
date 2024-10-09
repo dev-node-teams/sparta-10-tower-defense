@@ -229,7 +229,7 @@ function gameLoop() {
 
       score += 100;
       userGold += 50;
-      sendEvent(2, 'asdasd');
+      //sendEvent(2, 'asdasd');
     }
   }
 
@@ -245,6 +245,8 @@ function initGame() {
     return;
   }
 
+  isInitGame = true;
+  sendEvent(2, { timestamp: Date.now() });
   monsterPath = generateRandomMonsterPath(); // 몬스터 경로 생성
   initMap(); // 맵 초기화 (배경, 몬스터 경로 그리기)
   placeInitialTowers(); // 설정된 초기 타워 개수만큼 사전에 타워 배치
@@ -252,7 +254,6 @@ function initGame() {
 
   setInterval(spawnMonster, monsterSpawnInterval); // 설정된 몬스터 생성 주기마다 몬스터 생성
   gameLoop(); // 게임 루프 최초 실행
-  isInitGame = true;
 }
 
 // 이미지 로딩 완료 후 서버와 연결하고 게임 초기화

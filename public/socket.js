@@ -40,7 +40,8 @@ const socketConnection = () => {
     }
 
     console.log('연결되었어요: ', data);
-    userId = data.userId; // jwt 토큰이 들어가야 함
+
+    //userId = data.userId;
   });
 
   socket.on('response', (data) => {
