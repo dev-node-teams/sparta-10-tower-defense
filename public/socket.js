@@ -30,6 +30,9 @@ const socketConnection = () => {
     auth: {
       token: 'jwt token url',
     },
+    query: {
+      accessToken: `Bearer ${getCookie('accessToken')}`,
+    },
   });
 
   socket.on('connection', (data) => {
@@ -42,6 +45,17 @@ const socketConnection = () => {
     console.log('연결되었어요: ', data);
     userId = data.userId; // jwt 토큰이 들어가야 함
   });
+
+  socket.on('response', (data) => {
+    console.log('@@ response: =>>>  ', data);
+  });
 };
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return null;
+}
 
 export { sendEvent, getSocket, socketConnection };
