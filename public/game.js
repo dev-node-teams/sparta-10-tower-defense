@@ -1,6 +1,7 @@
 import { Base } from './base.js';
 import { Monster } from './monster.js';
 import { Tower } from './tower.js';
+import { getSocket, socketConnection, sendEvent } from './socket.js';
 
 /* 
   어딘가에 엑세스 토큰이 저장이 안되어 있다면 로그인을 유도하는 코드를 여기에 추가해주세요!
@@ -228,6 +229,7 @@ function gameLoop() {
 
       score += 100;
       userGold += 50;
+      sendEvent(2, 'asdasd');
     }
   }
 
@@ -262,19 +264,17 @@ Promise.all([
   ...monsterImages.map((img) => new Promise((resolve) => (img.onload = resolve))),
 ]).then(() => {
   /* 서버 접속 코드 (여기도 완성해주세요!) */
-  const socket = io('http://localhost:3005', {
-    auth: {
-      token: 'jwt token url',
-    },
-  });
+
+  socketConnection();
+
+  serverSocket = getSocket();
+
+  // setSocket(serverSocket);
+  // socketConnection();
 
   let userId = null;
-  socket.on('connection', (data) => {
-    console.log('연결되었어요: ', data);
-    userId = data; // jwt 토큰이 들어가야 함
-  });
 
-  console.log('serverSocket =>>> ', socket);
+  console.log('serverSocket =>>> ', serverSocket);
   if (!isInitGame) {
     initGame();
   }

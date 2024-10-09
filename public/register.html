@@ -49,6 +49,27 @@
     <button id="back">뒤로가기</button>
   </div>
   <script>
+
+    function makeRequest() {
+      fetch('http://localhost:3005/api/sign-up', {
+        method: 'POST', // HTTP 메서드를 POST로 설정
+        headers: {
+          'Content-Type': 'application/json', // 요청의 데이터 형식을 JSON으로 설정
+        },
+        body: JSON.stringify({
+          name: 'John Doe',
+          age: 30
+        }) // 요청 본문에 JSON 형식의 데이터를 전송
+      })
+        .then(response => response.json()) // 응답을 JSON으로 변환
+        .then(data => {
+          console.log('Success:', data); // 성공 시 응답 데이터를 처리
+        })
+        .catch((error) => {
+          console.error('Error:', error); // 에러 발생 시 처리
+        });
+    }
+
     document.getElementById("register").addEventListener("click", () => {
       const username = document.getElementById("username").value;
       const password = document.getElementById("password").value;
@@ -56,6 +77,10 @@
       /* 
         회원가입 API 호출 후 회원가입 성공 시 index.html로 이동시켜주세요!
       */
+      console.log(' => 1');
+      makeRequest();
+      console.log(' => 2');
+
     });
 
     document.getElementById("back").addEventListener("click", () => {
