@@ -13,7 +13,7 @@ const ctx = canvas.getContext('2d');
 
 const NUM_OF_MONSTERS = 5; // 몬스터 개수
 
-let userGold = 0; // 유저 골드
+let userGold = 200; // 유저 골드
 let base; // 기지 객체
 let baseHp = 100; // 기지 체력
 

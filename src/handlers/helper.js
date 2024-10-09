@@ -1,3 +1,5 @@
+import { createTower } from '../models/tower.model.js';
+
 import handlerMappings from './handlerMapping.js';
 
 export const handleDisconnect = (socket, uuid) => {
@@ -6,6 +8,8 @@ export const handleDisconnect = (socket, uuid) => {
 
 export const handleConnection = (socket, uuid) => {
   console.log(`New user connected!! ${uuid} with Socket ID: ${socket.id}`);
+
+  createTower(uuid);
 
   // 응답
   socket.emit('connection', { uuid });
