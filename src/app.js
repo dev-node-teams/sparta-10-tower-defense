@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import initSocket from './init/socket.js';
 import userRouter from './routers/users.router.js';
 import errorMiddleware from './middlewares/error.middleware.js';
+import { initRedisClient } from './init/redis.js';
 
 // .env => process.env
 dotenv.config();
@@ -28,6 +29,12 @@ app.get('/', (req, res, next) => {
   res.send('Hello World! : Tower Defense!');
 });
 
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+server.listen(PORT, async () => {
+  try {
+    // redis 설정
+    await initRedisClient();
+    console.log(`Server is running on port ${PORT}`);
+  } catch (e) {
+    console.error('Failed to load Redis ', e);
+  }
 });
