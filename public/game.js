@@ -154,8 +154,20 @@ function placeInitialTowers() {
 }
 
 function placeNewTower() {
+  const getShop = document.getElementById('shopModal');
+  const towerType = 1;
+  getShop.style.display = 'block';
+
+  // document.getElementById(`buybutton${towerType}`).addEventListener('click', buytower);
+
+  window.buybutton = (towerType) => {
+    buytower(towerType);
+  };
+}
+
+function buytower() {
   if (userGold < towerCost) {
-    alert(' 돈이 부족합니다. ');
+    console.log(' 돈이 부족합니다. ');
   } else {
     userGold -= towerCost;
 
@@ -309,4 +321,5 @@ buyTowerButton.style.cursor = 'pointer';
 
 buyTowerButton.addEventListener('click', placeNewTower);
 
+document.body.appendChild(buyTowerButton);
 document.body.appendChild(buyTowerButton);

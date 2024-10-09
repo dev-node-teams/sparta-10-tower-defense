@@ -35,6 +35,68 @@
       font-size: 16px;
       cursor: pointer;
     }
+
+    .canvasContainer {
+      position: relative;
+    }
+
+    .shopModal {
+      display: none;
+      position: absolute;
+      z-index: 1;
+      background-color: gray;
+      width: 1500px;
+      height: 300px;
+      left: 10%;
+      top: 70%
+    }
+
+    .shop {
+      width: 300px;
+      height: 300px;
+      float: left;
+    }
+
+    .shopimg{
+      width: 200px;
+      height: 200px;
+      margin-left: 50px;
+      margin-top: 20px;
+      float: left;
+    }
+
+    .shopsub{
+      width: 250px;
+      height: 50px;
+      margin-left: 40px;
+      margin-top: 80%;
+      margin-bottom: 20px;
+
+    }
+
+    .shopbutton{
+      float: right;
+      margin-bottom: 30px;
+    }
+
+    .shopbuttons{
+      width: 50px;
+      height : 50px;
+      float: right;
+
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+
+    #shopClose {
+      position: absolute;
+      top: 10;
+      right : 30px 
+    }
+
   </style>
 </head>
 
@@ -45,7 +107,73 @@
     <button id="loginButton">로그인</button>
     <button id="playButton">게임 플레이</button>
   </div>
+
+  <div class="canvasContainer">
   <canvas id="gameCanvas" width="1920" height="1080"></canvas>
+<!-- 상점 모달 -->  
+  <div id="shopModal" class ="shopModal">
+
+<button id="shopClose">닫기</button>
+<div class="shopimgs">
+<div id="shop1" class="shop">
+  <div class="shopimg">
+    <img src="images/tower.png">
+  </div>
+  <div class="shopsub">
+    가격
+<div class="shopbutton">
+    <button id="buybutton1" class="shopbuttons" onclick="buybutton('1')">구매</button>
+</div>
+  </div>
+</div>
+<div id="shop2" class="shop">
+  <div class="shopimg">
+    <img src="images/tower.png">
+  </div>
+  <div class="shopsub">
+    가격
+    <div class="shopbutton">
+    <button id="buybutton2" class="shopbuttons" onclick="buybutton('2')">구매</button>
+    </div>
+  </div>
+</div>
+<div id="shop3" class="shop">
+  <div class="shopimg">
+    <img src="images/tower.png">
+  </div>
+  <div class="shopsub">
+    가격
+    <div class="shopbutton">
+    <button id="buybutton3" class="shopbuttons" onclick="buybutton('3')">구매</button>
+    </div>
+  </div>
+</div>
+<div id="shop4" class="shop">
+  <div class="shopimg">
+    <img src="images/tower.png">
+  </div>
+  <div class="shopsub">
+    가격
+    <div class="shopbutton">
+    <button id="buybutton4" class="shopbuttons" onclick="buybutton('4')">구매</button>
+    </div>
+  </div>
+</div>
+<div id="shop5" class="shop">
+  <div class="shopimg">
+    <img src="images/tower.png">
+  </div>
+  <div class="shopsub">
+    가격
+    <div class="shopbutton">
+    <button id="buybutton5" class="shopbuttons" onclick="buybutton('5')">구매</button>
+    </div>
+  </div>
+</div>
+
+    </div>
+   </div>
+  </div>
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
   <script type="module">
     document
@@ -62,6 +190,11 @@
       document.querySelector(".button-container").style.display = "none";
       document.getElementById("gameCanvas").style.display = "block";
       import("./game.js");
+
+    document.getElementById("shopClose").addEventListener("click", () => {
+    document.getElementById("shopModal").style.display = 'none'
+    })
+
     });
   </script>
 </body>
