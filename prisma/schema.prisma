@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,14 +7,75 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Users {
-  userId    Int       @id @default(autoincrement()) @map("user_id")
-  email     String    @unique
-  password  String    
-  name      String    
-  createdAt DateTime  @default(now()) @map("created_at")
-  createdId String?    @map("created_id")
-  updatedAt DateTime  @updatedAt @map("updatedAt")
-  updatedId String?    @map("updated_id")
+  userId    Int      @id @default(autoincrement()) @map("user_id") @db.UnsignedInt
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now()) @map("created_at")
+  createdId String?  @map("created_id")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedId String?  @map("updated_id")
+  name      String
+  ranking   Ranking?
+}
+
+model Towers {
+  towerId        Int           @id @default(autoincrement()) @map("tower_id") @db.TinyInt
+  name           String
+  image          String
+  price          Int           @db.SmallInt
+  attackPower    Int           @map("attack_power") @db.SmallInt
+  attackRange    Int           @map("attack_range") @db.SmallInt
+  attackSpeed    Int           @map("attack_speed") @db.SmallInt
+  versionGroupId Int
+  VersionGroups  VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
+}
+
+model Monsters {
+  monsterId      Int           @id @default(autoincrement()) @map("monster_id") @db.TinyInt
+  imageUrl       String        @map("image_url")
+  width          Int           @db.TinyInt
+  heigth         Int           @db.TinyInt
+  spawnInterval  Int           @map("spawn_interval") @db.UnsignedInt
+  maxHp          Int           @map("max_hp") @db.UnsignedInt
+  attackPower    Int           @map("attack_power") @db.UnsignedInt
+  point          Int           @db.UnsignedInt
+  versionGroupId Int
+  VersionGroups  VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
+}
+
+model Stage {
+  stageId        Int           @id @default(autoincrement()) @map("stage_id") @db.TinyInt
+  score          Int           @db.UnsignedInt
+  bonusScore     Int           @map("bonus_score") @db.UnsignedInt
+  rankingRankId  Int?          @db.UnsignedInt
+  versionGroupId Int
+  ranking        Ranking?      @relation(fields: [rankingRankId], references: [rankId])
+  VersionGroups  VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
+}
+
+model Ranking {
+  rankId    Int      @id @default(autoincrement()) @map("rank_id") @db.UnsignedInt
+  userId    Int      @unique @map("user_id") @db.UnsignedInt
+  score     Int      @db.UnsignedInt
+  stage     Int      @db.TinyInt
+  createdAt DateTime @default(now()) @map("created_at")
+  user      Users    @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  Stage     Stage[]
+}
+
+model CreateMonsterPerStage {
+  createId  Int @id @default(autoincrement()) @map("create_id") @db.TinyInt
+  stageId   Int @map("stage_id") @db.TinyInt
+  monsterId Int @map("monster_id") @db.TinyInt
+}
+
+model VersionGroups {
+  versionGroupId Int        @id @default(autoincrement()) @map("version_group_id")
+  versionId      Int        @unique @map("version_id")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updatedAt")
+  monsters       Monsters[]
+  stage          Stage[]
+  towers         Towers[]
 }
