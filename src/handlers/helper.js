@@ -12,7 +12,7 @@ export const handleConnection = (socket, uuid) => {
   createTower(uuid);
 
   // 응답
-  socket.emit('connection', { uuid });
+  socket.emit('connection', { userId: 555 });
 };
 
 export const handlerEvent = async (io, socket, data) => {

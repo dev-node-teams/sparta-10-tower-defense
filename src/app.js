@@ -1,8 +1,12 @@
 import express from 'express';
 import { createServer } from 'http';
+import dotenv from 'dotenv';
 import initSocket from './init/socket.js';
 import userRouter from './routers/users.router.js';
 import errorMiddleware from './middlewares/error.middleware.js';
+
+// .env => process.env
+dotenv.config();
 
 const app = express();
 const server = createServer(app);

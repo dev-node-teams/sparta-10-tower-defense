@@ -1,11 +1,10 @@
-let socket = io('http://localhost:3005', {
-  auth: {
-    token: 'jwt token url',
-  },
-});
+const IP = 'http://localhost:3005';
+
+let socket = null;
 
 let userId = 555;
 let CLIENT_VERSION = '1.0.0';
+
 const sendEvent = (handlerId, payload) => {
   const res = socket.emit('event', {
     userId,
@@ -18,13 +17,30 @@ const sendEvent = (handlerId, payload) => {
 };
 
 const getSocket = () => {
+  // 소켓 연결 실패 시
+  if (!socket.connected) {
+    return null;
+  }
+
   return socket;
 };
 
 const socketConnection = () => {
+  socket = io(IP, {
+    auth: {
+      token: 'jwt token url',
+    },
+  });
+
   socket.on('connection', (data) => {
+    const currentSocket = getSocket();
+    if (!currentSocket) {
+      console.error('소켓 연결 실패 새로고침해주세요.');
+      return;
+    }
+
     console.log('연결되었어요: ', data);
-    userId = data; // jwt 토큰이 들어가야 함
+    userId = data.userId; // jwt 토큰이 들어가야 함
   });
 };
 
