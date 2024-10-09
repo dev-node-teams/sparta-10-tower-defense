@@ -26,10 +26,10 @@ export const handlerEvent = async (io, socket, data) => {
   console.log('@@ handlerEvent - res =>>> ', response);
 
   // 브로드캐스트라면 io 사용
-  if (response.broadcast) {
-    io.emit('response', response);
-    return;
-  }
+  // if (response.broadcast) {
+  //   io.emit('response', response);
+  //   return;
+  // }
 
   socket.emit('response', response);
 };
