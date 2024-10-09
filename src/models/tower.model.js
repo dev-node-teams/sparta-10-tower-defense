@@ -1,18 +1,18 @@
 const towers = {};
 
 //초기화
-export const createTower = (uuid) => {
-  towers[uuid] = [];
+export const createTower = (userId) => {
+  towers[userId] = [];
 };
 
-export const getTower = (uuid) => {
-  return towers[uuid];
+export const getTower = (userId) => {
+  return towers[userId];
 };
 
-export const setTower = (uuid, position) => {
-  return towers[uuid].push({ position });
+export const setTower = (userId, position) => {
+  return towers[userId].push({ position });
 };
 
-export const clearTower = (uuid) => {
-  return (towers[uuid] = []);
+export const clearTower = (userId) => {
+  return (towers[userId] = []);
 };

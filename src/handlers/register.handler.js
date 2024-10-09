@@ -11,7 +11,7 @@ const registerHandler = (io) => {
     console.log(' userId =>>> ', userId);
 
     // 연결 초기화
-    handleConnection(socket, `유저의 jwt 토큰: ${socket.id}`);
+    handleConnection(socket, userId);
 
     // 응답
     socket.emit('response', 'res');

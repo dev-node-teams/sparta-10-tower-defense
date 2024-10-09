@@ -6,13 +6,13 @@ export const handleDisconnect = (socket, uuid) => {
   console.log(`User disconnected: ${socket.id}`);
 };
 
-export const handleConnection = (socket, uuid) => {
-  console.log(`New user connected!! ${uuid} with Socket ID: ${socket.id}`);
+export const handleConnection = (socket, userId) => {
+  console.log(`New user connected!! ${userId} with Socket ID: ${socket.id}`);
 
-  createTower(uuid);
+  createTower(userId);
 
   // 응답
-  socket.emit('connection', { userId: 555 });
+  socket.emit('connection', { userId: userId });
 };
 
 export const handlerEvent = async (io, socket, data) => {
