@@ -2,7 +2,7 @@ const towers = {};
 
 //초기화
 export const createTower = (uuid) => {
-  towers[555] = [];
+  towers[uuid] = [];
 };
 
 export const getTower = (uuid) => {
@@ -10,7 +10,7 @@ export const getTower = (uuid) => {
 };
 
 export const setTower = (uuid, position) => {
-  return towers[555].push({ position });
+  return towers[uuid].push({ position });
 };
 
 export const clearTower = (uuid) => {
