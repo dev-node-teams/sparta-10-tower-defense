@@ -154,16 +154,25 @@ function placeInitialTowers() {
 
 function placeNewTower() {
   if (userGold < towerCost) {
-  }
+    alert(' 돈이 부족합니다. ');
+  } else {
+    userGold -= towerCost;
 
-  /* 
+    /* 
     타워를 구입할 수 있는 자원이 있을 때 타워 구입 후 랜덤 배치하면 됩니다.
     빠진 코드들을 채워넣어주세요! 
   */
-  const { x, y } = getRandomPositionNearPath(200);
-  const tower = new Tower(x, y);
-  towers.push(tower);
-  tower.draw(ctx, towerImage);
+    const { x, y } = getRandomPositionNearPath(200);
+    const tower = new Tower(x, y);
+    towers.push(tower);
+    tower.draw(ctx, towerImage);
+
+    sendEvent(30, {
+      // userId: userId, 인증 미들웨어 에서 받아와야함 ?
+      // towerType: towerType, 상태 동기화 할때 받아온거에서 찾아야함
+      position: { x, y },
+    });
+  }
 }
 
 function placeBase() {
