@@ -224,6 +224,7 @@ function gameLoop() {
 
       /* 몬스터가 죽었을 때 */
       monsters.splice(i, 1);
+      sendEvent(21, { monsterId: monster.monsterNumber , monsterLevel: monsterLevel });
 
       console.log(' monsters =>> ', monsters);
 
