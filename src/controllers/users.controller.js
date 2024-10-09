@@ -1,5 +1,5 @@
 import { UsersService } from '../services/users.service.js';
-import JoiUtils from '../utils/joi/index.js';
+import JoiUtils from '../utils/joi.utils.js';
 import asyncHandler from 'express-async-handler';
 
 export class UsersController {
@@ -28,8 +28,12 @@ export class UsersController {
     // 토큰 생성
     const accessToken = await this.usersService.signIn(email, password);
 
+    console.log(' AT =>>>> ', accessToken);
+
     // 쿠키 저장
-    res.cookie('accessToken', `Bearer ${accessToken}`);
+    res.cookie('accessToken', accessToken, {
+      httpOnly: false, // 브라우저의 JavaScript에서 접근 가능하게 설정
+    });
 
     return res.status(200).json({ message: '정상적으로 로그인이 되었습니다.', data: accessToken });
   });

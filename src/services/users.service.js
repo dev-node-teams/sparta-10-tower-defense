@@ -51,14 +51,12 @@ export class UsersService {
     // 토큰 생성
     const accessToken = jwt.sign(
       {
-        userId: user.id,
+        userId: user.userId,
       },
       process.env.ACCESS_TOKEN_SECRET_KEY,
       { expiresIn: '30m' },
     );
 
-    return {
-      accessToken: accessToken,
-    };
+    return accessToken;
   };
 }

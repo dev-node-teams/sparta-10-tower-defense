@@ -1,8 +1,14 @@
 import { handleDisconnect, handleConnection, handlerEvent } from './helper.js';
+import AuthUtils from '../utils/auth.utils.js';
+
 //
 const registerHandler = (io) => {
   io.on('connection', async (socket) => {
     console.log(' registerHandler userId =>>> ', socket.id);
+
+    let accessToken = decodeURIComponent(socket.handshake.query.accessToken);
+    let userId = AuthUtils.verify(accessToken);
+    console.log(' userId =>>> ', userId);
 
     // 연결 초기화
     handleConnection(socket, `유저의 jwt 토큰: ${socket.id}`);
