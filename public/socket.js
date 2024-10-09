@@ -2,12 +2,12 @@ const IP = 'http://localhost:3005';
 
 let socket = null;
 
-let userId = 555;
+let token = `Bearer ${getCookie('accessToken')}`;
 let CLIENT_VERSION = '1.0.0';
 
 const sendEvent = (handlerId, payload) => {
   const res = socket.emit('event', {
-    userId,
+    token,
     clientVersion: CLIENT_VERSION,
     handlerId,
     payload,
@@ -28,7 +28,7 @@ const getSocket = () => {
 const socketConnection = () => {
   socket = io(IP, {
     query: {
-      accessToken: `Bearer ${getCookie('accessToken')}`,
+      accessToken: token,
     },
   });
 
