@@ -267,14 +267,11 @@ Promise.all([
 
   socketConnection();
 
-  serverSocket = getSocket();
-
   // setSocket(serverSocket);
   // socketConnection();
 
   let userId = null;
 
-  console.log('serverSocket =>>> ', serverSocket);
   if (!isInitGame) {
     initGame();
   }

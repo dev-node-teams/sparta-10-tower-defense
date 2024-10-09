@@ -8,7 +8,7 @@ export const handleConnection = (socket, uuid) => {
   console.log(`New user connected!! ${uuid} with Socket ID: ${socket.id}`);
 
   // 응답
-  socket.emit('connection', { uuid });
+  socket.emit('connection', { userId: 555 });
 };
 
 export const handlerEvent = async (io, socket, data) => {
