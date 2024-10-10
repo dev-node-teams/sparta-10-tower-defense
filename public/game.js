@@ -1,7 +1,6 @@
 import { Base } from './base.js';
 import { Monster } from './monster.js';
 import { Tower } from './tower.js';
-import { getSocket, socketConnection, sendEvent } from './socket.js';
 
 /* 
   어딘가에 엑세스 토큰이 저장이 안되어 있다면 로그인을 유도하는 코드를 여기에 추가해주세요!
@@ -23,11 +22,6 @@ let monsterLevel = 1; // 몬스터 레벨
 let monsterSpawnInterval = 1500; // 몬스터 생성 주기
 const monsters = [];
 const towers = [];
-
-let monsterData = [];
-let towerData;
-let roundMonsterData = [];
-let stagesData = [];
 
 let score = 0; // 게임 점수
 let highScore = 0; // 기존 최고 점수
@@ -220,7 +214,6 @@ function gameLoop() {
       const isDestroyed = monster.move(base);
       if (isDestroyed) {
         /* 게임 오버 */
-        sendEvent(3, { score: score });
         alert('게임 오버. 스파르타 본부를 지키지 못했다...ㅠㅠ');
         location.reload();
       }
@@ -230,13 +223,11 @@ function gameLoop() {
 
       /* 몬스터가 죽었을 때 */
       monsters.splice(i, 1);
-      sendEvent(21, { monsterId: monster.monsterNumber, monsterLevel: monsterLevel });
 
       console.log(' monsters =>> ', monsters);
 
       score += 100;
       userGold += 50;
-      //sendEvent(2, 'asdasd');
     }
   }
 
@@ -252,8 +243,6 @@ function initGame() {
     return;
   }
 
-  isInitGame = true;
-  sendEvent(2, { timestamp: Date.now() });
   monsterPath = generateRandomMonsterPath(); // 몬스터 경로 생성
   initMap(); // 맵 초기화 (배경, 몬스터 경로 그리기)
   placeInitialTowers(); // 설정된 초기 타워 개수만큼 사전에 타워 배치
@@ -261,6 +250,7 @@ function initGame() {
 
   setInterval(spawnMonster, monsterSpawnInterval); // 설정된 몬스터 생성 주기마다 몬스터 생성
   gameLoop(); // 게임 루프 최초 실행
+  isInitGame = true;
 }
 
 // 이미지 로딩 완료 후 서버와 연결하고 게임 초기화
@@ -272,14 +262,14 @@ Promise.all([
   ...monsterImages.map((img) => new Promise((resolve) => (img.onload = resolve))),
 ]).then(() => {
   /* 서버 접속 코드 (여기도 완성해주세요!) */
+  let somewhere;
+  serverSocket = io('http://localhost:3005', {
+    auth: {
+      token: somewhere, // 토큰이 저장된 어딘가에서 가져와야 합니다!
+    },
+  });
 
-  socketConnection();
-
-  // setSocket(serverSocket);
-  // socketConnection();
-
-  let userId = null;
-
+  console.log('serverSocket =>>> ', serverSocket);
   if (!isInitGame) {
     initGame();
   }
@@ -293,29 +283,6 @@ Promise.all([
     }
   */
 });
-
-export function setStages(stageList) {
-  stagesData = stageList;
-}
-
-export function setUserInfo(score, gold) {
-  userGold = gold;
-  score = score;
-  console.log('확인 : ', userGold, score);
-}
-
-export function setMonsters(monsterList) {
-  monsterData = monsterList;
-}
-
-export function setTowers(towerList) {
-  towerData = towerList;
-  console.log('towers 정보 : ', towers);
-}
-
-export function setRountMonsters(rountMonsterList) {
-  roundMonsterData = rountMonsterList;
-}
 
 const buyTowerButton = document.createElement('button');
 buyTowerButton.textContent = '타워 구입';
