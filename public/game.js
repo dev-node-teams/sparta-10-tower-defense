@@ -53,6 +53,32 @@ for (let i = 1; i <= NUM_OF_MONSTERS; i++) {
 
 let monsterPath;
 
+export function displayLevelUpText(level) {
+  const levelUpText = `${level} 스테이지!`;
+  const x = canvas.width / 2;
+  const y = canvas.height / 2;
+
+  const duration = 1500; // 1.5초 동안 표시
+
+  let startTime = Date.now();
+
+  function renderLevelUpText() {
+    const elapsedTime = Date.now() - startTime;
+
+    ctx.font = '100px Times New Roman';
+    ctx.fillStyle = 'yellow';
+    ctx.textAlign = 'center';
+    ctx.fillText(levelUpText, x, y);
+
+    if (elapsedTime < duration) {
+      requestAnimationFrame(renderLevelUpText);
+    }
+  }
+
+  // 처음 호출 시 텍스트를 그리기 시작
+  renderLevelUpText();
+}
+
 function generateRandomMonsterPath() {
   const path = [];
   let currentX = 0;
@@ -251,8 +277,23 @@ function gameLoop() {
     }
   }
 
-  if (Math.floor(score / 500) > monsterLevel) {
-    monsterLevel++;
+  // if (Math.floor(score / 500) > monsterLevel) {
+  //   monsterLevel++;
+  // }
+
+  /* 특정 점수 도달 시 스테이지 이동 */
+  // db에서 받아올거
+  let stageDummy = [
+    { id: 1, score: 0, bonusScore: 0 },
+    { id: 2, score: 100, bonusScore: 0 },
+    { id: 3, score: 300, bonusScore: 0 },
+    { id: 4, score: 500, bonusScore: 0 },
+    { id: 5, score: 800, bonusScore: 0 },
+  ];
+
+  if (monsterLevel < stageDummy.length && score > stageDummy[monsterLevel].score) {
+    sendEvent(4, { score, currentStage: monsterLevel, targetStage: monsterLevel + 1, userGold });
+    monsterLevel++; // 서버에서 수신한 이벤트를 통해 스테이지(monsterLevel) 업데이트하는 걸로 변경해야함
   }
 
   requestAnimationFrame(gameLoop); // 지속적으로 다음 프레임에 gameLoop 함수 호출할 수 있도록 함
@@ -306,6 +347,7 @@ Promise.all([
 
 export function setStages(stageList) {
   stagesData = stageList;
+  console.log('스테이지 정보: ', stagesData);
 }
 
 export function setUserInfo(score, gold) {

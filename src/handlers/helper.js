@@ -1,12 +1,13 @@
 import { createTower, getTower } from '../models/tower.model.js';
 import { createGold } from '../models/gold.model.js';
 import { createScore } from '../models/score.model.js';
-import { createStage } from '../models/stage.model.js';
+import { clearStage, createStage } from '../models/stage.model.js';
 import handlerMappings from './handlerMapping.js';
 import AuthUtils from '../utils/auth.utils.js';
 
 export const handleDisconnect = (socket, userId) => {
-  console.log(`User disconnected: ${socket.id}`);
+  console.log(`User disconnected: socket ID=${socket.id} / user ID=${userId}`);
+  clearStage(userId);
 };
 
 export const handleConnection = (socket, userId) => {

@@ -23,7 +23,7 @@ const registerHandler = (io) => {
     socket.on('event', (data) => handlerEvent(io, socket, data));
 
     // 접속해제시 이벤트
-    socket.on('disconnect', () => handleDisconnect(socket, '유저의 jwt 토큰'));
+    socket.on('disconnect', () => handleDisconnect(socket, userId));
   });
 };
 
