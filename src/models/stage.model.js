@@ -8,11 +8,11 @@ const getStage = (userId) => {
   return stages[userId];
 };
 
-const setStage = (userId, data) => {
+const setStage = (userId, id) => {
   // 매개변수 이름을 임의로 정한 상태 입니다.
   // 적절한 이름이 생각나면 변경하겠습니다.
 
-  return stages[userId].push(data);
+  return stages[userId].push(id);
 };
 
 const clearStage = (userId) => {

@@ -33,6 +33,8 @@ export const handlerEvent = async (io, socket, data) => {
     socket.emit('reponse', { status: 'fail', message: 'Handler not found' });
     return;
   }
+
+  console.log('data.token =>>> ', data.token);
   const userId = AuthUtils.verify(data.token);
   console.log('userId =>>> ', userId);
 

@@ -24,6 +24,11 @@ let monsterSpawnInterval = 1500; // 몬스터 생성 주기
 const monsters = [];
 const towers = [];
 
+let monsterData = [];
+let towerData;
+let roundMonsterData = [];
+let stagesData = [];
+
 let score = 0; // 게임 점수
 let highScore = 0; // 기존 최고 점수
 let isInitGame = false;
@@ -335,6 +340,29 @@ Promise.all([
     }
   */
 });
+
+export function setStages(stageList) {
+  stagesData = stageList;
+}
+
+export function setUserInfo(score, gold) {
+  userGold = gold;
+  score = score;
+  console.log('확인 : ', userGold, score);
+}
+
+export function setMonsters(monsterList) {
+  monsterData = monsterList;
+}
+
+export function setTowers(towerList) {
+  towerData = towerList;
+  console.log('towers 정보 : ', towers);
+}
+
+export function setRountMonsters(rountMonsterList) {
+  roundMonsterData = rountMonsterList;
+}
 
 const buyTowerButton = document.createElement('button');
 buyTowerButton.textContent = '타워 구입';
