@@ -1,8 +1,9 @@
-import { createTower } from '../models/tower.model.js';
+import { createTower, getTower } from '../models/tower.model.js';
 import { createGold } from '../models/gold.model.js';
 import { createScore } from '../models/score.model.js';
 import { createStage } from '../models/stage.model.js';
 import handlerMappings from './handlerMapping.js';
+import AuthUtils from '../utils/auth.utils.js';
 
 export const handleDisconnect = (socket, userId) => {
   console.log(`User disconnected: ${socket.id}`);
@@ -32,8 +33,10 @@ export const handlerEvent = async (io, socket, data) => {
     socket.emit('reponse', { status: 'fail', message: 'Handler not found' });
     return;
   }
+  const userId = AuthUtils.verify(data.token);
+  console.log('userId =>>> ', userId);
 
-  const response = await handler(data.token, data.payload);
+  const response = await handler(userId, data.payload);
 
   console.log('@@ handlerEvent - res =>>> ', response);
 

@@ -2,17 +2,19 @@ import { clearGold, getGold, setGold } from '../models/gold.model.js';
 import { clearScore, getScore, setScore } from '../models/score.model.js';
 import { clearStage, getStage, setStage } from '../models/stage.model.js';
 import { clearMonsters, getMonsters } from '../models/monster.model.js';
-import { prisma } from '../utils/prisma/index.js';
-import AuthUtils from '../utils/auth.utils.js';
+import { PrismaClient } from '../../generated/clientGameDB/index.js';
 
-export const gameStart = async (token, payload) => {
+const prisma = new PrismaClient();
+
+import AuthUtils from '../utils/auth.utils.js';
+export const gameStart = async (userId, payload) => {
   // 게임이 시작할 경우 호출되는 Handler
 
-  console.log('------------------------------------');
-  console.log('token : ', token);
-  const userId = AuthUtils.verify(token);
-  console.log('userId : ', userId);
-  console.log('------------------------------------');
+  // console.log('------------------------------------');
+  // console.log('token : ', token);
+  // const userId = AuthUtils.verify(token);
+  // console.log('userId : ', userId);
+  // console.log('------------------------------------');
   clearStage(userId);
   clearGold(userId);
   clearScore(userId);

@@ -1,13 +1,12 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../../generated/clientGameDB"  
+  output   = "../../generated/clientGameDB"
 }
 
 datasource db {
   provider = "mysql"
   url      = env("GAME_DATABASE_URL")
 }
-
 
 model Towers {
   towerId        Int           @id @default(autoincrement()) @map("tower_id") @db.TinyInt
@@ -35,16 +34,14 @@ model Monsters {
 }
 
 model Stage {
-  stageId        Int           @id @default(autoincrement()) @map("stage_id") @db.TinyInt
-  score          Int           @db.UnsignedInt
-  bonusScore     Int           @map("bonus_score") @db.UnsignedInt
-  rankingRankId  Int?          @db.UnsignedInt
+  stageId        Int  @id @default(autoincrement()) @map("stage_id") @db.TinyInt
+  score          Int  @db.UnsignedInt
+  bonusScore     Int  @map("bonus_score") @db.UnsignedInt
+  rankingRankId  Int? @db.UnsignedInt
   versionGroupId Int
 
-  VersionGroups  VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
+  VersionGroups VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
 }
-
-
 
 model CreateMonsterPerStage {
   createId  Int @id @default(autoincrement()) @map("create_id") @db.TinyInt

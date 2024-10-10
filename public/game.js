@@ -145,19 +145,17 @@ function placeInitialTowers() {
     타워를 초기에 배치하는 함수입니다.
     무언가 빠진 코드가 있는 것 같지 않나요? 
   */
-  for (let i = 0; i < numOfInitialTowers; i++) {
-    const { x, y } = getRandomPositionNearPath(200);
-    const tower = new Tower(x, y, towerCost);
-    towers.push(tower);
-    tower.draw(ctx, towerImage);
-  }
+  // for (let i = 0; i < numOfInitialTowers; i++) {
+  //   const { x, y } = getRandomPositionNearPath(200);
+  //   const tower = new Tower(x, y, towerCost);
+  //   towers.push(tower);
+  //   tower.draw(ctx, towerImage);
+  // }
 }
 
 function placeNewTower() {
   const getShop = document.getElementById('shopModal');
   getShop.style.display = 'block';
-
-  // document.getElementById(`buybutton${towerType}`).addEventListener('click', buytower);
 
   window.buybutton = (shopNumber) => {
     buytower(shopNumber);
@@ -182,26 +180,35 @@ function buytower(shopNumber) {
     attack_range: 300,
     attack_speed: 60,
   };
+  towerType[1] = {
+    tower_id: 2,
+    name: '속사타워',
+    image: 'images/tower.png',
+    price: 100,
+    attack_power: 25,
+    attack_range: 500,
+    attack_speed: 9,
+  };
 
-  if (userGold < towerType[0].price) {
+  if (userGold < towerType[shopNumber].price) {
     console.log(' 돈이 부족합니다. ');
   } else {
-    userGold -= towerType[0].price;
+    userGold -= towerType[shopNumber].price;
 
     const tower = new Tower(
       x,
       y,
-      towerType[0].attack_power,
-      towerType[0].attack_range,
-      towerType[0].attack_speed,
-      towerType[0].price,
+      towerType[shopNumber].attack_power,
+      towerType[shopNumber].attack_range,
+      towerType[shopNumber].attack_speed,
+      towerType[shopNumber].price,
     );
 
     towers.push(tower);
     tower.draw(ctx, towerImage);
 
     sendEvent(30, {
-      towerType: towerType[0].tower_id,
+      towerType: towerType[shopNumber].tower_id,
       position: { x, y },
     });
   }
