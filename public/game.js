@@ -56,7 +56,6 @@ for (let i = 1; i <= NUM_OF_MONSTERS; i++) {
 let monsterPath;
 
 export function displayLevelUpText(level) {
-  console.log('@@@@@@@@@@@@@@@@ddfsdfsdfs@@@@@@@@@@@@@@@@');
   const levelUpText = `${level} 스테이지!`;
   const x = canvas.width / 2;
   const y = canvas.height / 2;
@@ -338,6 +337,7 @@ Promise.all([
 
 export function setStages(stageList) {
   stagesData = stageList;
+  console.log('스테이지 정보: ', stagesData);
 }
 
 export function setUserInfo(score, gold) {
