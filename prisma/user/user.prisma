@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../generated/clientUserDB"  
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("USER_DATABASE_URL")
+}
+
+model Users {
+  userId    Int      @id @default(autoincrement()) @map("user_id") @db.UnsignedInt
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now()) @map("created_at")
+  createdId String?  @map("created_id")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedId String?  @map("updated_id")
+  name      String
+  ranking   Ranking?
+}
+
+model Ranking {
+  rankId    Int      @id @default(autoincrement()) @map("rank_id") @db.UnsignedInt
+  userId    Int      @unique @map("user_id") @db.UnsignedInt
+  score     Int      @db.UnsignedInt
+  stage     Int      @db.TinyInt
+  createdAt DateTime @default(now()) @map("created_at")
+  user      Users    @relation(fields: [userId], references: [userId], onDelete: Cascade)
+//   Stage     Stage[]
+}
