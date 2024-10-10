@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../generated/clientGameDB"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("GAME_DATABASE_URL")
+}
+
+
+model Towers {
+  towerId        Int           @id @default(autoincrement()) @map("tower_id") @db.TinyInt
+  name           String
+  image          String
+  price          Int           @db.SmallInt
+  attackPower    Int           @map("attack_power") @db.SmallInt
+  attackRange    Int           @map("attack_range") @db.SmallInt
+  attackSpeed    Int           @map("attack_speed") @db.SmallInt
+  versionGroupId Int
+  VersionGroups  VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
+}
+
+model Monsters {
+  monsterId      Int           @id @default(autoincrement()) @map("monster_id") @db.TinyInt
+  imageUrl       String        @map("image_url")
+  width          Int           @db.TinyInt
+  heigth         Int           @db.TinyInt
+  spawnInterval  Int           @map("spawn_interval") @db.UnsignedInt
+  maxHp          Int           @map("max_hp") @db.UnsignedInt
+  attackPower    Int           @map("attack_power") @db.UnsignedInt
+  point          Int           @db.UnsignedInt
+  versionGroupId Int
+  VersionGroups  VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
+}
+
+model Stage {
+  stageId        Int           @id @default(autoincrement()) @map("stage_id") @db.TinyInt
+  score          Int           @db.UnsignedInt
+  bonusScore     Int           @map("bonus_score") @db.UnsignedInt
+  rankingRankId  Int?          @db.UnsignedInt
+  versionGroupId Int
+
+  VersionGroups  VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
+}
+
+
+
+model CreateMonsterPerStage {
+  createId  Int @id @default(autoincrement()) @map("create_id") @db.TinyInt
+  stageId   Int @map("stage_id") @db.TinyInt
+  monsterId Int @map("monster_id") @db.TinyInt
+}
+
+model VersionGroups {
+  versionGroupId Int        @id @default(autoincrement()) @map("version_group_id")
+  versionId      Int        @unique @map("version_id")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updatedAt")
+  monsters       Monsters[]
+  stage          Stage[]
+  towers         Towers[]
+}

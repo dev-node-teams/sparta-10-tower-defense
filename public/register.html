@@ -43,19 +43,69 @@
   <div class="form-container">
     <h1>타워 짓고 10조 타워 디펜스 게임</h1>
     <h2>회원가입</h2>
-    <input type="text" id="username" placeholder="아이디" />
+    <input type="text" id="email" placeholder="이메일" />
+    <input type="text" id="name" placeholder="이름" />
     <input type="password" id="password" placeholder="비밀번호" />
+    <input type="password" id="passwordConfirm" placeholder="비밀번호확인" />
     <button id="register">회원가입</button>
     <button id="back">뒤로가기</button>
   </div>
   <script>
+
+    function signUp(email, name, password, passwordConfirm) {
+
+      let isStatusOk = false;
+
+      fetch('http://localhost:3005/api/sign-up', {
+        method: 'POST', // HTTP 메서드를 POST로 설정
+        headers: {
+          'Content-Type': 'application/json', // 요청의 데이터 형식을 JSON으로 설정
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          passwordConfirm,
+          name,
+        }) // 요청 본문에 JSON 형식의 데이터를 전송
+      })
+        .then(response => {
+          console.log('res =>> ', response);
+          if (response.status === 201) {
+            isStatusOk = true;
+          } else {
+            isStatusOk = false;
+          }
+          return response.json();
+        }) // 응답을 JSON으로 변환
+        .then(data => {
+          if (isStatusOk) {
+            console.log('Success:', data); // 성공 시 응답 데이터를 처리
+            alert('회원가입이 완료되었습니다.');
+            window.location.href = "index.html";
+          } else {
+            console.log('Fail:', data); // 실패 시 응답 데이터를 처리
+            alert('오류가 발생하였습니다.');
+          }
+
+        })
+        .catch((error) => {
+          console.error('Error:', error); // 에러 발생 시 처리
+        });
+    }
+
     document.getElementById("register").addEventListener("click", () => {
-      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const name = document.getElementById("name").value;
       const password = document.getElementById("password").value;
+      const passwordConfirm = document.getElementById("passwordConfirm").value;
 
       /* 
         회원가입 API 호출 후 회원가입 성공 시 index.html로 이동시켜주세요!
       */
+      console.log(' => 1');
+      signUp(email, name, password, passwordConfirm);
+      console.log(' => 2');
+
     });
 
     document.getElementById("back").addEventListener("click", () => {

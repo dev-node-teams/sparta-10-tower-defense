@@ -1,6 +1,13 @@
 import express from 'express';
 import { createServer } from 'http';
+import dotenv from 'dotenv';
 import initSocket from './init/socket.js';
+import userRouter from './routers/users.router.js';
+import errorMiddleware from './middlewares/error.middleware.js';
+import { initRedisClient } from './init/redis.js';
+
+// .env => process.env
+dotenv.config();
 
 const app = express();
 const server = createServer(app);
@@ -14,10 +21,20 @@ app.use(express.static('public')); // 정적파일 서빙
 // init 폴더
 initSocket(server);
 
+app.use('/api', [userRouter]);
+
+app.use(errorMiddleware);
+
 app.get('/', (req, res, next) => {
   res.send('Hello World! : Tower Defense!');
 });
 
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+server.listen(PORT, async () => {
+  try {
+    // redis 설정
+    await initRedisClient();
+    console.log(`Server is running on port ${PORT}`);
+  } catch (e) {
+    console.error('Failed to load Redis ', e);
+  }
 });
