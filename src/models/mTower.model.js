@@ -22,3 +22,10 @@ export const getTowerDatas = async () => {
   res = res.map((e) => JSON.parse(e));
   return res;
 };
+
+/**
+ * 타워 메타 데이터 삭제
+ */
+export const clearTowerDatas = () => {
+  redisClient.del(KEY_PREFIX);
+};

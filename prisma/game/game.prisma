@@ -34,9 +34,9 @@ model Monsters {
 }
 
 model Stage {
-  stageId        Int @id @default(autoincrement()) @map("stage_id") @db.TinyInt
-  score          Int @db.UnsignedInt
-  bonusScore     Int @map("bonus_score") @db.UnsignedInt
+  stageId        Int           @id @default(autoincrement()) @map("stage_id") @db.TinyInt
+  score          Int           @db.UnsignedInt
+  bonusScore     Int           @map("bonus_score") @db.UnsignedInt
   versionGroupId Int
 
   VersionGroups VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
