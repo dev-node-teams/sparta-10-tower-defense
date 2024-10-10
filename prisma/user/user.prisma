@@ -27,5 +27,4 @@ model Ranking {
   stage     Int      @db.TinyInt
   createdAt DateTime @default(now()) @map("created_at")
   user      Users    @relation(fields: [userId], references: [userId], onDelete: Cascade)
-//   Stage     Stage[]
 }

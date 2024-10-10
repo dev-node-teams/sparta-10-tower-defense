@@ -40,7 +40,7 @@ model Stage {
   bonusScore     Int           @map("bonus_score") @db.UnsignedInt
   rankingRankId  Int?          @db.UnsignedInt
   versionGroupId Int
-  // ranking        Ranking?      @relation(fields: [rankingRankId], references: [rankId])
+
   VersionGroups  VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
 }
 
