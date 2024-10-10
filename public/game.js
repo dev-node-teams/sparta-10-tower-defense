@@ -229,8 +229,8 @@ function spawnMonster() {
 }
 
 document.addEventListener('updateScoreAndGold', (event) => {
-  score = event.detail.score;  // 이벤트에서 전달된 점수
-  userGold = event.detail.gold;  // 이벤트에서 전달된 골드
+  score = event.detail.score; // 이벤트에서 전달된 점수
+  userGold = event.detail.gold; // 이벤트에서 전달된 골드
   console.log(`점수 업데이트됨: ${score}, 골드 업데이트됨: ${userGold}`);
 });
 
@@ -280,7 +280,7 @@ function gameLoop() {
     } else if (monster.hp === 0) {
       // 몬스터가 기지를 공격한 후
       monsters.splice(i, 1);
-      } else {
+    } else {
       console.log(' monsters =>> ', monsters);
 
       /* 몬스터가 죽었을 때 */
@@ -301,18 +301,18 @@ function gameLoop() {
 
   /* 특정 점수 도달 시 스테이지 이동 */
   // db에서 받아올거
-  // let stageDummy = [
-  //   { id: 1, score: 0, bonusScore: 0 },
-  //   { id: 2, score: 100, bonusScore: 0 },
-  //   { id: 3, score: 300, bonusScore: 0 },
-  //   { id: 4, score: 500, bonusScore: 0 },
-  //   { id: 5, score: 800, bonusScore: 0 },
-  // ];
+  // // let stageDummy = [
+  // //   { id: 1, score: 0, bonusScore: 0 },
+  // //   { id: 2, score: 100, bonusScore: 0 },
+  // //   { id: 3, score: 300, bonusScore: 0 },
+  // //   { id: 4, score: 500, bonusScore: 0 },
+  // //   { id: 5, score: 800, bonusScore: 0 },
+  // // ];
 
-  // if (monsterLevel < stageDummy.length && score > stageDummy[monsterLevel].score) {
-  //   sendEvent(4, { score, currentStage: monsterLevel, targetStage: monsterLevel + 1, userGold });
-  //   monsterLevel++; // 서버에서 수신한 이벤트를 통해 스테이지(monsterLevel) 업데이트하는 걸로 변경해야함
-  // }
+  if (monsterLevel < stagesData.length && score > stagesData[monsterLevel].score) {
+    sendEvent(4, { score, currentStage: monsterLevel, targetStage: monsterLevel + 1, userGold });
+    monsterLevel++; // 서버에서 수신한 이벤트를 통해 스테이지(monsterLevel) 업데이트하는 걸로 변경해야함
+  }
 
   requestAnimationFrame(gameLoop); // 지속적으로 다음 프레임에 gameLoop 함수 호출할 수 있도록 함
 }
