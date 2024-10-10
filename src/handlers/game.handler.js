@@ -1,6 +1,7 @@
 import { clearGold, getGold, setGold } from '../models/gold.model.js';
 import { clearScore, getScore, setScore } from '../models/score.model.js';
 import { clearStage, getStage, setStage } from '../models/stage.model.js';
+import { clearMonsters, getMonsters } from '../models/monster.model.js';
 import { prisma } from '../utils/prisma/index.js';
 import AuthUtils from '../utils/auth.utils.js';
 
@@ -44,10 +45,19 @@ export const gameStart = async (token, payload) => {
   return { status: 'success', initInfo, stage, roundMonster, towerArray };
 };
 
-export const gameEnd = async (uuid, payload) => {
-  //
-  // 이 함수 호출들은 맨 마지막 return 위에 존재 해야 합니다.
-  // deteleStage(uuid);
-  // deleteGold(uuid);
-  // deleteScore(uuid);
+export const gameEnd = async (userId, payload) => {
+  const userMonsters = getMonsters(userId);
+
+  if (!userMonsters) {
+    return { status: 'fail', message: 'Monsters not found' };
+  }
+
+  let verificationScore = 0;
+  for (let i = 0; i < userMonsters.length; i++) {
+    verificationScore += (userMonsters[i].level + 1) * 100;
+  }
+  if (verificationScore !== payload.score) {
+    return { status: 'fail', message: 'Score verification failed' };
+  }
+  return { status: 'success', message: 'Game Over' };
 };
