@@ -283,15 +283,15 @@ function gameLoop() {
 
   /* 특정 점수 도달 시 스테이지 이동 */
   // db에서 받아올거
-  let stageDummy = [
-    { id: 1, score: 0, bonusScore: 0 },
-    { id: 2, score: 100, bonusScore: 0 },
-    { id: 3, score: 300, bonusScore: 0 },
-    { id: 4, score: 500, bonusScore: 0 },
-    { id: 5, score: 800, bonusScore: 0 },
-  ];
+  // let stageDummy = [
+  //   { id: 1, score: 0, bonusScore: 0 },
+  //   { id: 2, score: 100, bonusScore: 0 },
+  //   { id: 3, score: 300, bonusScore: 0 },
+  //   { id: 4, score: 500, bonusScore: 0 },
+  //   { id: 5, score: 800, bonusScore: 0 },
+  // ];
 
-  if (monsterLevel < stageDummy.length && score > stageDummy[monsterLevel].score) {
+  if (monsterLevel < stagesData.length && score > stagesData[monsterLevel].score) {
     sendEvent(4, { score, currentStage: monsterLevel, targetStage: monsterLevel + 1, userGold });
     monsterLevel++; // 서버에서 수신한 이벤트를 통해 스테이지(monsterLevel) 업데이트하는 걸로 변경해야함
   }
