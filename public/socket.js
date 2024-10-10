@@ -1,9 +1,17 @@
+import { setMonsters, setRountMonsters, setStages, setTowers, setUserInfo } from './game.js';
+
 const IP = 'http://localhost:3005';
 
 let socket = null;
 
 let token = `Bearer ${getCookie('accessToken')}`;
 let CLIENT_VERSION = '1.0.0';
+
+let userInfo = null;
+let stages = null;
+let towers = null;
+let monsters = null;
+let roundMonsters = null;
 
 const sendEvent = (handlerId, payload) => {
   const res = socket.emit('event', {
@@ -40,12 +48,23 @@ const socketConnection = () => {
     }
 
     console.log('연결되었어요: ', data);
-
     //userId = data.userId;
   });
 
   socket.on('response', (data) => {
     console.log('@@ response: =>>>  ', data);
+    if (data.handlerId === 2) {
+      userInfo = data.init.initData;
+      stages = data.init.stages;
+      monsters = data.init.monsters;
+      towers = data.init.towers;
+      roundMonsters = data.init.roundMonsters;
+      setUserInfo(userInfo.score, userInfo.gold);
+      setStages(stages);
+      setMonsters(monsters);
+      setTowers(towers);
+      setRountMonsters(roundMonsters);
+    }
   });
 };
 
