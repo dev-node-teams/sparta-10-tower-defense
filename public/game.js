@@ -345,12 +345,12 @@ export function setRountMonsters(rountMonsterList) {
 const buyTowerButton = document.createElement('button');
 buyTowerButton.textContent = '타워 구입';
 buyTowerButton.style.position = 'absolute';
-buyTowerButton.style.top = '10px';
-buyTowerButton.style.right = '10px';
+buyTowerButton.style.bottom = '50px';
+buyTowerButton.style.right = '30px';
 buyTowerButton.style.padding = '10px 20px';
-buyTowerButton.style.fontSize = '16px';
+buyTowerButton.style.fontSize = '20px';
 buyTowerButton.style.cursor = 'pointer';
 
 buyTowerButton.addEventListener('click', placeNewTower);
 
-document.body.appendChild(buyTowerButton);
+document.getElementById('mainCanvas').appendChild(buyTowerButton);
