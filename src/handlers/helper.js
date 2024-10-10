@@ -2,6 +2,7 @@ import { createGold } from '../models/gold.model.js';
 import { createScore } from '../models/score.model.js';
 import { createStage } from '../models/stage.model.js';
 import handlerMappings from './handlerMapping.js';
+import AuthUtils from '../utils/auth.utils.js';
 
 export const handleDisconnect = (socket, userId) => {
   console.log(`User disconnected: ${socket.id}`);
@@ -29,7 +30,11 @@ export const handlerEvent = async (io, socket, data) => {
     return;
   }
 
-  const response = await handler(data.token, data.payload);
+  console.log('data.token =>>> ', data.token);
+  const userId = AuthUtils.verify(data.token);
+  console.log('userId =>>> ', userId);
+
+  const response = await handler(userId, data.payload);
 
   console.log('@@ handlerEvent - res =>>> ', response);
 

@@ -5,6 +5,7 @@ import initSocket from './init/socket.js';
 import userRouter from './routers/users.router.js';
 import errorMiddleware from './middlewares/error.middleware.js';
 import { initRedisClient } from './init/redis.js';
+import { initData } from './init/initData.js';
 
 // .env => process.env
 dotenv.config();
@@ -33,6 +34,7 @@ server.listen(PORT, async () => {
   try {
     // redis 설정
     await initRedisClient();
+    await initData();
     console.log(`Server is running on port ${PORT}`);
   } catch (e) {
     console.error('Failed to load Redis ', e);

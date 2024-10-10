@@ -2,21 +2,19 @@ import { clearGold, getGold, setGold } from '../models/gold.model.js';
 import { clearScore, getScore, setScore } from '../models/score.model.js';
 import { clearStage, setStage } from '../models/stage.model.js';
 import { clearMonsters, setMonster } from '../models/monster.model.js';
-
 import AuthUtils from '../utils/auth.utils.js';
-
 import { GameStartService } from '../services/gamestart.service.js';
 
 const gameStartService = new GameStartService();
 
-export const gameStart = async (token, payload) => {
+export const gameStart = async (userId, payload) => {
   // 게임이 시작할 경우 호출되는 Handler
 
-  console.log('------------------------------------');
-  console.log('token : ', token);
-  const userId = AuthUtils.verify(token);
-  console.log('userId : ', userId);
-  console.log('------------------------------------');
+  // console.log('------------------------------------');
+  // console.log('token : ', token);
+  // const userId = AuthUtils.verify(token);
+  // console.log('userId : ', userId);
+  // console.log('------------------------------------');
   clearStage(userId);
   clearGold(userId);
   clearScore(userId);
