@@ -31,7 +31,7 @@ export const handlerEvent = async (io, socket, data) => {
   const handler = handlerMappings[data.handlerId];
 
   if (!handler) {
-    socket.emit('reponse', { status: 'fail', message: 'Handler not found' });
+    socket.emit('response', { status: 'fail', message: 'Handler not found' });
     return;
   }
 

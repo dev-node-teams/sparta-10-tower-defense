@@ -27,6 +27,8 @@ export default class AuthUtils {
     } catch (err) {
       if (err.name === 'TokenExpiredError') {
         throw new StatusError('토큰의 유효기간이 지났습니다.', StatusCodes.UNAUTHORIZED);
+      } else {
+        throw new StatusError('인증이 필요한 기능입니다.', StatusCodes.UNAUTHORIZED);
       }
     }
   }

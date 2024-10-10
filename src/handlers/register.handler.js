@@ -7,9 +7,22 @@ const registerHandler = (io) => {
   io.on('connection', async (socket) => {
     console.log(' registerHandler userId =>>> ', socket.id);
 
-    let accessToken = decodeURIComponent(socket.handshake.query.accessToken);
-    let userId = AuthUtils.verify(accessToken);
-    console.log(' userId =>>> ', userId);
+    let userId;
+    try {
+      //
+      let accessToken = decodeURIComponent(socket.handshake.query.accessToken);
+      userId = AuthUtils.verify(accessToken);
+      console.log(' userId =>>> ', userId);
+      //
+    } catch (e) {
+      console.error('[ERROR] =>> ', e);
+      socket.emit('response', {
+        status: 'fail',
+        errorCode: 401,
+        message: '인증이 필요한 기능입니다.',
+      });
+      return;
+    }
     // 접속한 유저 아이디 서버에 저장
     addUser({ userId, socketId: socket.id });
 

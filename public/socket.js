@@ -56,6 +56,20 @@ const socketConnection = () => {
 
   socket.on('response', (data) => {
     console.log('@@ response: =>>>  ', data);
+
+    // 에러 처리
+    if (data && data.status === 'fail') {
+      switch (data.errorCode) {
+        case 401:
+          alert('로그인을 해주세요!');
+          deleteCookie('accessToken');
+          window.location.href = 'index.html';
+          return;
+        default:
+          console.error('[ERROR] =>>> ', data);
+      }
+    }
+
     if (data && data.handlerId) {
       switch (data.handlerId) {
         case 2:
