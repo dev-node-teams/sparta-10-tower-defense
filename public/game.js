@@ -12,6 +12,7 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 const NUM_OF_MONSTERS = 5; // 몬스터 개수
+const NUM_OF_TOWERS = 5; // 타워의 종류
 
 let userGold = 200; // 유저 골드
 let base; // 기지 객체
@@ -35,14 +36,21 @@ let isInitGame = false;
 const backgroundImage = new Image();
 backgroundImage.src = 'images/bg.webp';
 
-const towerImage = new Image();
-towerImage.src = 'images/tower.png';
-
 const baseImage = new Image();
 baseImage.src = 'images/base.png';
 
 const pathImage = new Image();
 pathImage.src = 'images/path.png';
+
+// const towerImage = new Image();
+// towerImage.src = 'images/tower.png';
+
+const towerImage = [];
+// for (let i = 1; i <= NUM_OF_TOWERS; i++) {
+//   const img = new Image();
+//   img.src = towerData[i].image;
+//   towerImage.push(img);
+// }
 
 const monsterImages = [];
 for (let i = 1; i <= NUM_OF_MONSTERS; i++) {
@@ -171,10 +179,11 @@ function buytower(shopNumber) {
       towerData[shopNumber].attackRange,
       towerData[shopNumber].attackSpeed,
       towerData[shopNumber].price,
+      towerImage[shopNumber],
     );
 
     towers.push(tower);
-    tower.draw(ctx, towerImage);
+    tower.draw(ctx);
 
     sendEvent(30, {
       towerType: towerData[shopNumber].towerId,
@@ -210,7 +219,7 @@ function gameLoop() {
 
   // 타워 그리기 및 몬스터 공격 처리
   towers.forEach((tower) => {
-    tower.draw(ctx, towerImage);
+    tower.draw(ctx);
     tower.updateCooldown();
     monsters.forEach((monster) => {
       const distance = Math.sqrt(
@@ -276,9 +285,11 @@ function initGame() {
 // 이미지 로딩 완료 후 서버와 연결하고 게임 초기화
 Promise.all([
   new Promise((resolve) => (backgroundImage.onload = resolve)),
-  new Promise((resolve) => (towerImage.onload = resolve)),
+
   new Promise((resolve) => (baseImage.onload = resolve)),
   new Promise((resolve) => (pathImage.onload = resolve)),
+  // new Promise((resolve) => (towerImage.onload = resolve)),
+  ...towerImage.map((img) => new Promise((resolve) => (img.onload = resolve))),
   ...monsterImages.map((img) => new Promise((resolve) => (img.onload = resolve))),
 ]).then(() => {
   /* 서버 접속 코드 (여기도 완성해주세요!) */
@@ -320,6 +331,11 @@ export function setMonsters(monsterList) {
 
 export function setTowers(towerList) {
   towerData = towerList;
+  for (let i = 0; i < NUM_OF_TOWERS; i++) {
+    const img = new Image();
+    img.src = towerData[i].image;
+    towerImage.push(img);
+  }
 }
 
 export function setRountMonsters(rountMonsterList) {
