@@ -17,8 +17,6 @@ let userGold = 200; // 유저 골드
 let base; // 기지 객체
 let baseHp = 100; // 기지 체력
 
-let towerCost = 10; // 타워 구입 비용
-let numOfInitialTowers = 2; // 초기 타워 개수
 let monsterLevel = 1; // 몬스터 레벨
 let monsterSpawnInterval = 1500; // 몬스터 생성 주기
 const monsters = [];
@@ -145,19 +143,6 @@ function getRandomPositionNearPath(maxDistance) {
   };
 }
 
-function placeInitialTowers() {
-  /* 
-    타워를 초기에 배치하는 함수입니다.
-    무언가 빠진 코드가 있는 것 같지 않나요? 
-  */
-  // for (let i = 0; i < numOfInitialTowers; i++) {
-  //   const { x, y } = getRandomPositionNearPath(200);
-  //   const tower = new Tower(x, y, towerCost);
-  //   towers.push(tower);
-  //   tower.draw(ctx, towerImage);
-  // }
-}
-
 function placeNewTower() {
   const getShop = document.getElementById('shopModal');
   getShop.style.display = 'block';
@@ -174,46 +159,25 @@ function buytower(shopNumber) {
   */
   const { x, y } = getRandomPositionNearPath(200);
 
-  // 테스트용 타워
-  let towerType = {};
-  towerType[0] = {
-    tower_id: 1,
-    name: '기본타워',
-    image: 'images/tower.png',
-    price: 50,
-    attack_power: 40,
-    attack_range: 300,
-    attack_speed: 60,
-  };
-  towerType[1] = {
-    tower_id: 2,
-    name: '속사타워',
-    image: 'images/tower.png',
-    price: 100,
-    attack_power: 25,
-    attack_range: 500,
-    attack_speed: 9,
-  };
-
-  if (userGold < towerType[shopNumber].price) {
+  if (userGold < towerData[shopNumber].price) {
     console.log(' 돈이 부족합니다. ');
   } else {
-    userGold -= towerType[shopNumber].price;
+    userGold -= towerData[shopNumber].price;
 
     const tower = new Tower(
       x,
       y,
-      towerType[shopNumber].attack_power,
-      towerType[shopNumber].attack_range,
-      towerType[shopNumber].attack_speed,
-      towerType[shopNumber].price,
+      towerData[shopNumber].attackPower,
+      towerData[shopNumber].attackRange,
+      towerData[shopNumber].attackSpeed,
+      towerData[shopNumber].price,
     );
 
     towers.push(tower);
     tower.draw(ctx, towerImage);
 
     sendEvent(30, {
-      towerType: towerType[shopNumber].tower_id,
+      towerType: towerData[shopNumber].towerId,
       position: { x, y },
     });
   }
@@ -303,7 +267,6 @@ function initGame() {
   sendEvent(2, { timestamp: Date.now() });
   monsterPath = generateRandomMonsterPath(); // 몬스터 경로 생성
   initMap(); // 맵 초기화 (배경, 몬스터 경로 그리기)
-  placeInitialTowers(); // 설정된 초기 타워 개수만큼 사전에 타워 배치
   placeBase(); // 기지 배치
 
   setInterval(spawnMonster, monsterSpawnInterval); // 설정된 몬스터 생성 주기마다 몬스터 생성
@@ -357,7 +320,6 @@ export function setMonsters(monsterList) {
 
 export function setTowers(towerList) {
   towerData = towerList;
-  console.log('towers 정보 : ', towers);
 }
 
 export function setRountMonsters(rountMonsterList) {
@@ -375,5 +337,4 @@ buyTowerButton.style.cursor = 'pointer';
 
 buyTowerButton.addEventListener('click', placeNewTower);
 
-document.body.appendChild(buyTowerButton);
 document.body.appendChild(buyTowerButton);
