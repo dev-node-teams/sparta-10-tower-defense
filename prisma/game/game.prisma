@@ -8,7 +8,6 @@ datasource db {
   url      = env("GAME_DATABASE_URL")
 }
 
-
 model Towers {
   towerId        Int           @id @default(autoincrement()) @map("tower_id") @db.TinyInt
   name           String
@@ -40,10 +39,8 @@ model Stage {
   bonusScore     Int           @map("bonus_score") @db.UnsignedInt
   versionGroupId Int
 
-  VersionGroups  VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
+  VersionGroups VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
 }
-
-
 
 model CreateMonsterPerStage {
   createId  Int @id @default(autoincrement()) @map("create_id") @db.TinyInt

@@ -1,4 +1,5 @@
 import { PrismaClient } from '../../generated/clientGameDB/index.js';
+
 const prisma = new PrismaClient();
 export class TowersRepository {
   /**
@@ -9,3 +10,8 @@ export class TowersRepository {
     return await prisma.towers.findMany();
   };
 }
+
+export const findTowers = async () => {
+  const findTowers = await prisma.Towers.findMany();
+  return findTowers;
+};
