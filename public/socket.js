@@ -1,4 +1,4 @@
-import { setMonsters, setRountMonsters, setStages, setTowers, setUserInfo } from './game.js';
+import { setMonsters, setStages, setTowers, setUserInfo, setMonstersScore, setMonstersGold } from './game.js';
 import { displayLevelUpText } from './game.js';
 
 const IP = 'http://localhost:3005';
@@ -65,12 +65,12 @@ const socketConnection = () => {
           stages = data.init.stages;
           monsters = data.init.monsters;
           towers = data.init.towers;
-          roundMonsters = data.init.roundMonsters;
+          // roundMonsters = data.init.roundMonsters;
           setUserInfo(userInfo.score, userInfo.gold);
           setStages(stages);
           setMonsters(monsters);
           setTowers(towers);
-          setRountMonsters(roundMonsters);
+          // setRountMonsters(roundMonsters);
           break;
 
         case 4:
@@ -78,16 +78,9 @@ const socketConnection = () => {
           break;
 
         case 21:
-          if (data.totalScore !== undefined && data.totalGold !== undefined) {
-            const event = new CustomEvent('updateScoreAndGold', {
-              detail: {
-                score: data.totalScore,
-                gold: data.totalGold
-              }
-            });
-            document.dispatchEvent(event);  // 커스텀 이벤트 발생
-          }
-            break;
+          setMonstersScore(data.totalScore)
+          setMonstersGold(data.totalGold)
+          break;
 
         default:
           console.log('!! 일치하는 핸들러가 없습니다.');
