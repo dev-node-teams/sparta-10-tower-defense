@@ -12,7 +12,7 @@ export const gameStart = async (userId, payload) => {
   await clearStage(userId);
   await clearGold(userId);
   await clearScore(userId);
-  clearMonsters(userId);
+  await clearMonsters(userId);
 
   await setStage(userId, 1);
   await setScore(userId, 0);

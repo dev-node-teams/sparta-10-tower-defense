@@ -7,7 +7,7 @@ import { getGold, setGold, getTotalGold } from '../models/gold.model.js';
 export const monsterKill = async (userId, payload) => {
   const monsterMetadata = await findMonsters();
 
-  const monsters = getMonsters(userId);
+  const monsters = await getMonsters(userId);
   if (!monsters) {
     return { status: 'fail', message: 'Monsters not found' };
   }
