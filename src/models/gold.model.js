@@ -25,4 +25,4 @@ const clearGold = (userId) => {
   return (golds[userId] = []);
 };
 
-export { createGold, getGold, getTotalGold, setGold, clearGold };
+export { createGold, getGold, setGold, clearGold, getTotalGold };

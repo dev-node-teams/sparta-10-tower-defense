@@ -16,3 +16,7 @@ export const setTower = (userId, towerType, position) => {
 export const clearTower = (userId) => {
   return (towers[userId] = []);
 };
+
+export const deleteTower = (userId, tower) => {
+  towers[userId] = towers[userId].filter((i) => i !== tower);
+};
