@@ -1,7 +1,7 @@
 import { Base } from './base.js';
 import { Monster } from './monster.js';
 import { Tower } from './tower.js';
-import { getSocket, socketConnection, sendEvent } from './socket.js';
+import { getSocket, socketConnection, sendEvent, targetStage } from './socket.js';
 
 /* 
   어딘가에 엑세스 토큰이 저장이 안되어 있다면 로그인을 유도하는 코드를 여기에 추가해주세요!
@@ -13,7 +13,7 @@ const ctx = canvas.getContext('2d');
 
 const NUM_OF_MONSTERS = 5; // 몬스터 개수
 
-let userGold = 200; // 유저 골드
+let userGold = 0; // 유저 골드
 let base; // 기지 객체
 let baseHp = 100; // 기지 체력
 
@@ -30,6 +30,8 @@ let stagesData = [];
 let score = 0; // 게임 점수
 let highScore = 0; // 기존 최고 점수
 let isInitGame = false;
+
+let moveStageFlag = true;
 
 // 이미지 로딩 파트
 const backgroundImage = new Image();
@@ -76,6 +78,11 @@ export function displayLevelUpText(level) {
 
   // 처음 호출 시 텍스트를 그리기 시작
   renderLevelUpText();
+}
+
+export function moveStage(targetStage) {
+  monsterLevel = targetStage;
+  moveStageFlag = true;
 }
 
 function generateRandomMonsterPath() {
@@ -219,6 +226,12 @@ function spawnMonster() {
   monsters.push(new Monster(monsterPath, monsterImages, monsterLevel));
 }
 
+document.addEventListener('updateScoreAndGold', (event) => {
+  score = event.detail.score; // 이벤트에서 전달된 점수
+  userGold = event.detail.gold; // 이벤트에서 전달된 골드
+  console.log(`점수 업데이트됨: ${score}, 골드 업데이트됨: ${userGold}`);
+});
+
 function gameLoop() {
   // 렌더링 시에는 항상 배경 이미지부터 그려야 합니다! 그래야 다른 이미지들이 배경 이미지 위에 그려져요!
   ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height); // 배경 이미지 다시 그리기
@@ -279,23 +292,10 @@ function gameLoop() {
     }
   }
 
-  // if (Math.floor(score / 500) > monsterLevel) {
-  //   monsterLevel++;
-  // }
-
   /* 특정 점수 도달 시 스테이지 이동 */
-  // db에서 받아올거
-  let stageDummy = [
-    { id: 1, score: 0, bonusScore: 0 },
-    { id: 2, score: 100, bonusScore: 0 },
-    { id: 3, score: 300, bonusScore: 0 },
-    { id: 4, score: 500, bonusScore: 0 },
-    { id: 5, score: 800, bonusScore: 0 },
-  ];
-
-  if (monsterLevel < stageDummy.length && score > stageDummy[monsterLevel].score) {
+  if (monsterLevel < stagesData.length && score > stagesData[monsterLevel].score && moveStageFlag) {
+    moveStageFlag = false;
     sendEvent(4, { score, currentStage: monsterLevel, targetStage: monsterLevel + 1, userGold });
-    monsterLevel++; // 서버에서 수신한 이벤트를 통해 스테이지(monsterLevel) 업데이트하는 걸로 변경해야함
   }
 
   requestAnimationFrame(gameLoop); // 지속적으로 다음 프레임에 gameLoop 함수 호출할 수 있도록 함
@@ -455,3 +455,6 @@ function sellTower(tower) {
   const y = tower.y;
   sendEvent(31, { towerType: tower.type, position: { x, y } });
 }
+
+export { monsterLevel };
+
