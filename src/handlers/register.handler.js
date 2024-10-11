@@ -5,7 +5,7 @@ import { addUser } from '../models/user.model.js';
 //
 const registerHandler = (io) => {
   io.on('connection', async (socket) => {
-    console.log(' registerHandler userId =>>> ', socket.id);
+    console.log(' registerHandler socket ID =>>> ', socket.id);
 
     let userId;
     try {
@@ -14,29 +14,31 @@ const registerHandler = (io) => {
       userId = AuthUtils.verify(accessToken);
       console.log(' userId =>>> ', userId);
       //
+
+      // 접속한 유저 아이디 서버에 저장
+      addUser({ userId, socketId: socket.id });
+
+      // 연결 초기화
+      handleConnection(socket, userId);
+
+      // 응답
+      //socket.emit('response', 'res');
+
+      // event handler 호출
+      socket.on('event', (data) => handlerEvent(io, socket, data));
+
+      // 접속해제시 이벤트
+      socket.on('disconnect', () => handleDisconnect(socket, userId));
     } catch (e) {
-      console.error('[ERROR] =>> ', e);
+      console.error('[ERROR] register.handler.js  =>> ', e);
+      console.error('[ERROR] register.handler.js  =>> ', e.statusCode);
       socket.emit('response', {
         status: 'fail',
-        errorCode: 401,
-        message: '인증이 필요한 기능입니다.',
+        errorCode: e.statusCode,
+        message: e.message,
       });
       return;
     }
-    // 접속한 유저 아이디 서버에 저장
-    addUser({ userId, socketId: socket.id });
-
-    // 연결 초기화
-    handleConnection(socket, userId);
-
-    // 응답
-    //socket.emit('response', 'res');
-
-    // event handler 호출
-    socket.on('event', (data) => handlerEvent(io, socket, data));
-
-    // 접속해제시 이벤트
-    socket.on('disconnect', () => handleDisconnect(socket, userId));
   });
 };
 

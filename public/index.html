@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="author" content="Changmin Kang" />
-  <title>내일배움캠프 Node.js 트랙 타워 디펜스 게임</title>
+  <title>타워 짓고 10조 타워 디펜스 게임</title>
   <link rel="icon" type="image/x-icon" href="./images/favicon.ico" />
   <style>
     body {
@@ -106,9 +106,10 @@
 
 <body>
   <div class="button-container">
-    <h1 style="color: white">내일배움캠프 Node.js 트랙 타워 디펜스 게임</h1>
+    <h1 style="color: white">타워 짓고 10조 타워 디펜스 게임</h1>
     <button id="registerButton">회원가입</button>
     <button id="loginButton">로그인</button>
+    <button id="loginOutButton" style="display: none;">로그아웃</button>
     <button id="playButton">게임 플레이</button>
   </div>
 
@@ -187,9 +188,12 @@
     if (isLogin) {
       document.getElementById('registerButton').style.display = 'none';
       document.getElementById('loginButton').style.display = 'none';
+      document.getElementById('loginOutButton').style.display = 'block';
+
     } else {
       document.getElementById('registerButton').style.display = 'block';
       document.getElementById('loginButton').style.display = 'block';
+      document.getElementById('loginOutButton').style.display = 'none';
     }
 
     document
@@ -200,6 +204,12 @@
 
     document.getElementById("loginButton").addEventListener("click", () => {
       window.location.href = "login.html";
+    });
+
+    document.getElementById("loginOutButton").addEventListener("click", () => {
+      deleteCookie('accessToken');
+      deleteCookie('refreshToken');
+      window.location.href = 'index.html';
     });
 
     document.getElementById("playButton").addEventListener("click", () => {

@@ -26,14 +26,17 @@ export class UsersController {
     const { email, password } = await JoiUtils.validateSignIn(req.body);
 
     // 토큰 생성
-    const accessToken = await this.usersService.signIn(email, password);
+    const { accessToken, refreshToken } = await this.usersService.signIn(email, password);
 
-    console.log(' AT =>>>> ', accessToken);
+    console.log(' AT1 =>>>> ', accessToken);
+    console.log(' AT2 =>>>> ', refreshToken);
 
     // 쿠키 저장
     res.cookie('accessToken', accessToken, {
       httpOnly: false, // 브라우저의 JavaScript에서 접근 가능하게 설정
     });
+
+    res.cookie('refreshToken', refreshToken);
 
     return res.status(200).json({ message: '정상적으로 로그인이 되었습니다.', data: accessToken });
   });
