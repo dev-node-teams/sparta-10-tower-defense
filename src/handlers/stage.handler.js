@@ -10,10 +10,10 @@ export const moveStage = async (userId, payload) => {
     return { status: 'fail', message: '다음 스테이지가 없습니다.' };
   }
 
-  let currentStages = getStage(userId); // 유저가 보유한 스테이지
+  let currentStages = await getStage(userId); // 유저가 보유한 스테이지
   if (!currentStages) {
-    createStage(userId);
-    currentStages = getStage(userId);
+    await createStage(userId);
+    currentStages = await getStage(userId);
   }
 
   if (!currentStages.length) {
@@ -44,7 +44,7 @@ export const moveStage = async (userId, payload) => {
   /** 잡은 몬스터로 점수 검증 끝 */
 
   // 유저의 다음 스테이지 정보 업데이트
-  setStage(userId, payload.targetStage);
+  await setStage(userId, payload.targetStage);
   return {
     status: 'success',
     message: '스테이지 이동',
