@@ -114,69 +114,55 @@
   </div>
 
   <div class="canvasContainer" id="mainCanvas">
-    <canvas id="gameCanvas" width="1920" height="1080"></canvas>
-    <!-- 상점 모달 -->
-    <div id="shopModal" class="shopModal">
+    
+  <canvas id="gameCanvas" width="1920" height="1080"></canvas>
+  <div id="buttonContainer"></div>
+<!-- 상점 모달 -->  
+  <div id="shopModal" class ="shopModal">
 
-      <button id="shopClose" class="shopbuttons">닫기</button>
-      <div class="shopimgs">
-        <div id="shop1" class="shop">
-          <div class="shopimg">
-            <img src="images/tower1.png">
-          </div>
-          <div class="shopsub">
-            <div class="shopbutton">
-              <button id="buybutton1" class="shopbuttons" onclick="buybutton('0')">구매</button>
-            </div>
-            기본 타워 </br>50G
-          </div>
-        </div>
-        <div id="shop2" class="shop">
-          <div class="shopimg">
-            <img src="images/tower2.png">
-          </div>
-          <div class="shopsub">
-            <div class="shopbutton">
-              <button id="buybutton2" class="shopbuttons" onclick="buybutton('1')">구매</button>
-            </div>
-            속사 타워 </br>100G
-          </div>
-        </div>
-        <div id="shop3" class="shop">
-          <div class="shopimg">
-            <img src="images/tower3.png">
-          </div>
-          <div class="shopsub">
-            <div class="shopbutton">
-              <button id="buybutton3" class="shopbuttons" onclick="buybutton('2')">구매</button>
-            </div>
-            죽창 타워 </br>300G
-          </div>
-        </div>
-        <div id="shop4" class="shop">
-          <div class="shopimg">
-            <img src="images/tower4.png">
-          </div>
-          <div class="shopsub">
-            <div class="shopbutton">
-              <button id="buybutton4" class="shopbuttons" onclick="buybutton('3')">구매</button>
-            </div>
-            저격 타워 </br>200G
-          </div>
-        </div>
-        <div id="shop5" class="shop">
-          <div class="shopimg">
-            <img src="images/tower5.png">
-          </div>
-          <div class="shopsub">
-            <div class="shopbutton">
-              <button id="buybutton5" class="shopbuttons" onclick="buybutton('4')">구매</button>
-            </div>
-            초속사 타워 </br>500G
-          </div>
-        </div>
+<button id="shopClose" class="shopbuttons">닫기</button>
+<div class="shopimgs">
+<div id="shop1" class="shop">
+  <div class="shopimg">
+    <img src="images/tower1.png">
+  </div>
+  <div class="shopsub">
+<div class="shopbutton">
+    <button id="buybutton1" class="shopbuttons" onclick="buybutton('0')">구매</button>
+</div>
+기본 타워 </br>50G
+  </div>
+</div>
+<div id="shop2" class="shop">
+  <div class="shopimg">
+    <img src="images/tower2.png">
+  </div>
+  <div class="shopsub">
+    <div class="shopbutton">
+    <button id="buybutton2" class="shopbuttons" onclick="buybutton('1')">구매</button>
+    </div>
+        속사 타워 </br>100G
+  </div>
+</div>
+<div id="shop3" class="shop">
+  <div class="shopimg">
+    <img src="images/tower3.png">
+  </div>
+  <div class="shopsub">
+    <div class="shopbutton">
+    <button id="buybutton3" class="shopbuttons" onclick="buybutton('2')">구매</button>
+    </div>
+    죽창 타워 </br>300G
+  </div>
+</div>
+<div id="shop4" class="shop">
+  <div class="shopimg">
+    <img src="images/tower4.png">
+  </div>
+  <div class="shopsub">
+    <div class="shopbutton">
+    <button id="buybutton4" class="shopbuttons" onclick="buybutton('3')">구매</button>
 
-      </div>
     </div>
   </div>
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>

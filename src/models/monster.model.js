@@ -7,11 +7,13 @@ export const createMonsters = (userId) => {
 
 // 몬스터 기록 확인
 export const getMonsters = (userId) => {
+  console.log(`여기 1 ----->`, monsters)
   return monsters[userId];
 };
 
 // 새로운 몬스터 추가 확인 
 export const setMonster = (userId, id, level) => {
+  console.log(`여기 2 ----->`, monsters)
   return monsters[userId].push({ id, level });
 };
 

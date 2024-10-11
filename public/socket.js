@@ -1,5 +1,5 @@
 import { setMonsters, setRountMonsters, setStages, setTowers, setUserInfo } from './game.js';
-import { displayLevelUpText } from './game.js';
+import { displayLevelUpText, moveStage } from './game.js';
 
 const IP = 'http://localhost:3005';
 
@@ -15,6 +15,10 @@ let stages = null;
 let towers = null;
 let monsters = null;
 let roundMonsters = null;
+let score = null;
+let userGold = null;
+
+let targetStage = 0;
 
 const sendEvent = (handlerId, payload) => {
   const res = socket.emit('event', {
@@ -100,11 +104,26 @@ const socketConnection = () => {
           setMonsters(monsters);
           setTowers(towers);
           setRountMonsters(roundMonsters);
+          console.log('클라이언트 확인 : ', data.init);
           break;
 
-        case 4:
-          displayLevelUpText(data.payload.targetStage);
+        case 4: // 스테이지 이동
+          targetStage = data.payload.targetStage;
+          displayLevelUpText(targetStage);
+          moveStage(targetStage);
           break;
+
+        case 21:
+          if (data.totalScore !== undefined && data.totalGold !== undefined) {
+            const event = new CustomEvent('updateScoreAndGold', {
+              detail: {
+                score: data.totalScore,
+                gold: data.totalGold
+              }
+            });
+            document.dispatchEvent(event);  // 커스텀 이벤트 발생
+          }
+            break;
 
         default:
           console.log('!! 일치하는 핸들러가 없습니다.');
@@ -121,4 +140,4 @@ function getCookie(name) {
   return null;
 }
 
-export { sendEvent, getSocket, socketConnection };
+export { sendEvent, getSocket, socketConnection, targetStage };

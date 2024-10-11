@@ -25,4 +25,4 @@ const clearScore = (userId) => {
   return (score[userId] = []);
 };
 
-export { createScore, getScore, setScore, clearScore };
+export { createScore, getScore, setScore, clearScore, getTotalScore };
