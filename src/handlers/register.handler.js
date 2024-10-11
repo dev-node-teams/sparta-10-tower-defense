@@ -5,25 +5,40 @@ import { addUser } from '../models/user.model.js';
 //
 const registerHandler = (io) => {
   io.on('connection', async (socket) => {
-    console.log(' registerHandler userId =>>> ', socket.id);
+    console.log(' registerHandler socket ID =>>> ', socket.id);
 
-    let accessToken = decodeURIComponent(socket.handshake.query.accessToken);
-    let userId = AuthUtils.verify(accessToken);
-    console.log(' userId =>>> ', userId);
-    // 접속한 유저 아이디 서버에 저장
-    addUser({ userId, socketId: socket.id });
+    let userId;
+    try {
+      //
+      let accessToken = decodeURIComponent(socket.handshake.query.accessToken);
+      userId = AuthUtils.verify(accessToken);
+      console.log(' userId =>>> ', userId);
+      //
 
-    // 연결 초기화
-    handleConnection(socket, userId);
+      // 접속한 유저 아이디 서버에 저장
+      addUser({ userId, socketId: socket.id });
 
-    // 응답
-    //socket.emit('response', 'res');
+      // 연결 초기화
+      handleConnection(socket, userId);
 
-    // event handler 호출
-    socket.on('event', (data) => handlerEvent(io, socket, data));
+      // 응답
+      //socket.emit('response', 'res');
 
-    // 접속해제시 이벤트
-    socket.on('disconnect', () => handleDisconnect(socket, userId));
+      // event handler 호출
+      socket.on('event', (data) => handlerEvent(io, socket, data));
+
+      // 접속해제시 이벤트
+      socket.on('disconnect', () => handleDisconnect(socket, userId));
+    } catch (e) {
+      console.error('[ERROR] register.handler.js  =>> ', e);
+      console.error('[ERROR] register.handler.js  =>> ', e.statusCode);
+      socket.emit('response', {
+        status: 'fail',
+        errorCode: e.statusCode,
+        message: e.message,
+      });
+      return;
+    }
   });
 };
 

@@ -6,6 +6,7 @@ const IP = 'http://localhost:3005';
 let socket = null;
 
 let token = `Bearer ${getCookie('accessToken')}`;
+let refreshToken = `Bearer ${getCookie('refreshToken')}`;
 let userId = null;
 let CLIENT_VERSION = '1.0.0';
 
@@ -22,6 +23,7 @@ let targetStage = 0;
 const sendEvent = (handlerId, payload) => {
   const res = socket.emit('event', {
     token,
+    refreshToken,
     clientVersion: CLIENT_VERSION,
     handlerId,
     payload,
@@ -60,6 +62,35 @@ const socketConnection = () => {
 
   socket.on('response', (data) => {
     console.log('@@ response: =>>>  ', data);
+
+    // token
+    if (data && data.accessToken) {
+      console.log('@@ 토큰 재발급 !! =>>>> ', data.accessToken);
+      token = `Bearer ${data.accessToken}`;
+      setCookie('accessToken', data.accessToken);
+    }
+
+    // 에러 처리
+    if (data && data.status === 'fail') {
+      console.log('ERROR - FIAIL >>> ', data);
+
+      switch (data.errorCode) {
+        case 401:
+          if (data.message === '토큰의 유효기간이 지났습니다.' && data.handlerId) {
+            //
+            console.log('....................>> ', data);
+            return;
+          }
+          alert('로그인을 해주세요!');
+          deleteCookie('accessToken');
+          deleteCookie('refreshToken');
+          window.location.href = 'index.html';
+          return;
+        default:
+          console.error('[ERROR] =>>> ', data);
+      }
+    }
+
     if (data && data.handlerId) {
       switch (data.handlerId) {
         case 2:
