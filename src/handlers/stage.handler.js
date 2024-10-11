@@ -1,9 +1,9 @@
 import { createStage, getStage, setStage } from '../models/stage.model.js';
 import { getTotalScore } from '../models/score.model.js';
-import { findStage } from '../repositories/stages.repository.js';
+import { getStageDatas } from '../models/mStages.model.js';
 
 export const moveStage = async (userId, payload) => {
-  let stages = await findStage(); // 스테이지 메타데이터
+  let stages = await getStageDatas(); // 스테이지 메타데이터
 
   /** 스테이지 검증 시작 */
   if (!stages.some((stage) => stage.stageId === payload.targetStage)) {

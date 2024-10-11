@@ -301,11 +301,6 @@ function gameLoop() {
     }
   }
 
-  if (Math.floor(score / 500) > monsterLevel) {
-    sendEvent(4, { score, currentStage: monsterLevel, targetStage: monsterLevel + 1, userGold });
-    monsterLevel++;
-  }
-
   /* 특정 점수 도달 시 스테이지 이동 */
   if (monsterLevel < stagesData.length && score > stagesData[monsterLevel].score && moveStageFlag) {
     moveStageFlag = false;
