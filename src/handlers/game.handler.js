@@ -9,12 +9,12 @@ const gameStartService = new GameStartService();
 export const gameStart = async (userId, payload) => {
   // 게임이 시작할 경우 호출되는 Handler
 
-  clearStage(userId);
+  await clearStage(userId);
   clearGold(userId);
   clearScore(userId);
   clearMonsters(userId);
 
-  setStage(userId, 1);
+  await setStage(userId, 1);
   setScore(userId, 0);
   setGold(userId, 2000);
   //스테이지 모두 정보 조회
