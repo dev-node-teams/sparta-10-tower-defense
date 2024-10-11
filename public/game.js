@@ -21,7 +21,7 @@ let baseHp = 100; // 기지 체력
 let monsterLevel = 1; // 몬스터 레벨
 let monsterSpawnInterval = 1500; // 몬스터 생성 주기
 const monsters = [];
-const towers = [];
+let towers = [];
 
 let monsterData = [];
 let towerData;
@@ -207,7 +207,6 @@ function buytower(shopNumber) {
       towerData[shopNumber].price,
       towerImage[shopNumber],
     );
-
     towers.push(tower);
     tower.draw(ctx);
 
@@ -398,3 +397,42 @@ buyTowerButton.style.cursor = 'pointer';
 buyTowerButton.addEventListener('click', placeNewTower);
 
 document.getElementById('mainCanvas').appendChild(buyTowerButton);
+
+// 클릭 이벤트
+const cCanvas = document.getElementById('gameCanvas');
+cCanvas.addEventListener('click', (event, tower) => {
+  // 클릭한 위치 좌표 얻기
+  const rectCanvas = cCanvas.getBoundingClientRect();
+  const x = event.clientX - rectCanvas.left;
+  const y = event.clientY - rectCanvas.top;
+
+  const findClick = towers.find(
+    (i) => x > i.x && x < i.x + i.width && y > i.y && y < i.y + i.height,
+  );
+
+  if (findClick) {
+    if (document.getElementById('towerMenuButton')) {
+      document.getElementById('towerMenuButton').remove();
+    }
+
+    towerMenu(findClick);
+  } else {
+    if (document.getElementById('towerMenuButton')) {
+      document.getElementById('towerMenuButton').remove();
+    }
+  }
+
+  console.log('타워 클리ㅣ이이이이익', findClick);
+});
+
+function towerMenu(tower) {
+  const menuBotton = document.createElement('button');
+  menuBotton.id = 'towerMenuButton';
+  menuBotton.textContent = '타워 판매';
+  menuBotton.style.position = 'absolute';
+  menuBotton.style.bottom = '200px';
+  menuBotton.style.right = `${tower.x}px`;
+  menuBotton.style.cursor = 'pointer';
+  menuBotton.addEventListener('click', placeNewTower);
+  document.getElementById('mainCanvas').appendChild(menuBotton);
+}

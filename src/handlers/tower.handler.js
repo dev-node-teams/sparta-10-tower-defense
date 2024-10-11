@@ -8,16 +8,25 @@ export const towerBuy = async (userId, payload) => {
   const findTowerId = towerMetadata.find((id) => id.towerId === payload.towerType);
   // 소지금 - findTowerId.price 해서 쌓아두기
   setGold(userId, -findTowerId.price);
-  console.log('getTotalGold 확인 => ', getTotalGold(userId));
+  // 현재 소지금
+  const userTotalGold = getTotalGold(userId);
+
+  console.log('getTotalGold 확인 => ', userTotalGold);
 
   // 토탈골드가 마이너스인 경우
-  if (getTotalGold(userId) < 0) {
+  if (userTotalGold < 0) {
     return { status: 'fail', message: ' 치트 검거 완료 ' };
   }
 
   setTower(userId, payload.towerType, payload.position);
 
-  console.log(getTower(userId));
-  return { status: 'success', message: `${findTowerId.name} 타워를 구매했습니다. ` };
+  console.log('보유한 타워들', getTower(userId));
+
+  return {
+    status: 'success',
+    message: `${findTowerId.name} 타워를 구매했습니다. `,
+    handlerId: 5,
+    userGold: userTotalGold,
+  };
   //
 };
