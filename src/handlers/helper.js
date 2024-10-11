@@ -18,7 +18,7 @@ export const handleConnection = async (socket, userId) => {
 
   await createStage(userId);
   // 1 스테이지 생성
-  createGold(userId);
+  await createGold(userId);
   // 골드 생성
   createScore(userId);
   // 점수 생성

@@ -28,7 +28,7 @@ export const gameStart = async (userId, payload) => {
   console.log(`@@ gameStartHandler =>>> `, init.towers);
   // 나중에 initInfo 추가하기
   // 유저 초기 점수, 유저 초기 금액
-  init.initData = { score: getTotalScore(userId), gold: getTotalGold(userId) };
+  init.initData = { score: getTotalScore(userId), gold: await getTotalGold(userId) };
 
   if (!init.stages.length) console.log('@@ gameStartHandler - 서버에 스테이지 정보가 없습니다.');
   else if (!init.roundMonsters.length)
