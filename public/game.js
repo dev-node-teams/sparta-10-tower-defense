@@ -271,18 +271,20 @@ function gameLoop() {
         location.reload();
       }
       monster.draw(ctx);
-    } else {
+    } else if (monster.hp === 0) {
+      // 몬스터가 기지를 공격한 후
+      monsters.splice(i, 1);
+      } else {
       console.log(' monsters =>> ', monsters);
 
       /* 몬스터가 죽었을 때 */
-      monsters.splice(i, 1);
-      sendEvent(21, { monsterId: monster.monsterNumber, monsterLevel: monsterLevel });
+          // 몬스터 제거
+          monsters.splice(i, 1);
 
-      console.log(' monsters =>> ', monsters);
+          // 서버에 이벤트 전송
+          sendEvent(21, { monsterId: monster.monsterNumber, monsterLevel: monsterLevel });
 
-      score += 100;
-      userGold += 50;
-      //sendEvent(2, 'asdasd');
+          console.log(' monsters =>> ', monsters);
     }
   }
 

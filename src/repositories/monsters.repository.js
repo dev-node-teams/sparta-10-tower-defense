@@ -5,3 +5,8 @@ export class MonstersRepository {
     return await prisma.monsters.findMany();
   };
 }
+
+export const findMonsters = async () => {
+  const findMonsters = await prisma.monsters.findMany();
+  return findMonsters;
+};
