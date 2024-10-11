@@ -69,6 +69,7 @@ const socketConnection = () => {
           setMonsters(monsters);
           setTowers(towers);
           setRountMonsters(roundMonsters);
+          console.log('클라이언트 확인 : ', data.init);
           break;
 
         case 4:

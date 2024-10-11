@@ -1,8 +1,7 @@
-import { clearGold, getGold, setGold } from '../models/gold.model.js';
-import { clearScore, getScore, setScore } from '../models/score.model.js';
+import { clearGold, getTotalGold, setGold } from '../models/gold.model.js';
+import { clearScore, getTotalScore, setScore } from '../models/score.model.js';
 import { clearStage, setStage } from '../models/stage.model.js';
-import { clearMonsters, setMonster } from '../models/monster.model.js';
-import AuthUtils from '../utils/auth.utils.js';
+import { clearMonsters } from '../models/monster.model.js';
 import { GameStartService } from '../services/gamestart.service.js';
 
 const gameStartService = new GameStartService();
@@ -10,11 +9,6 @@ const gameStartService = new GameStartService();
 export const gameStart = async (userId, payload) => {
   // 게임이 시작할 경우 호출되는 Handler
 
-  // console.log('------------------------------------');
-  // console.log('token : ', token);
-  // const userId = AuthUtils.verify(token);
-  // console.log('userId : ', userId);
-  // console.log('------------------------------------');
   clearStage(userId);
   clearGold(userId);
   clearScore(userId);
@@ -27,13 +21,8 @@ export const gameStart = async (userId, payload) => {
 
   const init = await gameStartService.initSendData();
 
-  // prisma의 동작 과정이 터미널에 출력 되기 때문에 로그를 함께 출력했습니다.
-  console.log(`@@ gameStartHandler =>>> `, init.stages);
-  console.log(`@@ gameStartHandler =>>> `, init.roundMonsters);
-  console.log(`@@ gameStartHandler =>>> `, init.monsters);
-  console.log(`@@ gameStartHandler =>>> `, init.towers);
-  // 나중에 initInfo 추가하기
-  init.initData = { score: getScore(userId), gold: getGold(userId) };
+  // 유저 초기 점수, 유저 초기 금액
+  init.initData = { score: getTotalScore(userId), gold: getTotalGold(userId) };
 
   if (!init.stages.length) console.log('@@ gameStartHandler - 서버에 스테이지 정보가 없습니다.');
   else if (!init.roundMonsters.length)
