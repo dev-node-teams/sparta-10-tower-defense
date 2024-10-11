@@ -14,13 +14,13 @@ export const handleDisconnect = async (socket, userId) => {
 export const handleConnection = async (socket, userId) => {
   console.log(`New user connected!! ${userId} with Socket ID: ${socket.id}`);
 
-  clearTower(userId);
+  await clearTower(userId);
 
   await createStage(userId);
   // 1 스테이지 생성
   await createGold(userId);
   // 골드 생성
-  createScore(userId);
+  await createScore(userId);
   // 점수 생성
 
   socket.emit('connection', { userId });

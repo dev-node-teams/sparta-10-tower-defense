@@ -50,30 +50,57 @@ const monsterImages = [];
 
 let monsterPath;
 
-export function displayLevelUpText(level) {
-  const levelUpText = `${level} 스테이지!`;
+// export function displayLevelUpText(level) {
+//   const levelUpText = `${level} 스테이지!`;
+//   const x = canvas.width / 2;
+//   const y = canvas.height / 2;
+
+//   const duration = 1500; // 1.5초 동안 표시
+
+//   let startTime = Date.now();
+
+//   function renderLevelUpText() {
+//     const elapsedTime = Date.now() - startTime;
+
+//     ctx.font = '100px Times New Roman';
+//     ctx.fillStyle = 'yellow';
+//     ctx.textAlign = 'center';
+//     ctx.fillText(levelUpText, x, y);
+
+//     if (elapsedTime < duration) {
+//       requestAnimationFrame(renderLevelUpText);
+//     }
+//   }
+
+//   // 처음 호출 시 텍스트를 그리기 시작
+//   renderLevelUpText();
+// }
+
+// 텍스트 출력 이벤트?
+export function diplayEvent(text, color, position, fontSize) {
+  const eventText = text;
   const x = canvas.width / 2;
-  const y = canvas.height / 2;
+  const y = (canvas.height / 100) * position;
 
   const duration = 1500; // 1.5초 동안 표시
 
   let startTime = Date.now();
 
-  function renderLevelUpText() {
+  function textDraw(text) {
     const elapsedTime = Date.now() - startTime;
 
-    ctx.font = '100px Times New Roman';
-    ctx.fillStyle = 'yellow';
+    ctx.font = `${fontSize}px Times New Roman`;
+    ctx.fillStyle = color;
     ctx.textAlign = 'center';
-    ctx.fillText(levelUpText, x, y);
+    ctx.fillText(eventText, x, y);
 
     if (elapsedTime < duration) {
-      requestAnimationFrame(renderLevelUpText);
+      requestAnimationFrame(textDraw);
     }
   }
 
   // 처음 호출 시 텍스트를 그리기 시작
-  renderLevelUpText();
+  textDraw();
 }
 
 export function moveStage(targetStage) {
@@ -181,14 +208,10 @@ function placeNewTower() {
 }
 
 function buytower(shopNumber) {
-  /* 
-    타워를 구입할 수 있는 자원이 있을 때 타워 구입 후 랜덤 배치하면 됩니다.
-    빠진 코드들을 채워넣어주세요! 
-  */
   const { x, y } = getRandomPositionNearPath(200);
 
   if (userGold < towerData[shopNumber].price) {
-    console.log(' 돈이 부족합니다. ');
+    diplayEvent('골드가 부족합니다', 'red', 65, 70);
   } else {
     userGold -= towerData[shopNumber].price;
 
@@ -284,7 +307,6 @@ function gameLoop() {
   }
   // for (let i = 0; i < monsters.length; i++) {}
 
-
   /* 특정 점수 도달 시 스테이지 이동 */
   if (monsterLevel < stagesData.length && score > stagesData[monsterLevel].score && moveStageFlag) {
     moveStageFlag = false;
@@ -375,11 +397,11 @@ export function setTowers(towerList) {
 // }
 
 export function setMonstersScore(setMonsterScoreList) {
-  score = setMonsterScoreList
+  score = setMonsterScoreList;
 }
 
 export function setMonstersGold(setMonsterGoldList) {
-  userGold = setMonsterGoldList
+  userGold = setMonsterGoldList;
 }
 
 // 상점 열기 버튼
