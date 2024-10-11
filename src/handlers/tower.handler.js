@@ -9,16 +9,22 @@ export const towerBuy = async (userId, payload) => {
 
   // 소지금 - findTowerId.price 해서 쌓아두기
   setGold(userId, -findTowerId.price);
+  const totalGold = await getTotalGold(userId);
 
   // 토탈골드가 마이너스인 경우
-  if ((await getTotalGold(userId)) < 0) {
+  if (totalGold < 0) {
     return { status: 'fail', message: ' 치트 검거 완료 ' };
   }
 
   await setTower(userId, payload.towerType, payload.position);
   console.log('겟 타워 확인', await getTower(userId));
 
-  return { status: 'success', message: `${findTowerId.name} 타워를 구매했습니다. ` };
+  return {
+    status: 'success',
+    message: `${findTowerId.name} 타워를 구매했습니다. `,
+    hadlerId: 30,
+    totalGold,
+  };
   //
 };
 
@@ -32,8 +38,8 @@ export const towerSell = async (userId, payload) => {
   // 소지금 + findTowerId.price 해서 쌓아두기
   setGold(userId, +sellPrice);
 
-  const userTotalGold = await getTotalGold(userId);
-  console.log('타워 판매 후 잔액 => ', userTotalGold);
+  const totalGold = await getTotalGold(userId);
+  console.log('타워 판매 후 잔액 => ', totalGold);
   const beforeTowers = await getTower(userId);
 
   //판매 대상
@@ -53,5 +59,7 @@ export const towerSell = async (userId, payload) => {
     message: `${findTowerId.name} 타워를 판매했습니다. `,
     position: payload.position,
     remaining: towerCount,
+    hadlerId: 31,
+    totalGold,
   };
 };

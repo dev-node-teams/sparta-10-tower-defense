@@ -1,4 +1,11 @@
-import { setMonsters, setStages, setTowers, setUserInfo, setMonstersScore, setMonstersGold } from './game.js';
+import {
+  setMonsters,
+  setStages,
+  setTowers,
+  setUserInfo,
+  setMonstersScore,
+  setMonstersGold,
+} from './game.js';
 import { displayLevelUpText, moveStage } from './game.js';
 
 const IP = 'http://localhost:3005';
@@ -113,8 +120,16 @@ const socketConnection = () => {
           break;
 
         case 21:
-          setMonstersScore(data.totalScore)
-          setMonstersGold(data.totalGold)
+          setMonstersScore(data.totalScore);
+          setMonstersGold(data.totalGold);
+          break;
+
+        case 30:
+          setMonstersGold(data.totalGold);
+          break;
+
+        case 31:
+          setMonstersGold(data.totalGold);
           break;
 
         default:
