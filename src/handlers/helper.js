@@ -1,4 +1,4 @@
-import { createTower, getTower } from '../models/tower.model.js';
+import { clearTower } from '../models/tower.model.js';
 import { createGold } from '../models/gold.model.js';
 import { createScore } from '../models/score.model.js';
 import { clearStage, createStage } from '../models/stage.model.js';
@@ -13,7 +13,7 @@ export const handleDisconnect = (socket, userId) => {
 export const handleConnection = (socket, userId) => {
   console.log(`New user connected!! ${userId} with Socket ID: ${socket.id}`);
 
-  createTower(userId);
+  clearTower(userId);
 
   createStage(userId);
   // 1 스테이지 생성
