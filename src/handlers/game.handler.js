@@ -1,5 +1,5 @@
-import { clearGold, getTotalGold, setGold } from '../models/gold.model.js';
-import { clearScore, getTotalScore, setScore } from '../models/score.model.js';
+import { clearGold, getGold, setGold, getTotalGold } from '../models/gold.model.js';
+import { clearScore, getScore, setScore, getTotalScore } from '../models/score.model.js';
 import { clearStage, setStage } from '../models/stage.model.js';
 import { clearMonsters } from '../models/monster.model.js';
 import { GameStartService } from '../services/gamestart.service.js';
@@ -21,6 +21,12 @@ export const gameStart = async (userId, payload) => {
 
   const init = await gameStartService.initSendData();
 
+  // prisma의 동작 과정이 터미널에 출력 되기 때문에 로그를 함께 출력했습니다.
+  console.log(`@@ gameStartHandler =>>> `, init.stages);
+  console.log(`@@ gameStartHandler =>>> `, init.roundMonsters);
+  console.log(`@@ gameStartHandler =>>> `, init.monsters);
+  console.log(`@@ gameStartHandler =>>> `, init.towers);
+  // 나중에 initInfo 추가하기
   // 유저 초기 점수, 유저 초기 금액
   init.initData = { score: getTotalScore(userId), gold: getTotalGold(userId) };
 
