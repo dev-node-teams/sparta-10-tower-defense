@@ -6,17 +6,17 @@ import handlerMappings from './handlerMapping.js';
 import AuthUtils from '../utils/auth.utils.js';
 import jwt from 'jsonwebtoken';
 
-export const handleDisconnect = (socket, userId) => {
+export const handleDisconnect = async (socket, userId) => {
   console.log(`User disconnected: socket ID=${socket.id} / user ID=${userId}`);
-  clearStage(userId);
+  await clearStage(userId);
 };
 
-export const handleConnection = (socket, userId) => {
+export const handleConnection = async (socket, userId) => {
   console.log(`New user connected!! ${userId} with Socket ID: ${socket.id}`);
 
   createTower(userId);
 
-  createStage(userId);
+  await createStage(userId);
   // 1 스테이지 생성
   createGold(userId);
   // 골드 생성
