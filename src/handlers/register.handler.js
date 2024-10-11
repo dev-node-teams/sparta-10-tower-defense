@@ -1,6 +1,6 @@
 import { handleDisconnect, handleConnection, handlerEvent } from './helper.js';
 import AuthUtils from '../utils/auth.utils.js';
-import { addUser } from '../models/user.model.js';
+import { addUser, getUser } from '../models/user.model.js';
 
 //
 const registerHandler = (io) => {
@@ -16,7 +16,9 @@ const registerHandler = (io) => {
       //
 
       // 접속한 유저 아이디 서버에 저장
-      addUser({ userId, socketId: socket.id });
+      await addUser({ userId, socketId: socket.id });
+      let as = await getUser();
+      console.log('엄마들: ', as);
 
       // 연결 초기화
       handleConnection(socket, userId);
