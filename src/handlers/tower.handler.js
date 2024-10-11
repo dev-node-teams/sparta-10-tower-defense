@@ -44,7 +44,9 @@ export const towerSell = async (userId, payload) => {
 
   await updateTower(userId, remainingTowers);
 
-  const towerCount = afterMyTowers.length;
+  const afterTowers = await getTower(userId);
+  console.log('타워 판매 후 보유한 타워들', afterTowers);
+  const towerCount = afterTowers.length;
 
   return {
     status: 'success',
