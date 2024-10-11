@@ -1,5 +1,5 @@
-import { clearGold, getGold, setGold } from '../models/gold.model.js';
-import { clearScore, getScore, setScore } from '../models/score.model.js';
+import { clearGold, getGold, setGold, getTotalGold } from '../models/gold.model.js';
+import { clearScore, getScore, setScore, getTotalScore } from '../models/score.model.js';
 import { clearStage, setStage } from '../models/stage.model.js';
 import { clearMonsters, setMonster } from '../models/monster.model.js';
 import AuthUtils from '../utils/auth.utils.js';
@@ -33,7 +33,7 @@ export const gameStart = async (userId, payload) => {
   console.log(`@@ gameStartHandler =>>> `, init.monsters);
   console.log(`@@ gameStartHandler =>>> `, init.towers);
   // 나중에 initInfo 추가하기
-  init.initData = { score: getScore(userId), gold: getGold(userId) };
+  init.initData = { score: getTotalScore(userId), gold: getTotalGold(userId) };
 
   if (!init.stages.length) console.log('@@ gameStartHandler - 서버에 스테이지 정보가 없습니다.');
   else if (!init.roundMonsters.length)
