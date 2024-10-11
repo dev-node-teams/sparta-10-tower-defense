@@ -11,7 +11,7 @@ export const towerBuy = async (userId, payload) => {
   setGold(userId, -findTowerId.price);
 
   // 토탈골드가 마이너스인 경우
-  if (getTotalGold(userId) < 0) {
+  if ((await getTotalGold(userId)) < 0) {
     return { status: 'fail', message: ' 치트 검거 완료 ' };
   }
 
@@ -32,7 +32,7 @@ export const towerSell = async (userId, payload) => {
   // 소지금 + findTowerId.price 해서 쌓아두기
   setGold(userId, +sellPrice);
 
-  const userTotalGold = getTotalGold(userId);
+  const userTotalGold = await getTotalGold(userId);
   console.log('타워 판매 후 잔액 => ', userTotalGold);
   const beforeTowers = await getTower(userId);
 
