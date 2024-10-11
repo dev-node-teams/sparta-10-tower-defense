@@ -3,6 +3,7 @@ import { UsersRepository } from '../repositories/users.repository.js';
 import StatusError from '../errors/status.error.js';
 import { StatusCodes } from 'http-status-codes';
 import jwt from 'jsonwebtoken';
+import { storeRefreshToken } from '../models/token.model.js';
 
 export class UsersService {
   usersRepository = new UsersRepository();
@@ -57,6 +58,17 @@ export class UsersService {
       { expiresIn: '30m' },
     );
 
-    return accessToken;
+    // 토큰 생성
+    const refreshToken = jwt.sign(
+      {
+        userId: user.userId,
+      },
+      process.env.REFRESH_TOKEN_SECRET_KEY,
+      { expiresIn: '7d' },
+    );
+
+    storeRefreshToken(refreshToken, user.userId);
+
+    return { accessToken, refreshToken };
   };
 }

@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="author" content="Changmin Kang" />
-  <title>내일배움캠프 Node.js 트랙 타워 디펜스 게임</title>
+  <title>타워 짓고 10조 타워 디펜스 게임</title>
   <link rel="icon" type="image/x-icon" href="./images/favicon.ico" />
   <style>
     body {
@@ -47,7 +47,7 @@
       background-color: tan;
       width: 1500px;
       height: 300px;
-      border: 1px solid #2d2d2d; 
+      border: 1px solid #2d2d2d;
       border-radius: 16px;
       box-shadow: inset 0 0 8px #000;
       left: 10%;
@@ -60,7 +60,7 @@
       float: left;
     }
 
-    .shopimg{
+    .shopimg {
       width: 200px;
       height: 200px;
       margin-left: 50px;
@@ -68,7 +68,7 @@
       float: left;
     }
 
-    .shopsub{
+    .shopsub {
       width: 250px;
       height: 50px;
       margin-left: 40px;
@@ -77,17 +77,16 @@
 
       font-size: 22px;
       text-align: center
-
     }
 
-    .shopbutton{
+    .shopbutton {
       float: right;
       margin-bottom: 30px;
     }
 
-    .shopbuttons{
+    .shopbuttons {
       width: 50px;
-      height : 50px;
+      height: 50px;
       float: right;
 
     }
@@ -100,22 +99,24 @@
     #shopClose {
       position: absolute;
       top: 10;
-      right : 30px 
+      right: 30px
     }
-
   </style>
 </head>
 
 <body>
   <div class="button-container">
-    <h1 style="color: white">내일배움캠프 Node.js 트랙 타워 디펜스 게임</h1>
+    <h1 style="color: white">타워 짓고 10조 타워 디펜스 게임</h1>
     <button id="registerButton">회원가입</button>
     <button id="loginButton">로그인</button>
+    <button id="loginOutButton" style="display: none;">로그아웃</button>
     <button id="playButton">게임 플레이</button>
   </div>
 
   <div class="canvasContainer" id="mainCanvas">
+    
   <canvas id="gameCanvas" width="1920" height="1080"></canvas>
+  <div id="buttonContainer"></div>
 <!-- 상점 모달 -->  
   <div id="shopModal" class ="shopModal">
 
@@ -162,7 +163,7 @@
     <div class="shopbutton">
     <button id="buybutton4" class="shopbuttons" onclick="buybutton('3')">구매</button>
     </div>
-        저격 타워 </br>200G
+     저격 타워 </br>200G
   </div>
 </div>
 <div id="shop5" class="shop">
@@ -171,17 +172,30 @@
   </div>
   <div class="shopsub">
     <div class="shopbutton">
-    <button id="buybutton5" class="shopbuttons" onclick="buybutton('4')">구매</button>
+      <button id="buybutton5" class="shopbuttons" onclick="buybutton('4')">구매</button>
     </div>
-        초속사 타워 </br>500G
+    초속사 타워 </br>500G
   </div>
 </div>
-
     </div>
-   </div>
   </div>
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+  <script src="./utils.js"></script>
   <script type="module">
+
+    const isLogin = getCookie('accessToken');
+    console.log('isLogin =>>> ', isLogin);
+    if (isLogin) {
+      document.getElementById('registerButton').style.display = 'none';
+      document.getElementById('loginButton').style.display = 'none';
+      document.getElementById('loginOutButton').style.display = 'block';
+
+    } else {
+      document.getElementById('registerButton').style.display = 'block';
+      document.getElementById('loginButton').style.display = 'block';
+      document.getElementById('loginOutButton').style.display = 'none';
+    }
+
     document
       .getElementById("registerButton")
       .addEventListener("click", () => {
@@ -192,14 +206,20 @@
       window.location.href = "login.html";
     });
 
+    document.getElementById("loginOutButton").addEventListener("click", () => {
+      deleteCookie('accessToken');
+      deleteCookie('refreshToken');
+      window.location.href = 'index.html';
+    });
+
     document.getElementById("playButton").addEventListener("click", () => {
       document.querySelector(".button-container").style.display = "none";
       document.getElementById("gameCanvas").style.display = "block";
       import("./game.js");
 
-    document.getElementById("shopClose").addEventListener("click", () => {
-    document.getElementById("shopModal").style.display = 'none'
-    })
+      document.getElementById("shopClose").addEventListener("click", () => {
+        document.getElementById("shopModal").style.display = 'none'
+      })
 
     });
   </script>

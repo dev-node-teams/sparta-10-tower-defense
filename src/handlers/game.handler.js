@@ -9,12 +9,12 @@ const gameStartService = new GameStartService();
 export const gameStart = async (userId, payload) => {
   // 게임이 시작할 경우 호출되는 Handler
 
-  clearStage(userId);
+  await clearStage(userId);
   clearGold(userId);
   clearScore(userId);
   clearMonsters(userId);
 
-  setStage(userId, 1);
+  await setStage(userId, 1);
   setScore(userId, 0);
   setGold(userId, 2000);
   //스테이지 모두 정보 조회
@@ -28,7 +28,7 @@ export const gameStart = async (userId, payload) => {
   console.log(`@@ gameStartHandler =>>> `, init.towers);
   // 나중에 initInfo 추가하기
   // 유저 초기 점수, 유저 초기 금액
-  init.initData = { score: getTotalScore(userId), gold: getTotalGold(userId) };
+  init.initData = { score: getTotalScore(userId), gold: await getTotalGold(userId) };
 
   if (!init.stages.length) console.log('@@ gameStartHandler - 서버에 스테이지 정보가 없습니다.');
   else if (!init.roundMonsters.length)
