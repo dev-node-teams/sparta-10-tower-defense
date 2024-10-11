@@ -190,8 +190,6 @@ function buytower(shopNumber) {
   if (userGold < towerData[shopNumber].price) {
     console.log(' 돈이 부족합니다. ');
   } else {
-    userGold -= towerData[shopNumber].price;
-
     const tower = new Tower(
       x,
       y,
@@ -284,7 +282,6 @@ function gameLoop() {
   }
   // for (let i = 0; i < monsters.length; i++) {}
 
-
   /* 특정 점수 도달 시 스테이지 이동 */
   if (monsterLevel < stagesData.length && score > stagesData[monsterLevel].score && moveStageFlag) {
     moveStageFlag = false;
@@ -375,11 +372,11 @@ export function setTowers(towerList) {
 // }
 
 export function setMonstersScore(setMonsterScoreList) {
-  score = setMonsterScoreList
+  score = setMonsterScoreList;
 }
 
 export function setMonstersGold(setMonsterGoldList) {
-  userGold = setMonsterGoldList
+  userGold = setMonsterGoldList;
 }
 
 // 상점 열기 버튼
@@ -453,9 +450,6 @@ function towerMenu(tower) {
 // 타워 판매 함수 ##
 function sellTower(tower) {
   towers = towers.filter((t) => t !== tower);
-
-  // 돈 계산 해야함 (구매 가격의 절반?)
-
   const x = tower.x;
   const y = tower.y;
   sendEvent(31, { towerType: tower.type, position: { x, y } });

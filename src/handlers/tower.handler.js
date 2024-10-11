@@ -22,7 +22,6 @@ export const towerBuy = async (userId, payload) => {
   return {
     status: 'success',
     message: `${findTowerId.name} 타워를 구매했습니다. `,
-    hadlerId: 30,
     totalGold,
   };
   //
@@ -59,7 +58,6 @@ export const towerSell = async (userId, payload) => {
     message: `${findTowerId.name} 타워를 판매했습니다. `,
     position: payload.position,
     remaining: towerCount,
-    hadlerId: 31,
     totalGold,
   };
 };
