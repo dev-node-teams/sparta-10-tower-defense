@@ -1,8 +1,7 @@
 import { clearGold, getGold, setGold, getTotalGold } from '../models/gold.model.js';
 import { clearScore, getScore, setScore, getTotalScore } from '../models/score.model.js';
 import { clearStage, setStage } from '../models/stage.model.js';
-import { clearMonsters, setMonster } from '../models/monster.model.js';
-import AuthUtils from '../utils/auth.utils.js';
+import { clearMonsters } from '../models/monster.model.js';
 import { GameStartService } from '../services/gamestart.service.js';
 
 const gameStartService = new GameStartService();
@@ -10,11 +9,6 @@ const gameStartService = new GameStartService();
 export const gameStart = async (userId, payload) => {
   // 게임이 시작할 경우 호출되는 Handler
 
-  // console.log('------------------------------------');
-  // console.log('token : ', token);
-  // const userId = AuthUtils.verify(token);
-  // console.log('userId : ', userId);
-  // console.log('------------------------------------');
   clearStage(userId);
   clearGold(userId);
   clearScore(userId);
@@ -33,6 +27,7 @@ export const gameStart = async (userId, payload) => {
   console.log(`@@ gameStartHandler =>>> `, init.monsters);
   console.log(`@@ gameStartHandler =>>> `, init.towers);
   // 나중에 initInfo 추가하기
+  // 유저 초기 점수, 유저 초기 금액
   init.initData = { score: getTotalScore(userId), gold: getTotalGold(userId) };
 
   if (!init.stages.length) console.log('@@ gameStartHandler - 서버에 스테이지 정보가 없습니다.');
