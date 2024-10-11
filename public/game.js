@@ -450,11 +450,10 @@ function sellTower(tower) {
   towers = towers.filter((t) => t !== tower);
 
   // 돈 계산 해야함 (구매 가격의 절반?)
-  const getSellGold = tower.cost / 2;
+
   const x = tower.x;
   const y = tower.y;
   sendEvent(31, { towerType: tower.type, position: { x, y } });
 }
 
 export { monsterLevel };
-
