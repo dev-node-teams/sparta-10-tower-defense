@@ -16,14 +16,12 @@ export const monsterKill = async (userId, payload) => {
     (monster) => monster.monsterId === payload.monsterId + 1,
   );
 
-  setScore(userId, findMonsterId.point);
-  let totalScore = getTotalScore(userId);
-  console.log(`스코어 ----> `, getTotalScore(userId));
+  await setScore(userId, findMonsterId.point);
+  let totalScore = await getTotalScore(userId);
 
-  setGold(userId, findMonsterId.point);
+  await setGold(userId, findMonsterId.point);
   let totalGold = await getTotalGold(userId);
-  console.log(`골드 ----> `, await getTotalGold(userId));
 
-  setMonster(userId, payload.monsterId, payload.monsterLevel);
+  await setMonster(userId, payload.monsterId, payload.monsterLevel);
   return { status: 'success', handlerId: 21, totalScore, totalGold };
 };
