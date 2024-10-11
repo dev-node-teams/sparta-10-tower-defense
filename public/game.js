@@ -1,7 +1,7 @@
 import { Base } from './base.js';
 import { Monster } from './monster.js';
 import { Tower } from './tower.js';
-import { getSocket, socketConnection, sendEvent } from './socket.js';
+import { getSocket, socketConnection, sendEvent, targetStage } from './socket.js';
 
 /* 
   어딘가에 엑세스 토큰이 저장이 안되어 있다면 로그인을 유도하는 코드를 여기에 추가해주세요!
@@ -31,6 +31,8 @@ let stagesData = [];
 let score = 0; // 게임 점수
 let highScore = 0; // 기존 최고 점수
 let isInitGame = false;
+
+let moveStageFlag = true;
 
 // 이미지 로딩 파트
 const backgroundImage = new Image();
@@ -85,6 +87,11 @@ export function displayLevelUpText(level) {
 
   // 처음 호출 시 텍스트를 그리기 시작
   renderLevelUpText();
+}
+
+export function moveStage(targetStage) {
+  monsterLevel = targetStage;
+  moveStageFlag = true;
 }
 
 function generateRandomMonsterPath() {
@@ -300,17 +307,9 @@ function gameLoop() {
   }
 
   /* 특정 점수 도달 시 스테이지 이동 */
-  // db에서 받아올거
-  // let stageDummy = [
-  //     {stageId: 1, score: 100, bonusScore: 0, versionGroupId: 1}
-  //     {stageId: 2, score: 500, bonusScore: 50, versionGroupId: 1}
-  //     {stageId: 3, score: 1000, bonusScore: 100, versionGroupId: 1}
-  //     {stageId: 4, score: 3000, bonusScore: 300, versionGroupId: 1}
-  //     {stageId: 5, score: 5000, bonusScore: 500, versionGroupId: 1}
-  // ]
-  if (monsterLevel < stagesData.length && score > stagesData[monsterLevel].score) {
+  if (monsterLevel < stagesData.length && score > stagesData[monsterLevel].score && moveStageFlag) {
+    moveStageFlag = false;
     sendEvent(4, { score, currentStage: monsterLevel, targetStage: monsterLevel + 1, userGold });
-    monsterLevel++; // 서버에서 수신한 이벤트를 통해 스테이지(monsterLevel) 업데이트하는 걸로 변경해야함
   }
 
   requestAnimationFrame(gameLoop); // 지속적으로 다음 프레임에 gameLoop 함수 호출할 수 있도록 함
@@ -404,3 +403,5 @@ buyTowerButton.style.cursor = 'pointer';
 buyTowerButton.addEventListener('click', placeNewTower);
 
 document.getElementById('mainCanvas').appendChild(buyTowerButton);
+
+export { monsterLevel };

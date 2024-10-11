@@ -1,28 +1,16 @@
 import { createStage, getStage, setStage } from '../models/stage.model.js';
-import { getMonsters } from '../models/monster.model.js';
-import { getTower } from '../models/tower.model.js';
-import { StagesRepository } from '../repositories/stages.repository.js';
+import { getTotalScore } from '../models/score.model.js';
+import { findStage } from '../repositories/stages.repository.js';
 
-export const moveStage = (userId, payload) => {
-  // 다음 스테이지의 존재 여부 확인
-  const stages = [
-    { id: 1, score: 100, bonusScore: 0 },
-    { id: 2, score: 500, bonusScore: 50 },
-    { id: 3, score: 1000, bonusScore: 100 },
-    { id: 4, score: 3000, bonusScore: 300 },
-    { id: 5, score: 5000, bonusScore: 500 },
-  ];
-  // let stages = new StagesRepository();
-  // stages.viewEntireStages();
-
-  // console.log('콘솔을 찍으셧나요?: ', stages);
+export const moveStage = async (userId, payload) => {
+  let stages = await findStage(); // 스테이지 메타데이터
 
   /** 스테이지 검증 시작 */
-  if (!stages.some((stage) => stage.id === payload.targetStage)) {
+  if (!stages.some((stage) => stage.stageId === payload.targetStage)) {
     return { status: 'fail', message: '다음 스테이지가 없습니다.' };
   }
 
-  let currentStages = getStage(userId);
+  let currentStages = getStage(userId); // 유저가 보유한 스테이지
   if (!currentStages) {
     createStage(userId);
     currentStages = getStage(userId);
@@ -36,7 +24,7 @@ export const moveStage = (userId, payload) => {
   if (currentStages.length > 0) {
     currentStages.sort((a, b) => a.id - b.id);
   }
-  const currentStage = currentStages[currentStages.length - 1];
+  const currentStage = currentStages[currentStages.length - 1]; // 유저의 현재 스테이지
 
   // payload 의 currentStage 와 비교
   if (currentStage.id !== payload.currentStage) {
@@ -44,34 +32,16 @@ export const moveStage = (userId, payload) => {
   }
   /** 스테이지 검증 끝 */
 
-  /** 잡은 몬스터로 골드 검증 시작 */
-  // 잡은 몬스터 배열
-  // let currentMonsters = getMonsters(userId);
-  // let currentMonsters = [
-  //   { id: 1, point: 50 },
-  //   { id: 2, point: 60 },
-  //   { id: 3, point: 70 },
-  //   { id: 4, point: 80 },
-  //   { id: 5, point: 90 },
-  // ];
+  /** 잡은 몬스터로 점수 검증 시작 */
+  let scoreByMonsters = getTotalScore(userId);
 
-  // // 잡은 몬스터 배열로 점수 합계
-  // let scoreByMonsters = currentMonsters.reduce((acc, cur) => {
-  //   return (acc += Number(cur.point));
-  // }, 0);
-  // // 타겟 스테이지 정보
-  // let targetStageFromData = stages.filter((stage) => stage.id === payload.targetStage);
-
-  // if (scoreByMonsters < targetStageFromData[0].score) {
-  //   console.log(`!! ${userId}가 올바르지 않은 점수로 스테이지 이동 시도`);
-  //   return { status: 'fail', message: '점수가 올바르지 않습니다.' };
-  // }
-  /** 잡은 몬스터로 골드 검증 끝 */
-
-  /** 타워 구입 이력 검증 시작 */
-  let placeTower = getTower(userId);
-  console.log('@@@@@@@@@@@@@@@:', placeTower);
-  /** 타워 구입 이력 검증 끝 */
+  // 타겟 스테이지 정보
+  let targetStageFromData = stages.find((stage) => stage.stageId === payload.targetStage);
+  if (scoreByMonsters < targetStageFromData.score) {
+    console.log(`!! userId:${userId}가 올바르지 않은 점수로 스테이지 이동 시도`);
+    return { status: 'fail', message: '점수가 올바르지 않습니다.' };
+  }
+  /** 잡은 몬스터로 점수 검증 끝 */
 
   // 유저의 다음 스테이지 정보 업데이트
   setStage(userId, payload.targetStage);
