@@ -58,7 +58,7 @@ export const monsterKill = async (userId, payload) => {
     (monster) => monster.monsterId === payload.monsterId + 1,
   );
 
-  await setScore(userId, findMonsterId.point);
+  await setScore(userId, findMonsterId.score);
   let totalScore = await getTotalScore(userId);
 
   await setGold(userId, findMonsterId.point);

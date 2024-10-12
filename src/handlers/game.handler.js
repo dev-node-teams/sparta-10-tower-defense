@@ -3,7 +3,11 @@ import { clearScore, getTotalScore, setScore } from '../models/score.model.js';
 import { clearStage, setStage } from '../models/stage.model.js';
 import { clearMonsters, getMonsters } from '../models/monster.model.js';
 import { GameStartService } from '../services/gamestart.service.js';
-import { clearSpecialMonsters, setSpecialMonsters } from './../models/specialmonster.model.js';
+import {
+  clearSpecialMonsters,
+  setSpecialMonsters,
+  getSpecialMonsters,
+} from './../models/specialmonster.model.js';
 import { spawnGoldenGoblin } from '../utils/mymath.js';
 
 const gameStartService = new GameStartService();
@@ -20,18 +24,23 @@ export const gameStart = async (userId, payload) => {
   await setScore(userId, 0);
   await setGold(userId, 2000);
 
-  await setSpecialMonsters(userId, [spawnGoldenGoblin(10, 15)]);
+  let specialMonsterSpawnTime = [];
 
   const init = await gameStartService.initSendData();
 
-  // console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+  for (let i = 0; i < init.specialMonsters.length; i++)
+    specialMonsterSpawnTime.push(spawnGoldenGoblin(10, 25));
 
-  // console.log(`@@ gameStartHandler =>>> `, init.stages);
-  // console.log(`@@ gameStartHandler =>>> `, init.towers);
-  // console.log(`@@ gameStartHandler =>>> `, init.monsters);
-  // console.log(`@@ gameStartHandler =>>> `, init.specialMonsters);
+  await setSpecialMonsters(userId, specialMonsterSpawnTime);
 
-  // console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+  console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+
+  console.log(`@@ gameStartHandler =>>> `, init.stages);
+  console.log(`@@ gameStartHandler =>>> `, init.towers);
+  console.log(`@@ gameStartHandler =>>> `, init.monsters);
+  console.log(`@@ gameStartHandler =>>> `, init.specialMonsters);
+
+  console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 
   //유저 초기 점수, 유저 초기 보유 금액 추가하기
   init.initData = { score: await getTotalScore(userId), gold: await getTotalGold(userId) };

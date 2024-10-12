@@ -24,11 +24,26 @@ model Monsters {
   monsterId      Int           @id @default(autoincrement()) @map("monster_id") @db.TinyInt
   imageUrl       String        @map("image_url")
   width          Int           @db.TinyInt
-  heigth         Int           @db.TinyInt
-  spawnInterval  Int           @map("spawn_interval") @db.UnsignedInt
+  height         Int           @db.TinyInt
   maxHp          Int           @map("max_hp") @db.UnsignedInt
   attackPower    Int           @map("attack_power") @db.UnsignedInt
   point          Int           @db.UnsignedInt
+  score          Int           @db.UnsignedInt
+  speed          Int           @db.TinyInt
+  versionGroupId Int
+  VersionGroups  VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
+}
+
+model SpecialMonsters {
+  monsterId      Int           @id @default(autoincrement()) @map("monster_id") @db.TinyInt
+  imageUrl       String        @map("image_url")
+  width          Int           @db.TinyInt
+  height         Int           @db.TinyInt
+  maxHp          Int           @map("max_hp") @db.UnsignedInt
+  attackPower    Int           @map("attack_power") @db.UnsignedInt
+  point          Int           @db.UnsignedInt
+  score          Int           @db.UnsignedInt
+  speed          Int           @db.TinyInt
   versionGroupId Int
   VersionGroups  VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
 }
@@ -42,18 +57,13 @@ model Stage {
   VersionGroups VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
 }
 
-model CreateMonsterPerStage {
-  createId  Int @id @default(autoincrement()) @map("create_id") @db.TinyInt
-  stageId   Int @map("stage_id") @db.TinyInt
-  monsterId Int @map("monster_id") @db.TinyInt
-}
-
 model VersionGroups {
   versionGroupId Int        @id @default(autoincrement()) @map("version_group_id")
   versionId      Int        @unique @map("version_id")
   createdAt      DateTime   @default(now()) @map("created_at")
   updatedAt      DateTime   @updatedAt @map("updatedAt")
   monsters       Monsters[]
+  specialMonsters SpecialMonsters[]
   stage          Stage[]
   towers         Towers[]
 }

@@ -2,6 +2,7 @@ import { Base } from './base.js';
 import { Monster } from './monster.js';
 import { Tower } from './tower.js';
 import { socketConnection, sendEvent } from './socket.js';
+import { SpecialMonster } from './specialmonster.js';
 
 /* 
   어딘가에 엑세스 토큰이 저장이 안되어 있다면 로그인을 유도하는 코드를 여기에 추가해주세요!
@@ -295,7 +296,7 @@ function gameLoop() {
         return;
       }
       monster.draw(ctx);
-      specialMonster.draw(ctx);
+      if (specialMonster) specialMonster.draw(ctx);
     } else if (monster.hp === -Infinity) {
       // 몬스터가 기지를 공격한 후
       monsters.splice(i, 1);
@@ -307,7 +308,7 @@ function gameLoop() {
       monsters.splice(i, 1);
 
       // 서버에 이벤트 전송
-      sendEvent(21, { monsterId: monster.monsterNumber, monsterLevel });
+      sendEvent(21, { monsterId: monster.monsterId, monsterLevel });
 
       console.log(' monsters =>> ', monsters);
     }
@@ -371,17 +372,14 @@ Promise.all([
 
 export function setStages(stageList) {
   stagesData = stageList;
-  console.log('스테이지 정보: ', stagesData);
 }
 
 export function setUserInfo(score, gold) {
   userGold = gold;
   score = score;
-  console.log('확인 : ', userGold, score);
 }
 
 export function setMonsters(monsterList) {
-  console.log('monserList : ', monsterList);
   monsterData = monsterList;
   for (let i = 0; i < monsterData.length; i++) {
     // 인덱스를 0부터 시작하도록 변경
@@ -402,7 +400,6 @@ export function setTowers(towerList) {
 
 export function setSpecialMonsters(specialMonsterList) {
   specialMonsterData = specialMonsterList;
-  console.log('스페이셜 몬스터 : ', specialMonsterData);
   for (let i = 0; i < specialMonsterData.length; i++) {
     const img = new Image();
     img.src = specialMonsterData[i].imageUrl;
@@ -411,13 +408,12 @@ export function setSpecialMonsters(specialMonsterList) {
   //console.log('스페이셜 몬스터 이미지 : ', specialMonsterImages);
 }
 
-export function spawnSpecialMonster(specialMonsterId) {
-  specialMonsterData[specialMonsterId];
-
-  // 현재 specialMonsterData은 배열 형태로
-  // [{monsterId : 1, imageUrl : "image"}]
-
-  // 클라이언트에서 스페이셜 몬스터 생성 해야함
+export function spawnSpecialMonster(specialMonster) {
+  for (let i = 0; i < specialMonster.length; i++) {
+    specialMonsters.push(
+      new SpecialMonster(monsterPath, specialMonsterData[i], specialMonsterImages[i], monsterLevel),
+    );
+  }
 }
 
 export function setMonstersScore(setMonsterScoreList) {
