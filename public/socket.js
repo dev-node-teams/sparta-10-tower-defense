@@ -1,5 +1,12 @@
-import { setMonsters, setStages, setTowers, setUserInfo, setMonstersScore, setMonstersGold } from './game.js';
-import { displayLevelUpText, moveStage } from './game.js';
+import {
+  setMonsters,
+  setStages,
+  setTowers,
+  setUserInfo,
+  setMonstersScore,
+  setMonstersGold,
+} from './game.js';
+import { moveStage, diplayEvent } from './game.js';
 
 const IP = 'http://localhost:3005';
 
@@ -108,13 +115,13 @@ const socketConnection = () => {
 
         case 4: // 스테이지 이동
           targetStage = data.payload.targetStage;
-          displayLevelUpText(targetStage);
+          diplayEvent(`${targetStage} 스테이지! `, 'yellow', 50, 100);
           moveStage(targetStage);
           break;
 
         case 21:
-          setMonstersScore(data.totalScore)
-          setMonstersGold(data.totalGold)
+          setMonstersScore(data.totalScore);
+          setMonstersGold(data.totalGold);
           break;
 
         default:
