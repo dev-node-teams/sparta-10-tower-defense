@@ -300,13 +300,14 @@ function gameLoop() {
     } else if (monster.hp === -Infinity) {
       // 몬스터가 기지를 공격한 후
       monsters.splice(i, 1);
+      if (specialMonster) specialMonster.splic(i, 1);
     } else {
       console.log(' monsters =>> ', monsters);
 
       /* 몬스터가 죽었을 때 */
       // 몬스터 제거
       monsters.splice(i, 1);
-
+      if (specialMonster) specialMonster.splic(i, 1);
       // 서버에 이벤트 전송
       sendEvent(21, { monsterId: monster.monsterId, monsterLevel });
 
