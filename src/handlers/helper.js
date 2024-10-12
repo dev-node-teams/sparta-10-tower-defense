@@ -9,7 +9,7 @@ import jwt from 'jsonwebtoken';
 
 export const handleDisconnect = async (socket, userId) => {
   console.log(`User disconnected: socket ID=${socket.id} / user ID=${userId}`);
-  await removeUser(socket.id);
+  await removeUser(userId);
   await clearStage(userId);
 };
 
