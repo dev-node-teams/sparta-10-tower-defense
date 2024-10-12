@@ -1,24 +1,21 @@
-const users = [];
-//user들의 정보를 담을 배열
+import redisClient from '../init/redis.js';
+
+const KEY_PREFIX = 'users:';
+const TTL = 60 * 60 * 24 * 7; // 7일
 
 // 유저가 접속하면 호출되는 함수
-const addUser = (user) => {
-  users.push(user);
+const addUser = async (user) => {
+  await redisClient.set(KEY_PREFIX + user.userId, JSON.stringify(user), TTL);
 };
 
 // 유저가 접속 해제 할 때 호출되는 함수
-const removeUser = (socketId) => {
-  const index = users.findIndex((user) => user.socketId === socketId);
-  // 접속을 종료 할려는 Client(유저)의 index를 가져옵니다.
-  if (index !== -1) return users.splice(index, 1)[0];
-  // index -1이 아닌 상황에서는 users.splice(index, 1)로 그 index에서 1개를 지워줍니다.
-  // -> 그 유저 정보 삭제
-  // 그리고 남은 users 배열을 return 해줍니다.
-  // 만약 -1이라면, 해당 유저가 users 배열에 없는 대상이라(사실 오류인 상황)
+const removeUser = async (userId) => {
+  await redisClient.del(KEY_PREFIX + userId);
 };
 
-const getUser = () => {
-  return users;
+// 유저 조회하면 호출됨
+const getUser = async () => {
+  // userId로 구분된 키들 전체 조회 어떻게 하죠???????????????????????????
 };
 
 export { addUser, getUser, removeUser };

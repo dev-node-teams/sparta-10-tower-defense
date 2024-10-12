@@ -7,7 +7,7 @@ import { getGold, setGold, getTotalGold } from '../models/gold.model.js';
 export const monsterKill = async (userId, payload) => {
   const monsterMetadata = await findMonsters();
 
-  const monsters = getMonsters(userId);
+  const monsters = await getMonsters(userId);
   if (!monsters) {
     return { status: 'fail', message: 'Monsters not found' };
   }
@@ -16,15 +16,12 @@ export const monsterKill = async (userId, payload) => {
     (monster) => monster.monsterId === payload.monsterId + 1,
   );
 
-  setScore(userId, findMonsterId.point);
+  await setScore(userId, findMonsterId.point);
   let totalScore = await getTotalScore(userId);
-  console.log(`스코어 ----> `, totalScore);
 
-  setGold(userId,  findMonsterId.point);
+  await setGold(userId, findMonsterId.point);
   let totalGold = await getTotalGold(userId);
-  console.log(`골드 ----> `, totalGold);
 
-
-  setMonster(userId, payload.monsterId, payload.monsterLevel);
+  await setMonster(userId, payload.monsterId, payload.monsterLevel);
   return { status: 'success', handlerId: 21, totalScore, totalGold };
 };

@@ -2,12 +2,14 @@ import { clearTower } from '../models/tower.model.js';
 import { createGold } from '../models/gold.model.js';
 import { createScore } from '../models/score.model.js';
 import { clearStage, createStage } from '../models/stage.model.js';
+import { removeUser } from '../models/user.model.js';
 import handlerMappings from './handlerMapping.js';
 import AuthUtils from '../utils/auth.utils.js';
 import jwt from 'jsonwebtoken';
 
 export const handleDisconnect = async (socket, userId) => {
   console.log(`User disconnected: socket ID=${socket.id} / user ID=${userId}`);
+  await removeUser(userId);
   await clearStage(userId);
 };
 
