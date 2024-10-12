@@ -14,6 +14,7 @@ const ctx = canvas.getContext('2d');
 const NUM_OF_MONSTERS = 5; // 몬스터 개수
 
 let userGold = 0; // 유저 골드
+
 let base; // 기지 객체
 let baseHp = 100; // 기지 체력
 
@@ -24,13 +25,13 @@ let towers = [];
 
 let monsterData = [];
 let towerData;
-let roundMonsterData = [];
 let stagesData = [];
 
 let score = 0; // 게임 점수
 let highScore = 0; // 기존 최고 점수
 let isInitGame = false;
 
+const NUM_OF_TOWERS = 5; // 타워의 종류
 let moveStageFlag = true;
 
 // 이미지 로딩 파트
@@ -46,11 +47,6 @@ pathImage.src = 'images/path.png';
 const towerImage = [];
 
 const monsterImages = [];
-for (let i = 1; i <= NUM_OF_MONSTERS; i++) {
-  const img = new Image();
-  img.src = `images/monster${i}.png`;
-  monsterImages.push(img);
-}
 
 let monsterPath;
 
@@ -223,14 +219,8 @@ function placeBase() {
 }
 
 function spawnMonster() {
-  monsters.push(new Monster(monsterPath, monsterImages, monsterLevel));
+  monsters.push(new Monster(monsterPath, monsterData, monsterImages, monsterLevel));
 }
-
-document.addEventListener('updateScoreAndGold', (event) => {
-  score = event.detail.score; // 이벤트에서 전달된 점수
-  userGold = event.detail.gold; // 이벤트에서 전달된 골드
-  console.log(`점수 업데이트됨: ${score}, 골드 업데이트됨: ${userGold}`);
-});
 
 function gameLoop() {
   // 렌더링 시에는 항상 배경 이미지부터 그려야 합니다! 그래야 다른 이미지들이 배경 이미지 위에 그려져요!
@@ -270,12 +260,13 @@ function gameLoop() {
       const isDestroyed = monster.move(base);
       if (isDestroyed) {
         /* 게임 오버 */
-        sendEvent(3, { score: score });
+        sendEvent(3, { score });
         alert('게임 오버. 스파르타 본부를 지키지 못했다...ㅠㅠ');
         location.reload();
+        return;
       }
       monster.draw(ctx);
-    } else if (monster.hp === 0) {
+    } else if (monster.hp === -Infinity) {
       // 몬스터가 기지를 공격한 후
       monsters.splice(i, 1);
     } else {
@@ -286,11 +277,13 @@ function gameLoop() {
       monsters.splice(i, 1);
 
       // 서버에 이벤트 전송
-      sendEvent(21, { monsterId: monster.monsterNumber, monsterLevel: monsterLevel });
+      sendEvent(21, { monsterId: monster.monsterNumber, monsterLevel });
 
       console.log(' monsters =>> ', monsters);
     }
   }
+  // for (let i = 0; i < monsters.length; i++) {}
+
 
   /* 특정 점수 도달 시 스테이지 이동 */
   if (monsterLevel < stagesData.length && score > stagesData[monsterLevel].score && moveStageFlag) {
@@ -333,8 +326,6 @@ Promise.all([
   // setSocket(serverSocket);
   // socketConnection();
 
-  let userId = null;
-
   if (!isInitGame) {
     initGame();
   }
@@ -362,6 +353,12 @@ export function setUserInfo(score, gold) {
 
 export function setMonsters(monsterList) {
   monsterData = monsterList;
+  for (let i = 0; i < monsterData.length; i++) {
+    // 인덱스를 0부터 시작하도록 변경
+    const img = new Image();
+    img.src = monsterData[i].imageUrl;
+    monsterImages.push(img);
+  }
 }
 
 export function setTowers(towerList) {
@@ -373,8 +370,16 @@ export function setTowers(towerList) {
   }
 }
 
-export function setRountMonsters(rountMonsterList) {
-  roundMonsterData = rountMonsterList;
+// export function setRountMonsters(roundMonsterList) {
+//   roundMonsterData = roundMonsterList;
+// }
+
+export function setMonstersScore(setMonsterScoreList) {
+  score = setMonsterScoreList
+}
+
+export function setMonstersGold(setMonsterGoldList) {
+  userGold = setMonsterGoldList
 }
 
 // 상점 열기 버튼
