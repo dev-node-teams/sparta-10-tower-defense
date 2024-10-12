@@ -1,7 +1,7 @@
 import { Base } from './base.js';
 import { Monster } from './monster.js';
 import { Tower } from './tower.js';
-import { getSocket, socketConnection, sendEvent, targetStage } from './socket.js';
+import { socketConnection, sendEvent } from './socket.js';
 
 /* 
   어딘가에 엑세스 토큰이 저장이 안되어 있다면 로그인을 유도하는 코드를 여기에 추가해주세요!
@@ -21,9 +21,12 @@ let baseHp = 100; // 기지 체력
 let monsterLevel = 1; // 몬스터 레벨
 let monsterSpawnInterval = 1500; // 몬스터 생성 주기
 const monsters = [];
+const specialMonsters = [];
+
 let towers = [];
 
 let monsterData = [];
+let specialMonsterData = [];
 let towerData;
 let stagesData = [];
 
@@ -47,6 +50,7 @@ pathImage.src = 'images/path.png';
 const towerImage = [];
 
 const monsterImages = [];
+const specialMonsterImages = [];
 
 let monsterPath;
 
@@ -242,6 +246,7 @@ function placeBase() {
 }
 
 function spawnMonster() {
+  console.log('monsterData', monsterData);
   monsters.push(new Monster(monsterPath, monsterData, monsterImages, monsterLevel));
 }
 
@@ -279,6 +284,7 @@ function gameLoop() {
 
   for (let i = monsters.length - 1; i >= 0; i--) {
     const monster = monsters[i];
+    const specialMonster = specialMonsters[i];
     if (monster.hp > 0) {
       const isDestroyed = monster.move(base);
       if (isDestroyed) {
@@ -289,6 +295,7 @@ function gameLoop() {
         return;
       }
       monster.draw(ctx);
+      specialMonster.draw(ctx);
     } else if (monster.hp === -Infinity) {
       // 몬스터가 기지를 공격한 후
       monsters.splice(i, 1);
@@ -374,6 +381,7 @@ export function setUserInfo(score, gold) {
 }
 
 export function setMonsters(monsterList) {
+  console.log('monserList : ', monsterList);
   monsterData = monsterList;
   for (let i = 0; i < monsterData.length; i++) {
     // 인덱스를 0부터 시작하도록 변경
@@ -392,9 +400,25 @@ export function setTowers(towerList) {
   }
 }
 
-// export function setRountMonsters(roundMonsterList) {
-//   roundMonsterData = roundMonsterList;
-// }
+export function setSpecialMonsters(specialMonsterList) {
+  specialMonsterData = specialMonsterList;
+  console.log('스페이셜 몬스터 : ', specialMonsterData);
+  for (let i = 0; i < specialMonsterData.length; i++) {
+    const img = new Image();
+    img.src = specialMonsterData[i].imageUrl;
+    specialMonsterImages.push(img);
+  }
+  //console.log('스페이셜 몬스터 이미지 : ', specialMonsterImages);
+}
+
+export function spawnSpecialMonster(specialMonsterId) {
+  specialMonsterData[specialMonsterId];
+
+  // 현재 specialMonsterData은 배열 형태로
+  // [{monsterId : 1, imageUrl : "image"}]
+
+  // 클라이언트에서 스페이셜 몬스터 생성 해야함
+}
 
 export function setMonstersScore(setMonsterScoreList) {
   score = setMonsterScoreList;
@@ -402,6 +426,10 @@ export function setMonstersScore(setMonsterScoreList) {
 
 export function setMonstersGold(setMonsterGoldList) {
   userGold = setMonsterGoldList;
+}
+
+export function spawnGoldenGoblin(isGoldenGobline) {
+  monsters.push(new Monster(monsterPath, monsterData, monsterImages, monsterLevel));
 }
 
 // 상점 열기 버튼

@@ -5,6 +5,8 @@ import {
   setUserInfo,
   setMonstersScore,
   setMonstersGold,
+  setSpecialMonsters,
+  spawnSpecialMonster,
 } from './game.js';
 import { moveStage, diplayEvent } from './game.js';
 
@@ -14,16 +16,7 @@ let socket = null;
 
 let token = `Bearer ${getCookie('accessToken')}`;
 let refreshToken = `Bearer ${getCookie('refreshToken')}`;
-let userId = null;
 let CLIENT_VERSION = '1.0.0';
-
-let userInfo = null;
-let stages = null;
-let towers = null;
-let monsters = null;
-let roundMonsters = null;
-let score = null;
-let userGold = null;
 
 let targetStage = 0;
 
@@ -101,16 +94,12 @@ const socketConnection = () => {
     if (data && data.handlerId) {
       switch (data.handlerId) {
         case 2:
-          userInfo = data.init.initData;
-          stages = data.init.stages;
-          monsters = data.init.monsters;
-          towers = data.init.towers;
-          // roundMonsters = data.init.roundMonsters;
-          setUserInfo(userInfo.score, userInfo.gold);
-          setStages(stages);
-          setMonsters(monsters);
-          setTowers(towers);
-          // setRountMonsters(roundMonsters);
+          console.log(data);
+          setUserInfo(data.initData.score, data.initData.gold);
+          setStages(data.stages);
+          setMonsters(data.monsters);
+          setTowers(data.towers);
+          setSpecialMonsters(data.specialMonsters);
           break;
 
         case 4: // 스테이지 이동
@@ -122,6 +111,7 @@ const socketConnection = () => {
         case 21:
           setMonstersScore(data.totalScore);
           setMonstersGold(data.totalGold);
+          if (data.specialMonsters.length) spawnSpecialMonster(data.specialMonsters);
           break;
 
         default:
