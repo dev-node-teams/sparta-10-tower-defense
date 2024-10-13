@@ -28,8 +28,6 @@ let monsters = null;
 let roundMonsters = null;
 let score = null;
 let userGold = null;
-let enhance = null;
-
 let targetStage = 0;
 
 const sendEvent = (handlerId, payload) => {
