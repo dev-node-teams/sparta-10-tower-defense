@@ -6,6 +6,7 @@ import { removeUser } from '../models/user.model.js';
 import handlerMappings from './handlerMapping.js';
 import AuthUtils from '../utils/auth.utils.js';
 import jwt from 'jsonwebtoken';
+import res from 'express/lib/response.js';
 
 export const handleDisconnect = async (socket, userId) => {
   console.log(`User disconnected: socket ID=${socket.id} / user ID=${userId}`);
@@ -37,9 +38,8 @@ export const handlerEvent = async (io, socket, data) => {
   } catch (e) {
     console.log('[ERROR] handlerEvent =>> ', e);
     if (e.statusCode === 401 && e.message === '토큰의 유효기간이 지났습니다.') {
-      let result = AuthUtils.reissueAccessToken(data.refreshToken);
+      let result = await AuthUtils.reissueAccessToken(data.refreshToken);
       if (result.token) {
-        console.log('result token =....  new >>>> ', result.token);
         data.token = result.token;
         newAccessToken = result.token.split(' ')[1];
       } else {
@@ -64,9 +64,7 @@ export const handlerEvent = async (io, socket, data) => {
     console.log('data.token =>>> ', data.token);
     const userId = AuthUtils.verify(data.token);
     console.log('userId =>>> ', userId);
-
     const response = await handler(userId, data.payload);
-
     console.log('@@ handlerEvent - res =>>> ', response);
 
     // 브로드캐스트라면 io 사용
@@ -79,7 +77,7 @@ export const handlerEvent = async (io, socket, data) => {
       response.accessToken = newAccessToken;
     }
     if (data.handlerId) {
-      response.handlerId = data.handlerId;
+      if (!response.handlerId) response.handlerId = data.handlerId;
     }
 
     socket.emit('response', response);
