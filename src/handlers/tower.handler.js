@@ -26,7 +26,7 @@ export const towerBuy = async (userId, payload) => {
   }
 
   // 소지금 - findTowerId.price 해서 쌓아두기
-  setGold(userId, -findTowerId.price);
+  await setGold(userId, -findTowerId.price);
 
   const totalGold = await getTotalGold(userId);
 
@@ -78,7 +78,7 @@ export const towerSell = async (userId, payload) => {
 
   // 정산 하기 (타워구매+강화에 들어간 골드의 절반)
   const sellPrice = (findTowerId.price + enahncePrice) / 2;
-  setGold(userId, +sellPrice);
+  await setGold(userId, +sellPrice);
   const totalGold = await getTotalGold(userId);
   console.log('타워 판매 후 잔액 => ', totalGold);
 
@@ -127,7 +127,7 @@ export const towerEnhance = async (userId, payload) => {
     return { status: 'fail', message: ' 골드가 부족합니다. ', error: true };
   }
 
-  setGold(userId, -enhanceTargetInfo.price);
+  await setGold(userId, -enhanceTargetInfo.price);
 
   const totalGold = await getTotalGold(userId);
 
