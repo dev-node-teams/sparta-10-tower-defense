@@ -114,7 +114,12 @@ const socketConnection = () => {
         case 21:
           setMonstersScore(data.totalScore);
           setMonstersGold(data.totalGold);
-          if (data.specialMonsters.length) spawnSpecialMonster(data.specialMonsters);
+          spawnSpecialMonster(data.specialMonsters);
+          break;
+
+        case 22:
+          setMonstersScore(data.totalScore);
+          setMonstersGold(data.totalGold);
           break;
 
         case 30:

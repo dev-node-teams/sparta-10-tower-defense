@@ -10,8 +10,3 @@ export class StagesRepository {
     return await prisma.stage.findMany();
   };
 }
-
-export const findStage = async () => {
-  const findStage = await prisma.stage.findMany();
-  return findStage;
-};

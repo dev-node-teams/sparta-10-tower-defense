@@ -5,8 +5,3 @@ export class SpecialMonstersRepository {
     return await prisma.specialMonsters.findMany();
   };
 }
-
-export const findMonsters = async () => {
-  const findMonsters = await prisma.monsters.findMany();
-  return findMonsters;
-};

@@ -285,7 +285,6 @@ function gameLoop() {
   CheckmonsterProgress(monsters);
   if (specialMonsters.length) CheckmonsterProgress(specialMonsters);
 
-
   /* 특정 점수 도달 시 스테이지 이동 */
   if (monsterLevel < stagesData.length && score > stagesData[monsterLevel].score && moveStageFlag) {
     moveStageFlag = false;
@@ -429,7 +428,9 @@ export function setSpecialMonsters(specialMonsterList) {
 }
 
 export function spawnSpecialMonster(specialMonster) {
-  for (let i = 0; i < specialMonster.length; i++) {
+  const temp = specialMonster;
+  console.log('temp : ', temp);
+  for (let i = 0; i < temp.length; i++) {
     specialMonsters.push(
       new SpecialMonster(monsterPath, specialMonsterData[i], specialMonsterImages[i], monsterLevel),
     );
