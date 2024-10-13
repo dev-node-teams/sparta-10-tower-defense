@@ -362,7 +362,8 @@ function CheckmonsterProgress(monsters) {
       // 몬스터 제거
       monsters.splice(i, 1);
       // 서버에 이벤트 전송
-      sendEvent(21, { monsterId: monster.monsterId, monsterLevel });
+      if (monster.monsterId >= 256) sendEvent(22, { monsterId: monster.monsterId, monsterLevel });
+      else sendEvent(21, { monsterId: monster.monsterId, monsterLevel });
 
       console.log(' monsters =>> ', monsters);
     }
@@ -404,7 +405,6 @@ export function setSpecialMonsters(specialMonsterList) {
     img.src = specialMonsterData[i].imageUrl;
     specialMonsterImages.push(img);
   }
-  console.log('스페이셜 몬스터 이미지 : ', specialMonsterImages);
 }
 
 export function spawnSpecialMonster(specialMonster) {
@@ -412,6 +412,7 @@ export function spawnSpecialMonster(specialMonster) {
     specialMonsters.push(
       new SpecialMonster(monsterPath, specialMonsterData[i], specialMonsterImages[i], monsterLevel),
     );
+    diplayEvent('황금 고블린 출현!!', 'darkorange', 50, 100);
   }
 }
 

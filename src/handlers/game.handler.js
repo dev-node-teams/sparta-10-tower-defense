@@ -32,7 +32,7 @@ export const gameStart = async (userId, payload) => {
     specialMonsterSpawnTime.push(spawnGoldenGoblin(10, 25));
 
   await setSpawnSpecialMonsters(userId, specialMonsterSpawnTime);
-
+  //console.log('몬스터 스폰 확인 : ', await getSpawnSpecialMonsters(userId));
   console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 
   console.log(`@@ gameStartHandler =>>> `, init.stages);

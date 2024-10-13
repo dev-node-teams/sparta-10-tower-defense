@@ -7,6 +7,7 @@ import {
   clearSpecialMonsterDatas,
 } from '../models/mSpecialMonster.model.js';
 import { setTowerDatas, getTowerDatas, clearTowerDatas } from '../models/mTower.model.js';
+
 import { TowersRepository } from '../repositories/towers.repository.js';
 import { MonstersRepository } from '../repositories/monsters.repository.js';
 import { SpecialMonstersRepository } from '../repositories/specialmonster.repository.js';
@@ -44,7 +45,14 @@ export async function initData() {
   console.log('monsterRes =>> ', monsterRes);
   console.log('stagesRes =>> ', stagesRes);
 
-  if (false) {
+  if (
+    isVersion &&
+    isVersion === DATA_VERSION &&
+    towerRes.length &&
+    monsterRes.length &&
+    stagesRes.length &&
+    specialMonsterRes.length
+  ) {
     console.log('@@@ 같은 버전의 게임 데이터가 레디스에 존재합니다.');
   } else {
     // clear

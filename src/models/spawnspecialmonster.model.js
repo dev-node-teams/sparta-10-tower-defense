@@ -1,6 +1,6 @@
 import redisClient from '../init/redis.js';
 
-const KEY_PREFIX = 'specialmonsters';
+const KEY_PREFIX = 'spawnspecialmonsters:';
 const TTL = 60 * 60 * 24 * 7; // 7일
 
 /**
