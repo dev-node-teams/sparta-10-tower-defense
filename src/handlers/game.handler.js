@@ -4,10 +4,10 @@ import { clearStage, setStage } from '../models/stage.model.js';
 import { clearMonsters, getMonsters } from '../models/monster.model.js';
 import { GameStartService } from '../services/gamestart.service.js';
 import {
-  clearSpecialMonsters,
-  setSpecialMonsters,
-  getSpecialMonsters,
-} from './../models/specialmonster.model.js';
+  clearSpawnSpecialMonsters,
+  setSpawnSpecialMonsters,
+  getSpawnSpecialMonsters,
+} from '../models/spawnspecialmonster.model.js';
 import { spawnGoldenGoblin } from '../utils/mymath.js';
 
 const gameStartService = new GameStartService();
@@ -18,7 +18,7 @@ export const gameStart = async (userId, payload) => {
   await clearGold(userId);
   await clearScore(userId);
   await clearMonsters(userId);
-  await clearSpecialMonsters(userId);
+  await clearSpawnSpecialMonsters(userId);
 
   await setStage(userId, 1);
   await setScore(userId, 0);
@@ -31,7 +31,7 @@ export const gameStart = async (userId, payload) => {
   for (let i = 0; i < init.specialMonsters.length; i++)
     specialMonsterSpawnTime.push(spawnGoldenGoblin(10, 25));
 
-  await setSpecialMonsters(userId, specialMonsterSpawnTime);
+  await setSpawnSpecialMonsters(userId, specialMonsterSpawnTime);
 
   console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 

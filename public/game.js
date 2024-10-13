@@ -12,8 +12,6 @@ let serverSocket; // 서버 웹소켓 객체
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-const NUM_OF_MONSTERS = 5; // 몬스터 개수
-
 let userGold = 0; // 유저 골드
 
 let base; // 기지 객체
@@ -35,7 +33,6 @@ let score = 0; // 게임 점수
 let highScore = 0; // 기존 최고 점수
 let isInitGame = false;
 
-const NUM_OF_TOWERS = 5; // 타워의 종류
 let moveStageFlag = true;
 
 // 이미지 로딩 파트
@@ -247,7 +244,6 @@ function placeBase() {
 }
 
 function spawnMonster() {
-  console.log('monsterData', monsterData);
   monsters.push(new Monster(monsterPath, monsterData, monsterImages, monsterLevel));
 }
 
@@ -270,7 +266,8 @@ function gameLoop() {
   towers.forEach((tower) => {
     tower.draw(ctx);
     tower.updateCooldown();
-    monsters.forEach((monster) => {
+    const totalMonster = [...monsters, ...specialMonsters];
+    totalMonster.forEach((monster) => {
       const distance = Math.sqrt(
         Math.pow(tower.x - monster.x, 2) + Math.pow(tower.y - monster.y, 2),
       );
@@ -283,38 +280,8 @@ function gameLoop() {
   // 몬스터가 공격을 했을 수 있으므로 기지 다시 그리기
   base.draw(ctx, baseImage);
 
-  for (let i = monsters.length - 1; i >= 0; i--) {
-    const monster = monsters[i];
-    const specialMonster = specialMonsters[i];
-    if (monster.hp > 0) {
-      const isDestroyed = monster.move(base);
-      if (isDestroyed) {
-        /* 게임 오버 */
-        sendEvent(3, { score });
-        alert('게임 오버. 스파르타 본부를 지키지 못했다...ㅠㅠ');
-        location.reload();
-        return;
-      }
-      monster.draw(ctx);
-      if (specialMonster) specialMonster.draw(ctx);
-    } else if (monster.hp === -Infinity) {
-      // 몬스터가 기지를 공격한 후
-      monsters.splice(i, 1);
-      if (specialMonster) specialMonster.splic(i, 1);
-    } else {
-      console.log(' monsters =>> ', monsters);
-
-      /* 몬스터가 죽었을 때 */
-      // 몬스터 제거
-      monsters.splice(i, 1);
-      if (specialMonster) specialMonster.splic(i, 1);
-      // 서버에 이벤트 전송
-      sendEvent(21, { monsterId: monster.monsterId, monsterLevel });
-
-      console.log(' monsters =>> ', monsters);
-    }
-  }
-  // for (let i = 0; i < monsters.length; i++) {}
+  CheckmonsterProgress(monsters);
+  if (specialMonsters.length) CheckmonsterProgress(specialMonsters);
 
   /* 특정 점수 도달 시 스테이지 이동 */
   if (monsterLevel < stagesData.length && score > stagesData[monsterLevel].score && moveStageFlag) {
@@ -349,6 +316,7 @@ Promise.all([
   // new Promise((resolve) => (towerImage.onload = resolve)),
   ...towerImage.map((img) => new Promise((resolve) => (img.onload = resolve))),
   ...monsterImages.map((img) => new Promise((resolve) => (img.onload = resolve))),
+  ...specialMonsterImages.map((img) => new Promise((resolve) => (img.onload = resolve))),
 ]).then(() => {
   /* 서버 접속 코드 (여기도 완성해주세요!) */
 
@@ -370,6 +338,36 @@ Promise.all([
     }
   */
 });
+
+function CheckmonsterProgress(monsters) {
+  for (let i = monsters.length - 1; i >= 0; i--) {
+    const monster = monsters[i];
+    if (monster.hp > 0) {
+      const isDestroyed = monster.move(base);
+      if (isDestroyed) {
+        /* 게임 오버 */
+        sendEvent(3, { score });
+        alert('게임 오버. 스파르타 본부를 지키지 못했다...ㅠㅠ');
+        location.reload();
+        return;
+      }
+      monster.draw(ctx);
+    } else if (monster.hp === -Infinity) {
+      // 몬스터가 기지를 공격한 후
+      monsters.splice(i, 1);
+    } else {
+      console.log(' monsters =>> ', monsters);
+
+      /* 몬스터가 죽었을 때 */
+      // 몬스터 제거
+      monsters.splice(i, 1);
+      // 서버에 이벤트 전송
+      sendEvent(21, { monsterId: monster.monsterId, monsterLevel });
+
+      console.log(' monsters =>> ', monsters);
+    }
+  }
+}
 
 export function setStages(stageList) {
   stagesData = stageList;
@@ -406,7 +404,7 @@ export function setSpecialMonsters(specialMonsterList) {
     img.src = specialMonsterData[i].imageUrl;
     specialMonsterImages.push(img);
   }
-  //console.log('스페이셜 몬스터 이미지 : ', specialMonsterImages);
+  console.log('스페이셜 몬스터 이미지 : ', specialMonsterImages);
 }
 
 export function spawnSpecialMonster(specialMonster) {
