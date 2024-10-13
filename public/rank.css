@@ -1,0 +1,68 @@
+/* styles.css */
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+}
+
+header {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 1em 0;
+}
+
+h1 {
+  margin: 0;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  margin: 2em 0;
+}
+
+#ranking {
+  background-color: white;
+  padding: 2em;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
+}
+
+#ranking-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#ranking-list li {
+  background-color: #e0e0e0;
+  margin-bottom: 1em;
+  padding: 1em;
+  text-align: center;
+  border-radius: 5px;
+}
+
+#ranking-list li:first-child {
+  background-color: #ffd700;
+}
+
+#ranking-list li:nth-child(2) {
+  background-color: #c0c0c0;
+}
+
+#ranking-list li:nth-child(3) {
+  background-color: #cd7f32;
+}
+
+footer {
+  text-align: center;
+  padding: 1em;
+  background-color: #333;
+  color: white;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}

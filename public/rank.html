@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>랭킹 사이트</title>
+    <link rel="stylesheet" href="rank.css">
+</head>
+<style>
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .button-container button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+</style>
+
+
+<body>
+    <header>
+        <h1>랭킹 리스트</h1>
+    </header>
+
+
+
+    <main>
+        <section id="ranking">
+            <ul id="ranking-list">
+                <!-- JavaScript에서 동적으로 업데이트될 부분 -->
+            </ul>
+        </section>
+
+    </main>
+    <div class="button-container">
+        <button id="back">뒤로가기</button>
+    </div>
+
+    <footer>
+        <p>&copy; 타워 짓고 10조 - 랭킹 사이트</p>
+    </footer>
+
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+
+        fetch('http://localhost:3005/api/ranks', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json', // 요청의 데이터 형식을 JSON으로 설정
+            },
+        }).then(response => {
+            console.log('res =>> ', response);
+            if (response.status === 200) {
+                isStatusOk = true;
+            } else {
+                isStatusOk = false;
+            }
+            return response.json();
+        }) // 응답을 JSON으로 변환
+            .then(data => {
+                if (isStatusOk) {
+                    console.log('Success:', data); // 성공 시 응답 데이터를 처리
+                    const rankingContainer = document.getElementById('ranking-list');
+                    data.data.forEach((item, index) => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `${index + 1}. ${item.value} - ${item.score}점`;
+                        rankingContainer.appendChild(listItem);
+                    });
+                } else {
+                    console.log('Fail:', data); // 실패 시 응답 데이터를 처리
+                    alert('오류가 발생하였습니다.');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error); // 에러 발생 시 처리
+            });
+    });
+
+    document.getElementById("back").addEventListener("click", () => {
+        window.location.href = "index.html";
+    });
+
+</script>
+
+</html>

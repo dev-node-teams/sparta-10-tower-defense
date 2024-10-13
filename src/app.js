@@ -3,6 +3,7 @@ import { createServer } from 'http';
 import dotenv from 'dotenv';
 import initSocket from './init/socket.js';
 import userRouter from './routers/users.router.js';
+import rankRouter from './routers/ranks.router.js';
 import errorMiddleware from './middlewares/error.middleware.js';
 import { initRedisClient } from './init/redis.js';
 import { initData } from './init/initData.js';
@@ -22,7 +23,7 @@ app.use(express.static('public')); // 정적파일 서빙
 // init 폴더
 initSocket(server);
 
-app.use('/api', [userRouter]);
+app.use('/api', [userRouter, rankRouter]);
 
 app.use(errorMiddleware);
 

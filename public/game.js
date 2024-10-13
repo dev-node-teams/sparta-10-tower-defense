@@ -285,8 +285,12 @@ function gameLoop() {
       if (isDestroyed) {
         /* 게임 오버 */
         sendEvent(3, { score });
-        alert('게임 오버. 스파르타 본부를 지키지 못했다...ㅠㅠ');
-        location.reload();
+
+        diplayEvent(`게임 오버`, 'red', 50, 100);
+        diplayEvent(`스파르타 본부를 지키지 못했다...ㅠㅠ`, 'red', 60, 100);
+        console.log('게임 오버. 스파르타 본부를 지키지 못했다...ㅠㅠ');
+        // alert('게임 오버. 스파르타 본부를 지키지 못했다...ㅠㅠ');
+        // location.reload();
         return;
       }
       monster.draw(ctx);

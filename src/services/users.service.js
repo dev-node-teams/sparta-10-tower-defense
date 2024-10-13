@@ -71,4 +71,9 @@ export class UsersService {
 
     return { accessToken, refreshToken };
   };
+
+  getUserName = async (userId) => {
+    const user = await this.usersRepository.findUserByUserId(userId);
+    return user.name;
+  };
 }

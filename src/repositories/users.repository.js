@@ -36,4 +36,18 @@ export class UsersRepository {
 
     return isExistUser;
   };
+
+  /**
+   * 아이디로 유저 찾기
+   * @param {*} userId
+   * @returns
+   */
+  findUserByUserId = async (userId) => {
+    const user = await prisma.users.findUnique({
+      where: {
+        userId,
+      },
+    });
+    return user;
+  };
 }

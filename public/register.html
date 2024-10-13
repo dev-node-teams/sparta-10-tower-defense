@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="author" content="Changmin Kang" />
-  <title>타워 짓고 10조</title>
+  <title>타워 짓고 10조 - 회원가입</title>
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
   <style>
     body {
@@ -36,23 +36,129 @@
       font-size: 16px;
       cursor: pointer;
     }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url('./images/backgroundImage.webp');
+      /* 이미지 경로 설정 */
+      background-size: cover;
+      /* 이미지가 화면을 덮도록 설정 */
+      background-position: center;
+      /* 이미지가 중앙에 위치 */
+      background-repeat: no-repeat;
+      /* 이미지를 반복하지 않음 */
+      height: 100vh;
+    }
+
+    .signup-container {
+      background-color: white;
+      padding: 2em;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 1.5em;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 0.5em;
+      text-align: left;
+    }
+
+    input {
+      padding: 0.8em;
+      margin-bottom: 1.5em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1em;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+
+    .submit {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 1em;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    .submit:hover {
+      background-color: #0056b3;
+    }
+
+    .btn {
+      background-color: white;
+      color: black;
+      border: 1px solid;
+      padding: 1em;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 
 <body>
-  <div class="form-container">
-    <h1>타워 짓고 10조 타워 디펜스 게임</h1>
+
+  <div class="signup-container">
     <h2>회원가입</h2>
-    <input type="text" id="email" placeholder="이메일" />
-    <input type="text" id="name" placeholder="이름" />
-    <input type="password" id="password" placeholder="비밀번호" />
-    <input type="password" id="passwordConfirm" placeholder="비밀번호확인" />
-    <button id="register">회원가입</button>
-    <button id="back">뒤로가기</button>
+    <form id="signup-form">
+      <label for="name">이름</label>
+      <input type="text" id="name" name="name" placeholder="이름을 입력하세요" required>
+
+      <label for="email">이메일</label>
+      <input type="email" id="email" name="email" placeholder="이메일을 입력하세요" required>
+
+      <label for="password">비밀번호</label>
+      <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+
+      <label for="confirm-password">비밀번호 확인</label>
+      <input type="password" id="passwordConfirm" name="confirm-password" placeholder="비밀번호를 다시 입력하세요" required>
+
+      <button type="button" class="submit" id="register">회원가입</button>
+      <button type="button" class="btn" id="back">뒤로가기</button>
+    </form>
   </div>
+
   <script>
 
     function signUp(email, name, password, passwordConfirm) {
+
+
+      if (email === '' || name === '' || password === '' || passwordConfirm === '') {
+
+        return;
+      }
 
       let isStatusOk = false;
 
@@ -84,7 +190,7 @@
             window.location.href = "index.html";
           } else {
             console.log('Fail:', data); // 실패 시 응답 데이터를 처리
-            alert('오류가 발생하였습니다.');
+            alert(data.message);
           }
 
         })
@@ -102,9 +208,8 @@
       /* 
         회원가입 API 호출 후 회원가입 성공 시 index.html로 이동시켜주세요!
       */
-      console.log(' => 1');
       signUp(email, name, password, passwordConfirm);
-      console.log(' => 2');
+
 
     });
 
