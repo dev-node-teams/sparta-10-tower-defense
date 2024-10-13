@@ -84,7 +84,7 @@ export default class AuthUtils {
           userId: resfreshUserId,
         },
         process.env.ACCESS_TOKEN_SECRET_KEY,
-        { expiresIn: '30s' },
+        { expiresIn: '30m' },
       );
       result.token = `Bearer ${newAccessToken}`;
     } catch (ee) {
