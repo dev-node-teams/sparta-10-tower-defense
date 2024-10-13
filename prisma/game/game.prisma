@@ -24,8 +24,7 @@ model Monsters {
   monsterId      Int           @id @default(autoincrement()) @map("monster_id") @db.TinyInt
   imageUrl       String        @map("image_url")
   width          Int           @db.TinyInt
-  heigth         Int           @db.TinyInt
-  spawnInterval  Int           @map("spawn_interval") @db.UnsignedInt
+  height         Int           @db.TinyInt
   maxHp          Int           @map("max_hp") @db.UnsignedInt
   attackPower    Int           @map("attack_power") @db.UnsignedInt
   point          Int           @db.UnsignedInt
@@ -34,18 +33,12 @@ model Monsters {
 }
 
 model Stage {
-  stageId        Int           @id @default(autoincrement()) @map("stage_id") @db.TinyInt
-  score          Int           @db.UnsignedInt
-  bonusScore     Int           @map("bonus_score") @db.UnsignedInt
+  stageId        Int @id @default(autoincrement()) @map("stage_id") @db.TinyInt
+  score          Int @db.UnsignedInt
+  bonusScore     Int @map("bonus_score") @db.UnsignedInt
   versionGroupId Int
 
   VersionGroups VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
-}
-
-model CreateMonsterPerStage {
-  createId  Int @id @default(autoincrement()) @map("create_id") @db.TinyInt
-  stageId   Int @map("stage_id") @db.TinyInt
-  monsterId Int @map("monster_id") @db.TinyInt
 }
 
 model VersionGroups {

@@ -16,7 +16,7 @@ const registerHandler = (io) => {
       //
 
       // 접속한 유저 아이디 서버에 저장
-      await addUser({ userId, socketId: socket.id });
+      addUser({ userId, socketId: socket.id });
 
       // 연결 초기화
       handleConnection(socket, userId);

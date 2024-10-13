@@ -5,8 +5,11 @@ import {
   setUserInfo,
   setMonstersScore,
   setMonstersGold,
+  towerBuyAgree,
+  moveStage,
+  diplayEvent,
+  towerSellAgree,
 } from './game.js';
-import { moveStage, diplayEvent } from './game.js';
 
 const IP = 'http://localhost:3005';
 
@@ -122,6 +125,25 @@ const socketConnection = () => {
         case 21:
           setMonstersScore(data.totalScore);
           setMonstersGold(data.totalGold);
+          break;
+
+        case 30:
+          if (data.error) {
+            diplayEvent(data.message, 'red', 65, 70);
+          } else {
+            towerBuyAgree(data.towerType - 1, data.position);
+            setMonstersGold(data.totalGold);
+          }
+
+          break;
+
+        case 31:
+          if (data.error) {
+            diplayEvent(data.message, 'red', 65, 70);
+          } else {
+            towerSellAgree(data.position);
+            setMonstersGold(data.totalGold);
+          }
           break;
 
         default:
