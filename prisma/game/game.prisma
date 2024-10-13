@@ -52,7 +52,7 @@ model Monsters {
 }
 
 model SpecialMonsters {
-  monsterId      Int           @id @default(autoincrement()) @map("monster_id") @db.TinyInt
+  monsterId      Int           @id @default(autoincrement()) @map("monster_id") @db.SmallInt
   imageUrl       String        @map("image_url")
   width          Int           @db.TinyInt
   height         Int           @db.TinyInt
