@@ -18,6 +18,7 @@ let base; // 기지 객체
 let baseHp = 100; // 기지 체력
 
 let monsterLevel = 1; // 몬스터 레벨
+let loopLevel = 0; // 마지막 스테이지 이후 회귀한 횟수
 let monsterSpawnInterval = 1000; // 몬스터 생성 주기
 const monsters = [];
 const specialMonsters = [];
@@ -31,6 +32,7 @@ let stagesData = [];
 
 let score = 0; // 게임 점수
 let highScore = 0; // 기존 최고 점수
+let scoreAtLastStage = 0; // 지난 스테이지에서의 점수, 스테이지 오를 때마다 score로 갱신됨
 let isInitGame = false;
 
 let moveStageFlag = true;
@@ -105,8 +107,11 @@ export function diplayEvent(text, color, position, fontSize) {
   textDraw();
 }
 
-export function moveStage(targetStage) {
+export function moveStage(targetStage, updatedLoopLevel) {
   monsterLevel = targetStage;
+  scoreAtLastStage = score;
+  loopLevel = updatedLoopLevel;
+  alert(`회귀레벨: ${loopLevel}`);
   moveStageFlag = true;
 }
 
@@ -252,7 +257,7 @@ function placeBase() {
 }
 
 function spawnMonster() {
-  monsters.push(new Monster(monsterPath, monsterData, monsterImages, monsterLevel));
+  monsters.push(new Monster(monsterPath, monsterData, monsterImages, monsterLevel + loopLevel));
 }
 
 function gameLoop() {
@@ -285,15 +290,47 @@ function gameLoop() {
   // 몬스터가 공격을 했을 수 있으므로 기지 다시 그리기
   base.draw(ctx, baseImage);
 
+  for (let i = monsters.length - 1; i >= 0; i--) {
+    const monster = monsters[i];
+    if (monster.hp > 0) {
+      const isDestroyed = monster.move(base);
+      if (isDestroyed) {
+        /* 게임 오버 */
+        sendEvent(3, { score });
+        alert('게임 오버. 스파르타 본부를 지키지 못했다...ㅠㅠ');
+        location.reload();
+        return;
+      }
+      monster.draw(ctx);
+    } else if (monster.hp === -Infinity) {
+      // 몬스터가 기지를 공격한 후
+      monsters.splice(i, 1);
+    } else {
+      console.log(' monsters =>> ', monsters);
 
-  CheckmonsterProgress(monsters);
-  if (specialMonsters.length) CheckmonsterProgress(specialMonsters);
+      /* 몬스터가 죽었을 때 */
+      // 몬스터 제거
+      monsters.splice(i, 1);
 
+      // 서버에 이벤트 전송
+      sendEvent(21, { monsterId: monster.monsterNumber, monsterLevel });
+
+      console.log(' monsters =>> ', monsters);
+    }
+  }
+  // for (let i = 0; i < monsters.length; i++) {}
 
   /* 특정 점수 도달 시 스테이지 이동 */
   if (monsterLevel < stagesData.length && score > stagesData[monsterLevel].score && moveStageFlag) {
     moveStageFlag = false;
-    sendEvent(4, { score, currentStage: monsterLevel, targetStage: monsterLevel + 1, userGold });
+    sendEvent(4, { score, currentStage: monsterLevel, targetStage: monsterLevel + 1 });
+  } else if (
+    monsterLevel === stagesData.length &&
+    score - scoreAtLastStage >= 1000 &&
+    moveStageFlag
+  ) {
+    moveStageFlag = false;
+    sendEvent(4, { score, currentStage: monsterLevel, targetStage: monsterLevel, loopLevel });
   }
 
   requestAnimationFrame(gameLoop); // 지속적으로 다음 프레임에 gameLoop 함수 호출할 수 있도록 함
@@ -485,10 +522,6 @@ export function setMonstersScore(setMonsterScoreList) {
 
 export function setMonstersGold(setMonsterGoldList) {
   userGold = setMonsterGoldList;
-}
-
-export function spawnGoldenGoblin(isGoldenGobline) {
-  monsters.push(new Monster(monsterPath, monsterData, monsterImages, monsterLevel));
 }
 
 // 상점 열기 버튼

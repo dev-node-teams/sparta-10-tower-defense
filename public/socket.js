@@ -31,6 +31,7 @@ let score = null;
 let userGold = null;
 
 let targetStage = 0;
+let updatedLoopLevel = 0;
 
 const sendEvent = (handlerId, payload) => {
   const res = socket.emit('event', {
@@ -123,8 +124,9 @@ const socketConnection = () => {
 
         case 4: // 스테이지 이동
           targetStage = data.payload.targetStage;
+          updatedLoopLevel = data.payload.updatedLoopLevel || 0;
           diplayEvent(`${targetStage} 스테이지! `, 'yellow', 50, 100);
-          moveStage(targetStage);
+          moveStage(targetStage, updatedLoopLevel);
           break;
 
         case 21:
