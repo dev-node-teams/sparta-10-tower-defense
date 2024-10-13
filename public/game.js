@@ -203,7 +203,7 @@ function openTowerShop() {
   getShop.style.display = 'block';
 }
 
-// 타워 구매 함수
+// 타워 구매 함수 #30
 function towerBuy(shopNumber) {
   const { x, y } = getRandomPositionNearPath(200);
 
@@ -234,6 +234,12 @@ export function towerBuyAgree(towerType, position) {
 // 타워 판매 함수
 export function towerSellAgree(target) {
   towers = towers.filter((t) => t.x !== target.x && t.y !== target.y);
+}
+
+// 타워 강화 함수
+export function towerEnhanceAgree(position, data) {
+  const findTower = towers.find((i) => i.x === position.x && i.y === position.y);
+  findTower.enhance(data);
 }
 
 function placeBase() {
@@ -393,7 +399,7 @@ export function setTowers(towerList) {
     towerImage.push(img);
     // 상점 UI 갱신
     document.getElementById(`productName${i + 1}`).innerHTML =
-      `${towerData[i].name.replace(/"/g, ' - ')}<br> 가격 : ${towerData[i].price}G`;
+      `== ${towerData[i].name} ==<br> 가격 : ${towerData[i].price}G`;
 
     // 타워 구매 버튼
     const div = document.getElementById(`productName${i + 1}`);
@@ -459,6 +465,7 @@ cCanvas.addEventListener('click', (event, tower) => {
   }
 });
 
+// 타워 클릭 시 메뉴
 function towerMenu(tower) {
   buttonContainer.innerHTML = '';
 
@@ -480,11 +487,19 @@ function towerMenu(tower) {
   enhanceButton.style.width = '80px';
   enhanceButton.style.height = '30px';
 
-  // 판매 버튼 기능
+  // 판매 버튼 기능 #31
   sellButton.addEventListener('click', () => {
     const x = tower.x;
     const y = tower.y;
     sendEvent(31, { towerType: tower.type, position: { x, y } });
+    buttonContainer.innerHTML = '';
+  });
+
+  // 강화 버튼 기능 #32
+  enhanceButton.addEventListener('click', () => {
+    const x = tower.x;
+    const y = tower.y;
+    sendEvent(32, { towerType: tower.type, position: { x, y } });
     buttonContainer.innerHTML = '';
   });
 
