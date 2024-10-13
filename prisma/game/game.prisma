@@ -18,7 +18,24 @@ model Towers {
   attackSpeed    Int           @map("attack_speed") @db.SmallInt
   versionGroupId Int
   VersionGroups  VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
+  enhance TowerEnhance[]
 }
+
+model TowerEnhance {
+  enhanceId      Int           @id @default(autoincrement()) @map("enhance_id") @db.TinyInt
+  towerId        Int           @map("tower_id") @db.TinyInt
+  enhanceLevel   Int           @map("enhance_level")
+  price          Int           @db.SmallInt
+  increasePower  Int           @map("increase_power") @db.SmallInt
+  increaseRange  Int           @map("increase_range") @db.SmallInt
+  increaseSpeed  Int           @map("increase_speed") @db.SmallInt
+  image          String
+  versionGroupId Int
+  VersionGroups  VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
+  towers         Towers        @relation(fields: [towerId], references: [towerId])
+}
+
+
 
 model Monsters {
   monsterId      Int           @id @default(autoincrement()) @map("monster_id") @db.TinyInt
@@ -28,9 +45,26 @@ model Monsters {
   maxHp          Int           @map("max_hp") @db.UnsignedInt
   attackPower    Int           @map("attack_power") @db.UnsignedInt
   point          Int           @db.UnsignedInt
+  score          Int           @db.UnsignedInt
+  speed          Int           @db.TinyInt
   versionGroupId Int
   VersionGroups  VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
 }
+
+model SpecialMonsters {
+  monsterId      Int           @id @default(autoincrement()) @map("monster_id") @db.SmallInt
+  imageUrl       String        @map("image_url")
+  width          Int           @db.TinyInt
+  height         Int           @db.TinyInt
+  maxHp          Int           @map("max_hp") @db.UnsignedInt
+  attackPower    Int           @map("attack_power") @db.UnsignedInt
+  point          Int           @db.UnsignedInt
+  score          Int           @db.UnsignedInt
+  speed          Int           @db.TinyInt
+  versionGroupId Int
+  VersionGroups  VersionGroups @relation(fields: [versionGroupId], references: [versionGroupId])
+}
+
 
 model Stage {
   stageId        Int @id @default(autoincrement()) @map("stage_id") @db.TinyInt
@@ -42,11 +76,13 @@ model Stage {
 }
 
 model VersionGroups {
-  versionGroupId Int        @id @default(autoincrement()) @map("version_group_id")
-  versionId      Int        @unique @map("version_id")
-  createdAt      DateTime   @default(now()) @map("created_at")
-  updatedAt      DateTime   @updatedAt @map("updatedAt")
+  versionGroupId Int            @id @default(autoincrement()) @map("version_group_id")
+  versionId      Int            @unique @map("version_id")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updatedAt")
   monsters       Monsters[]
+  specialMonsters SpecialMonsters[]
   stage          Stage[]
   towers         Towers[]
+  enhance        TowerEnhance[]
 }
