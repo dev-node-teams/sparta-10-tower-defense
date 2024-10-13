@@ -19,6 +19,7 @@ export class Monster {
   }
 
   init(level) {
+
     this.maxHp = this.monsterInfo.maxHp + 10 * level; // 몬스터의 현재 HP
     this.hp = this.maxHp; // 몬스터의 현재 HP
     this.attackPower = this.monsterInfo.attackPower + 5 * level; // 몬스터의 공격력 (기지에 가해지는 데미지)

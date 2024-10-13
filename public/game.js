@@ -200,41 +200,43 @@ function getRandomPositionNearPath(maxDistance) {
   };
 }
 
-function placeNewTower() {
+// 상점 UI 열기
+function openTowerShop() {
   const getShop = document.getElementById('shopModal');
   getShop.style.display = 'block';
-
-  window.buybutton = (shopNumber) => {
-    buytower(shopNumber);
-  };
 }
 
-function buytower(shopNumber) {
+// 타워 구매 함수
+function towerBuy(shopNumber) {
   const { x, y } = getRandomPositionNearPath(200);
 
-  if (userGold < towerData[shopNumber].price) {
-    diplayEvent('골드가 부족합니다', 'red', 65, 70);
-  } else {
-    userGold -= towerData[shopNumber].price;
+  sendEvent(30, {
+    towerType: shopNumber + 1,
+    position: { x, y },
+  });
+}
 
-    const tower = new Tower(
-      x,
-      y,
-      towerData[shopNumber].attackPower,
-      towerData[shopNumber].attackRange,
-      towerData[shopNumber].attackSpeed,
-      towerData[shopNumber].price,
-      towerImage[shopNumber],
-      towerData[shopNumber].towerId,
-    );
-    towers.push(tower);
-    tower.draw(ctx);
+// 타워 구매 승인
+export function towerBuyAgree(towerType, position) {
+  const { x, y } = position;
 
-    sendEvent(30, {
-      towerType: towerData[shopNumber].towerId,
-      position: { x, y },
-    });
-  }
+  const tower = new Tower(
+    x,
+    y,
+    towerData[towerType].attackPower,
+    towerData[towerType].attackRange,
+    towerData[towerType].attackSpeed,
+    towerData[towerType].price,
+    towerImage[towerType],
+    towerData[towerType].towerId,
+  );
+  towers.push(tower);
+  tower.draw(ctx);
+}
+
+// 타워 판매 함수
+export function towerSellAgree(target) {
+  towers = towers.filter((t) => t.x !== target.x && t.y !== target.y);
 }
 
 function placeBase() {
@@ -282,6 +284,7 @@ function gameLoop() {
 
   CheckmonsterProgress(monsters);
   if (specialMonsters.length) CheckmonsterProgress(specialMonsters);
+
 
   /* 특정 점수 도달 시 스테이지 이동 */
   if (monsterLevel < stagesData.length && score > stagesData[monsterLevel].score && moveStageFlag) {
@@ -391,10 +394,28 @@ export function setMonsters(monsterList) {
 
 export function setTowers(towerList) {
   towerData = towerList;
+
   for (let i = 0; i < towerData.length; i++) {
     const img = new Image();
     img.src = towerData[i].image;
     towerImage.push(img);
+    // 상점 UI 갱신
+    document.getElementById(`productName${i + 1}`).innerHTML =
+      `${towerData[i].name.replace(/"/g, ' - ')}<br> 가격 : ${towerData[i].price}G`;
+
+    // 타워 구매 버튼
+    const div = document.getElementById(`productName${i + 1}`);
+    const productButton = document.createElement('button');
+    productButton.textContent = '구매';
+    // productButton.style.position = 'absolute';
+    productButton.style.bottom = '20px';
+    productButton.style.padding = '5px 5px 5px 5px';
+    productButton.style.fontSize = '20px';
+    productButton.style.cursor = 'pointer';
+    productButton.addEventListener('click', () => {
+      towerBuy(i);
+    });
+    div.appendChild(productButton);
   }
 }
 
@@ -438,7 +459,7 @@ buyTowerButton.style.padding = '10px 20px';
 buyTowerButton.style.fontSize = '20px';
 buyTowerButton.style.cursor = 'pointer';
 
-buyTowerButton.addEventListener('click', placeNewTower);
+buyTowerButton.addEventListener('click', openTowerShop);
 
 document.getElementById('mainCanvas').appendChild(buyTowerButton);
 
@@ -487,24 +508,15 @@ function towerMenu(tower) {
 
   // 판매 버튼 기능
   sellButton.addEventListener('click', () => {
-    sellTower(tower);
+    const x = tower.x;
+    const y = tower.y;
+    sendEvent(31, { towerType: tower.type, position: { x, y } });
     buttonContainer.innerHTML = '';
   });
 
   // 버튼을 컨테이너에 추가
   buttonContainer.appendChild(sellButton);
   buttonContainer.appendChild(enhanceButton);
-}
-
-// 타워 판매 함수 ##
-function sellTower(tower) {
-  towers = towers.filter((t) => t !== tower);
-
-  // 돈 계산 해야함 (구매 가격의 절반?)
-
-  const x = tower.x;
-  const y = tower.y;
-  sendEvent(31, { towerType: tower.type, position: { x, y } });
 }
 
 export { monsterLevel };

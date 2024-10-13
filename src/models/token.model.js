@@ -10,3 +10,7 @@ export const storeRefreshToken = async (token, userId) => {
 export const clearRefreshToken = async (userId) => {
   await redisClient.del(KEY_PREFIX + userId);
 };
+
+export const getRefreshToken = async (userId) => {
+  return await redisClient.get(KEY_PREFIX + userId);
+};
