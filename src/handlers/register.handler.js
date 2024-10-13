@@ -20,7 +20,6 @@ const registerHandler = (io) => {
 
       // 연결 초기화
       handleConnection(socket, userId);
-
       // 응답
       //socket.emit('response', 'res');
 

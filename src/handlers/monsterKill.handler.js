@@ -1,7 +1,13 @@
 import { getMonsters, setMonster } from '../models/monster.model.js';
-import { getScore, setScore, getTotalScore } from '../models/score.model.js';
 import { findMonsters } from '../repositories/monsters.repository.js';
-import { getGold, setGold, getTotalGold } from '../models/gold.model.js';
+import { spawnGoldenGoblin } from '../utils/mymath.js';
+import {
+  getSpawnSpecialMonsters,
+  setSpawnSpecialMonstersElement,
+} from '../models/spawnspecialmonster.model.js';
+import { getSpecialMonsterDatas } from '../models/mSpecialMonster.model.js';
+import { setSpecialMonster } from '../models/specialmonster.model.js';
+import { getMonsterInfo, AddScoreAndGold } from '../utils/monster.utils.js';
 
 // 몬스터 kill 시 작동하는 핸들러
 export const monsterKill = async (userId, payload) => {
@@ -12,16 +18,40 @@ export const monsterKill = async (userId, payload) => {
     return { status: 'fail', message: 'Monsters not found' };
   }
 
-  const findMonsterId = monsterMetadata.find(
-    (monster) => monster.monsterId === payload.monsterId + 1,
-  );
+  const specialMonsterSpawn = await getSpawnSpecialMonsters(userId);
 
-  await setScore(userId, findMonsterId.point);
-  let totalScore = await getTotalScore(userId);
+  let specialMonsters = [];
+  for (let i = 0; i < specialMonsterSpawn.length; i++) {
+    if (monsters.length === specialMonsterSpawn[i]) {
+      await setSpawnSpecialMonstersElement(
+        userId,
+        spawnGoldenGoblin(monsters.length + 10, monsters.length + 25),
+        i,
+      );
+      specialMonsters.push(await getSpecialMonsterDatas());
+    }
+  }
 
-  await setGold(userId, findMonsterId.point);
-  let totalGold = await getTotalGold(userId);
+  const findMonster = monsterMetadata.find((monster) => monster.monsterId === payload.monsterId);
+
+  const { totalScore, totalGold } = await AddScoreAndGold(userId, findMonster);
 
   await setMonster(userId, payload.monsterId, payload.monsterLevel);
+  return { status: 'success', handlerId: 21, totalScore, totalGold, specialMonsters };
+};
+
+export const specialMonsterKill = async (userId, payload) => {
+  const { monsterId, monsterLevel } = payload;
+
+  const specialMonstersMetaData = await getSpecialMonsterDatas(userId);
+
+  if (!specialMonstersMetaData) return { status: 'fail', message: 'Special Monsters not found' };
+
+  console.log('SpecicalMonsterId : ', monsterId);
+
+  const findMonster = getMonsterInfo(specialMonstersMetaData, monsterId);
+
+  const { totalScore, totalGold } = await AddScoreAndGold(userId, findMonster);
+  await setSpecialMonster(userId, payload.monsterId, monsterLevel);
   return { status: 'success', handlerId: 21, totalScore, totalGold };
 };

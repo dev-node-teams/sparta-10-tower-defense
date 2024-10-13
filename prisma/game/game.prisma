@@ -86,3 +86,4 @@ model VersionGroups {
   towers         Towers[]
   enhance        TowerEnhance[]
 }
+
