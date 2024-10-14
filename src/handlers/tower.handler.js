@@ -19,6 +19,10 @@ export const towerBuy = async (userId, payload) => {
 
   const towerMetaData = await getTowerDatas();
   const findTowerId = towerMetaData.find((id) => id.towerId === payload.towerType);
+
+  if (!findTowerId) {
+    return { status: 'fail', message: ' 잘못된 대상입니다. ', error: true };
+  }
   const beforeTotalGold = await getTotalGold(userId);
 
   if (beforeTotalGold < findTowerId.price) {
@@ -38,6 +42,7 @@ export const towerBuy = async (userId, payload) => {
     message: `${findTowerId.name} 타워를 구매했습니다. `,
     towerType: findTowerId.towerId,
     position: payload.position,
+    towerData: findTowerId,
     totalGold,
   };
   //
@@ -77,7 +82,7 @@ export const towerSell = async (userId, payload) => {
   const towerCount = afterTowers.length;
 
   // 정산 하기 (타워구매+강화에 들어간 골드의 절반)
-  const sellPrice = (findTowerId.price + enahncePrice) / 2;
+  const sellPrice = Math.floor((findTowerId.price + enahncePrice) / 2);
   await setGold(userId, +sellPrice);
   const totalGold = await getTotalGold(userId);
   console.log('타워 판매 후 잔액 => ', totalGold);

@@ -36,6 +36,13 @@ export const gameStart = async (userId, payload) => {
 
   await setSpawnSpecialMonsters(userId, specialMonsterSpawnTime);
 
+
+  console.log(`@@ gameStartHandler =>>> `, init.stages);
+  console.log(`@@ gameStartHandler =>>> `, init.towers);
+  console.log(`@@ gameStartHandler =>>> `, init.monsters);
+  console.log(`@@ gameStartHandler =>>> `, init.specialMonsters);
+  console.log(`@@ gameStartHandler =>>> `, init.enhance);
+  console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
   // 유저 정보 조회
   const userName = await userService.getUserName(userId);
   let userKey = `${userName}(${userId})`;
@@ -55,6 +62,7 @@ export const gameStart = async (userId, payload) => {
   else if (!init.specialMonsters.length)
     console.log('@@ gameStartHandler - 서버에 스페이셜 몬스터 정보가 없습니다.');
   else if (!init.towers.length) console.log('@@ gameStartHandler - 서버에 타워 정보가 없습니다.');
+  else if (!init.enhance.length) console.log('@@ gameStartHandler - 서버에 강화 정보가 없습니다.');
 
   return { status: 'success', handlerId: 2, ...init };
 };

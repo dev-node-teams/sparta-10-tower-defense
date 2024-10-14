@@ -12,6 +12,7 @@ import {
   diplayEvent,
   towerSellAgree,
   towerEnhanceAgree,
+  setEnhance,
   setHighScore,
 } from './game.js';
 
@@ -114,7 +115,7 @@ const socketConnection = () => {
           setMonsters(data.monsters);
           setTowers(data.towers);
           setSpecialMonsters(data.specialMonsters);
-          console.log('setHighScore =>>> ', data.initData.highScore);
+          setEnhance(data.enhance);
           setHighScore(data.initData.highScore);
           break;
 
@@ -152,7 +153,7 @@ const socketConnection = () => {
             diplayEvent(data.message, 'crimson', 65, 70);
           } else {
             diplayEvent(data.message, 'black', 25, 35);
-            towerBuyAgree(data.towerType - 1, data.position);
+            towerBuyAgree(data.towerData, data.position);
             setMonstersGold(data.totalGold);
           }
           break;
