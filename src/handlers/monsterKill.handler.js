@@ -7,24 +7,21 @@ import {
   changeSpwanSpecialMonster,
   addScoreAndGold,
 } from '../utils/monster.utils.js';
+import { getMonsterDatas } from '../models/mMonster.model.js';
 
 // 몬스터 kill 시 작동하는 핸들러
 export const monsterKill = async (userId, payload) => {
-  const monsterMetadata = await findMonsters();
-
+  const { monsterId, monsterLevel } = payload;
   const monsters = await getMonsters(userId);
   if (!monsters) {
     return { status: 'fail', message: 'Monsters not found' };
   }
-
+  const monsterMetadata = await getMonsterDatas();
   // 스페이셜 몬스터 생성 타이밍 확인 및 변경
   let specialMonsters = await changeSpwanSpecialMonster(userId, monsters.length);
-
-  const findMonster = monsterMetadata.find((monster) => monster.monsterId === payload.monsterId);
-
+  const findMonster = getMonsterInfo(monsterMetadata, monsterId);
   const { totalScore, totalGold } = await addScoreAndGold(userId, findMonster);
-
-  await setMonster(userId, payload.monsterId, payload.monsterLevel);
+  await setMonster(userId, monsterId, monsterLevel);
   return { status: 'success', handlerId: 21, totalScore, totalGold, specialMonsters };
 };
 

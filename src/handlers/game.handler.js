@@ -6,9 +6,12 @@ import { GameStartService } from '../services/gamestart.service.js';
 import {
   clearSpawnSpecialMonsters,
   setSpawnSpecialMonsters,
-  getSpawnSpecialMonsters,
 } from '../models/spawnspecialmonster.model.js';
 import { spawnSpecialMonster } from '../utils/mymath.js';
+import { getSpecialMonsters, clearSpecialMonsters } from '../models/specialmonster.model.js';
+import { getMonsterDatas } from '../models/mMonster.model.js';
+import { getSpecialMonsterDatas } from '../models/mSpecialMonster.model.js';
+import { getStageDatas } from '../models/mStages.model.js';
 
 const gameStartService = new GameStartService();
 export const gameStart = async (userId, payload) => {
@@ -18,7 +21,8 @@ export const gameStart = async (userId, payload) => {
   await clearGold(userId);
   await clearScore(userId);
   await clearMonsters(userId);
-  await clearSpawnSpecialMonsters(userId);
+  await clearSpecialMonsters(userId);
+  await getSpecialMonsters(userId);
 
   await setStage(userId, 1);
   await setScore(userId, 0);
@@ -51,21 +55,40 @@ export const gameStart = async (userId, payload) => {
 };
 
 export const gameEnd = async (userId, payload) => {
-  const userMonsters = await getMonsters(userId);
+  const { score } = payload;
 
-  // if (!userMonsters) {
-  //   return { status: 'fail', message: 'Monsters not found' };
-  // }
+  const monsters = await getMonsters(userId);
+  const specialMonsters = await getSpecialMonsters(userId);
 
-  // let verificationScore = 0;
-  // for (let i = 0; i < userMonsters.length; i++) {
-  //   verificationScore += (userMonsters[i].level + 1) * 100;
-  // }
-  // if (verificationScore !== payload.score) {
-  //   return { status: 'fail', message: 'Score verification failed' };
-  // }
-  // return { status: 'success', message: 'Game Over' };
+  console.log('죽인 monsters : ', monsters, ',죽인 specialMonsters : ', specialMonsters);
 
-  console.log('game End =>>> ', payload);
+  const monsterMetaData = await getMonsterDatas();
+
+  console.log('monsterMetaData : ', monsterMetaData);
+  const specialMonsterMetaData = await getSpecialMonsterDatas();
+  const stagesMetaData = await getStageDatas();
+
+  let totalScore = 0;
+  for (let i = 0; i < monsters.length; i++) {
+    const findMonsterMetaData = monsterMetaData.find(
+      (metaData) => metaData.monsterId === monsters[i].monsterId,
+    );
+    //TODO: 스테이지에 따른 보너스 점수 조회 및 추가
+    console.log('findMonsterMetaData : ', findMonsterMetaData, 'monster : ', monsters[i]);
+    totalScore += findMonsterMetaData.score; //+ //findStagesMetaData.bonusScore;
+  }
+
+  for (let i = 0; i < specialMonsters.length; i++) {
+    const findSpecialMetaData = specialMonsterMetaData.find(
+      (metaData) => metaData.monsterId === specialMonsters[i].monsterId,
+    );
+    //TODO: 스테이지에 따른 보너스 점수 조회 및 추가
+    console.log('findSpecialMetaData : ', findSpecialMetaData);
+    totalScore += findSpecialMetaData.score; // + //findStagesMetaData.bonusScore;
+  }
+  console.log('일반, 스페이셜 몬스터 죽일 경우 최종 점수 : ', totalScore);
+
+  console.log('score : ', score, 'totalScore : ', totalScore);
+
   return { status: 'success', message: 'Game Over', score: payload.score };
 };
