@@ -46,9 +46,7 @@ export const towerBuy = async (userId, payload) => {
 // #31 타워 판매 핸들러
 export const towerSell = async (userId, payload) => {
   const towerMetaData = await getTowerDatas();
-  const findTowerId = towerMetaData.find((id) => id.towerId === payload.towerType);
   const enhanceMetaData = await getEnhanceDatas();
-
   const beforeTowers = await getTower(userId);
 
   //판매 대상
@@ -56,7 +54,9 @@ export const towerSell = async (userId, payload) => {
     (i) => i.position.x === payload.position.x && i.position.y === payload.position.y,
   );
 
-  if (!targetTower) {
+  const findTowerId = towerMetaData.find((id) => id.towerId === targetTower.towerType);
+
+  if (!targetTower || !findTowerId) {
     return { status: 'fail', message: ' 잘못된 대상입니다. ', error: true };
   }
 
@@ -95,10 +95,9 @@ export const towerSell = async (userId, payload) => {
 export const towerEnhance = async (userId, payload) => {
   const towerMetadata = await getTowerDatas();
   const beforeTowers = await getTower(userId);
-  const findTower = towerMetadata.find((id) => id.towerId === payload.towerType);
   const enhanceMetaData = await getEnhanceDatas();
 
-  const findTarget = beforeTowers.find(
+  const targetTower = beforeTowers.find(
     (i) => i.position.x === payload.position.x && i.position.y === payload.position.y,
   );
 
@@ -106,13 +105,15 @@ export const towerEnhance = async (userId, payload) => {
     (i) => i.position.x === payload.position.x && i.position.y === payload.position.y,
   );
 
-  if (targetTowerIndex === -1 || !findTarget) {
+  const findTower = towerMetadata.find((id) => id.towerId === targetTower.towerType);
+
+  if (targetTowerIndex === -1 || !targetTower) {
     return { status: 'fail', message: ' 대상을 찾을 수 없습니다. ', error: true };
   }
 
   // 강화 대상 단계 데이터
   const enhanceTargetInfo = enhanceMetaData.find(
-    (i) => i.towerId === findTower.towerId && i.enhanceLevel === findTarget.enhanceLevel + 1,
+    (i) => i.towerId === findTower.towerId && i.enhanceLevel === targetTower.enhanceLevel + 1,
   );
 
   if (!enhanceTargetInfo) {
@@ -136,7 +137,7 @@ export const towerEnhance = async (userId, payload) => {
   console.log('강화 후 타워 보유 목록', await getTower(userId));
   return {
     status: 'success',
-    message: ` ${findTower.name} 타워를 강화했습니다. ${findTarget.enhanceLevel} 강화 => ${enhanceTargetInfo.enhanceLevel} 강화`,
+    message: ` ${findTower.name} 타워를 강화했습니다. ${targetTower.enhanceLevel} 강화 => ${enhanceTargetInfo.enhanceLevel} 강화`,
     position: payload.position,
     enhanceData: enhanceTargetInfo,
     totalGold,

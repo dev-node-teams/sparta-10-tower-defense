@@ -496,7 +496,7 @@ function towerMenu(tower) {
   sellButton.addEventListener('click', () => {
     const x = tower.x;
     const y = tower.y;
-    sendEvent(31, { towerType: tower.type, position: { x, y } });
+    sendEvent(31, { position: { x, y } });
     buttonContainer.innerHTML = '';
   });
 
@@ -504,7 +504,7 @@ function towerMenu(tower) {
   enhanceButton.addEventListener('click', () => {
     const x = tower.x;
     const y = tower.y;
-    sendEvent(32, { towerType: tower.type, position: { x, y } });
+    sendEvent(32, { position: { x, y } });
     buttonContainer.innerHTML = '';
   });
 
