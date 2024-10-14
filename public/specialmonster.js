@@ -1,20 +1,24 @@
 export class SpecialMonster {
   constructor(path, specialMonster, specialMonsterImage, level) {
     // 생성자 안에서 몬스터의 속성을 정의한다고 생각하시면 됩니다!
-    if (!path || path.length <= 0) {
+    if (!path) {
       throw new Error('몬스터가 이동할 경로가 필요합니다.');
     }
     this.specialMonsterInfo = specialMonster;
     this.monsterId = this.specialMonsterInfo.monsterId;
     this.path = path; // 몬스터가 이동할 경로
     this.currentIndex = 0; // 몬스터가 이동 중인 경로의 인덱스
-    this.x = path[0].x; // 몬스터의 x 좌표 (최초 위치는 경로의 첫 번째 지점)
-    this.y = path[0].y; // 몬스터의 y 좌표 (최초 위치는 경로의 첫 번째 지점)
+    this.x = path.x; // 몬스터의 x 좌표 (최초 위치는 경로의 첫 번째 지점)
+    this.y = path.y; // 몬스터의 y 좌표 (최초 위치는 경로의 첫 번째 지점)
     this.width = this.specialMonsterInfo.width; // 몬스터 이미지 가로 길이
     this.height = this.specialMonsterInfo.height; // 몬스터 이미지 세로 길이
     this.speed = this.specialMonsterInfo.speed; // 몬스터의 이동 속도
     this.image = specialMonsterImage; // 몬스터 이미지
     this.level = level; // 몬스터 레벨
+
+    // 초기 랜덤 방향 결정
+    this.directionX = 1;
+    this.directionY = Math.random() < 0.5 ? -1 : 1;
     this.init(level);
   }
 
@@ -24,27 +28,32 @@ export class SpecialMonster {
     this.attackPower = this.specialMonsterInfo.attackPower + 5 * level; // 몬스터의 공격력 (기지에 가해지는 데미지)
   }
 
-  move(base) {
-    if (this.currentIndex < this.path.length - 1) {
-      const nextPoint = this.path[this.currentIndex + 1];
-      const deltaX = nextPoint.x - this.x;
-      const deltaY = nextPoint.y - this.y;
-      // 2차원 좌표계에서 두 점 사이의 거리를 구할 땐 피타고라스 정리를 활용하면 됩니다! a^2 = b^2 + c^2니까 루트를 씌워주면 되죠!
-      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+  move(canvas) {
+    let canvasWidth = canvas.width;
+    let canvasHeight = canvas.height;
 
-      if (distance < this.speed) {
-        // 거리가 속도보다 작으면 다음 지점으로 이동시켜주면 됩니다!
-        this.currentIndex++;
-      } else {
-        // 거리가 속도보다 크면 일정한 비율로 이동하면 됩니다. 이 때, 단위 벡터와 속도를 곱해줘야 해요!
-        this.x += (deltaX / distance) * this.speed; // 단위 벡터: deltaX / distance
-        this.y += (deltaY / distance) * this.speed; // 단위 벡터: deltaY / distance
-      }
-      return false;
-    } else {
-      const isDestroyed = base.takeDamage(this.attackPower); // 기지에 도달하면 기지에 데미지를 입힙니다!
-      this.hp = -Infinity; // 몬스터는 이제 기지를 공격했으므로 자연스럽게 소멸해야 합니다.
-      return isDestroyed;
+    // x축 방향(백터)과 스피드로 이동
+    this.x += this.directionX * this.speed;
+    // y축 방향(백터)와 스피드로 이동
+    this.y += this.directionY * this.speed;
+
+    //x가 0이면 canvas 기준 왼쪽 끝,
+
+    // this.x + this.width가 >= canvasWidth
+    // 현재 X 위치 + 본인 가로 크기가 canvasWidth이면,
+    // canvas의 오른쪽 끝
+    if (this.x <= 0 || this.x + this.width >= canvasWidth) {
+      this.directionX *= -1;
+      // x축 반대 방향으로 변경
+      this.x = Math.max(0, Math.min(this.x, canvasWidth - this.width));
+      // 0과 canvasWidth - this.width(본인 가로 크기) = 본인 가로 크기 내에서 최대한 갈 수 있는 x축 사이 범위
+    }
+
+    if (this.y <= 0 || this.y + this.height >= canvasHeight) {
+      this.directionY *= -1;
+      // y축 반대 방향으로 변경
+      this.y = Math.max(0, Math.min(this.y, canvasHeight - this.height));
+      // 0과 canvasHeigth - this.height(본인 세로 크기) = 본인 세로 크기 내에서 최대한 갈 수 있는 y축 사이 범위
     }
   }
 
