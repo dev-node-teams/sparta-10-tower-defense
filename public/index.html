@@ -217,109 +217,121 @@
     <button id="loginOutButton" style="display: none;">로그아웃</button> -->
   </div>
 
+
+  <div class="signup-container">
+    <h2>타워 짓고 10조 타워 디펜스 게임</h2>
+    <form id="signin-form">
+      <button type="button" class="submit" id="playButton">게임 플레이</button>
+      <button type="button" class="btn" id="rankButton">랭킹 조회</button>
+      <button type="button" class="btn" id="registerButton">회원가입</button>
+      <button type="button" class="btn" id="loginButton">로그인</button>
+      <button type="button" class="btn" id="loginOutButton" style="display: none;">로그아웃</button>
+    </form>
+  </div>
+
   <div class="canvasContainer" id="mainCanvas">
-    
-  <canvas id="gameCanvas" width="1920" height="1080"></canvas>
-  <div id="buttonContainer"></div>
-<!-- 상점 모달 -->  
-  <div id="shopModal" class ="shopModal">
 
-<button id="shopClose" class="shopbuttons">상점 닫기</button>
-<div class="shopimgs">
-<div id="shop1" class="shop">
-  <div id="shopimg1" class="shopimg">
-  </div>
-  <div id="productName1" class="shopsub">
-  </div>
-</div>
-<div id="shop2" class="shop">
-  <div id="shopimg2" class="shopimg">
-  </div>
-  <div id="productName2" class="shopsub">
-  </div>
-</div>
-<div id="shop3" class="shop">
-  <div id="shopimg3" class="shopimg">
-  </div>
-  <div id="productName3" class="shopsub">
-  </div>
-</div>
-<div id="shop4" class="shop">
-  <div id="shopimg4" class="shopimg">
-  </div>
-  <div id="productName4" class="shopsub">
+    <canvas id="gameCanvas" width="1920" height="1080"></canvas>
+    <div id="buttonContainer"></div>
+    <!-- 상점 모달 -->
+    <div id="shopModal" class="shopModal">
+
+      <button id="shopClose" class="shopbuttons">상점 닫기</button>
+      <div class="shopimgs">
+        <div id="shop1" class="shop">
+          <div id="shopimg1" class="shopimg">
+          </div>
+          <div id="productName1" class="shopsub">
+          </div>
+        </div>
+        <div id="shop2" class="shop">
+          <div id="shopimg2" class="shopimg">
+          </div>
+          <div id="productName2" class="shopsub">
+          </div>
+        </div>
+        <div id="shop3" class="shop">
+          <div id="shopimg3" class="shopimg">
+          </div>
+          <div id="productName3" class="shopsub">
+          </div>
+        </div>
+        <div id="shop4" class="shop">
+          <div id="shopimg4" class="shopimg">
+          </div>
+          <div id="productName4" class="shopsub">
+          </div>
+        </div>
+        <div id="shop5" class="shop">
+          <div id="shopimg5" class="shopimg">
+          </div>
+          <div id="productName5" class="shopsub">
+          </div>
+        </div>
+
       </div>
-</div>
-<div id="shop5" class="shop">
-  <div id="shopimg5" class="shopimg">
-  </div>
-  <div id="productName5" class="shopsub">
-  </div>
-</div>
-
-    </div>
-    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-    <script src="./utils.js"></script>
-    <script type="module">
-
-      const isLogin = getCookie('accessToken');
-      console.log('isLogin =>>> ', isLogin);
-      if (isLogin) {
-        document.getElementById('registerButton').style.display = 'none';
-        document.getElementById('loginButton').style.display = 'none';
-        document.getElementById('loginOutButton').style.display = 'block';
-
-      } else {
-        document.getElementById('registerButton').style.display = 'block';
-        document.getElementById('loginButton').style.display = 'block';
-        document.getElementById('loginOutButton').style.display = 'none';
-      }
-
-      //rankButton
-      document
-        .getElementById("rankButton")
-        .addEventListener("click", () => {
-          window.location.href = "rank.html";
-        });
-
-      document
-        .getElementById("registerButton")
-        .addEventListener("click", () => {
-          window.location.href = "register.html";
-        });
-
-      document.getElementById("loginButton").addEventListener("click", () => {
-        window.location.href = "login.html";
-      });
-
-      document.getElementById("loginOutButton").addEventListener("click", () => {
-        deleteCookie('accessToken');
-        deleteCookie('refreshToken');
-        window.location.href = 'index.html';
-      });
-
-      document.getElementById("playButton").addEventListener("click", () => {
-
+      <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+      <script src="./utils.js"></script>
+      <script type="module">
 
         const isLogin = getCookie('accessToken');
+        console.log('isLogin =>>> ', isLogin);
+        if (isLogin) {
+          document.getElementById('registerButton').style.display = 'none';
+          document.getElementById('loginButton').style.display = 'none';
+          document.getElementById('loginOutButton').style.display = 'block';
 
-        if (!isLogin) {
-          alert('로그인을 해주세요.');
-          return;
+        } else {
+          document.getElementById('registerButton').style.display = 'block';
+          document.getElementById('loginButton').style.display = 'block';
+          document.getElementById('loginOutButton').style.display = 'none';
         }
 
+        //rankButton
+        document
+          .getElementById("rankButton")
+          .addEventListener("click", () => {
+            window.location.href = "rank.html";
+          });
 
-        document.querySelector(".signup-container").style.display = "none";
-        document.querySelector(".button-container").style.display = "none";
-        document.getElementById("gameCanvas").style.display = "block";
-        import("./game.js");
+        document
+          .getElementById("registerButton")
+          .addEventListener("click", () => {
+            window.location.href = "register.html";
+          });
 
-        document.getElementById("shopClose").addEventListener("click", () => {
-          document.getElementById("shopModal").style.display = 'none'
-        })
+        document.getElementById("loginButton").addEventListener("click", () => {
+          window.location.href = "login.html";
+        });
 
-      });
-    </script>
+        document.getElementById("loginOutButton").addEventListener("click", () => {
+          deleteCookie('accessToken');
+          deleteCookie('refreshToken');
+          window.location.href = 'index.html';
+        });
+
+        document.getElementById("playButton").addEventListener("click", () => {
+
+
+          const isLogin = getCookie('accessToken');
+
+          if (!isLogin) {
+            alert('로그인을 해주세요.');
+            return;
+          }
+
+
+          document.querySelector(".signup-container").style.display = "none";
+          document.querySelector(".button-container").style.display = "none";
+          document.getElementById("gameCanvas").style.display = "block";
+          import("./game.js");
+
+          document.getElementById("shopClose").addEventListener("click", () => {
+            document.getElementById("shopModal").style.display = 'none'
+          })
+
+        });
+      </script>
 </body>
 
 </html>
