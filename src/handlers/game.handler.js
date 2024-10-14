@@ -8,7 +8,7 @@ import {
   setSpawnSpecialMonsters,
   getSpawnSpecialMonsters,
 } from '../models/spawnspecialmonster.model.js';
-import { spawnGoldenGoblin } from '../utils/mymath.js';
+import { spawnSpecialMonster } from '../utils/mymath.js';
 
 const gameStartService = new GameStartService();
 export const gameStart = async (userId, payload) => {
@@ -29,7 +29,7 @@ export const gameStart = async (userId, payload) => {
   const init = await gameStartService.initSendData();
 
   for (let i = 0; i < init.specialMonsters.length; i++)
-    specialMonsterSpawnTime.push(spawnGoldenGoblin(10, 25));
+    specialMonsterSpawnTime.push(spawnSpecialMonster(10, 25));
 
   await setSpawnSpecialMonsters(userId, specialMonsterSpawnTime);
   //console.log('몬스터 스폰 확인 : ', await getSpawnSpecialMonsters(userId));

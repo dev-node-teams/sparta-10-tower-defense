@@ -114,7 +114,13 @@ const socketConnection = () => {
         case 21:
           setMonstersScore(data.totalScore);
           setMonstersGold(data.totalGold);
-          if (data.specialMonsters.length) spawnSpecialMonster(data.specialMonsters);
+          spawnSpecialMonster(data.specialMonsters);
+          break;
+
+        case 22:
+          diplayEvent('황금 고블린 처치', 'darkorange', 50, 100);
+          setMonstersScore(data.totalScore);
+          setMonstersGold(data.totalGold);
           break;
 
         case 30:
