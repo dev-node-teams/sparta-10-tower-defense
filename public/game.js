@@ -55,6 +55,8 @@ const specialMonsterImages = [];
 
 let monsterPath;
 
+let isDestroyed;
+
 // export function displayLevelUpText(level) {
 //   const levelUpText = `${level} 스테이지!`;
 //   const x = canvas.width / 2;
@@ -290,8 +292,36 @@ function gameLoop() {
   // 몬스터가 공격을 했을 수 있으므로 기지 다시 그리기
   base.draw(ctx, baseImage);
 
-  CheckmonsterProgress(monsters);
-  if (specialMonsters.length) CheckmonsterProgress(specialMonsters);
+
+  if (!isDestroyed) {
+    CheckmonsterProgress(monsters);
+    if (specialMonsters.length) CheckmonsterProgress(specialMonsters);
+  } else {
+    diplayEvent(`게임 오버`, 'red', 50, 100);
+    diplayEvent(`스파르타 본부를 지키지 못했다...ㅠㅠ`, 'red', 60, 100);
+    console.log('게임 오버. 스파르타 본부를 지키지 못했다...ㅠㅠ');
+
+    // 게임종료 후 버튼 [ 뒤로가기 ]
+    const x = canvas.width / 2;
+    const y = canvas.height / 2;
+
+    // 뒤로가기
+    const backButton = document.createElement('button');
+    backButton.textContent = '뒤로가기';
+    backButton.style.position = 'absolute';
+    backButton.style.bottom = y / 2 + 'px'; //'350px';
+    backButton.style.right = x / 2 + 420 + 'px'; //'30px';
+    backButton.style.padding = '10px 20px';
+    backButton.style.fontSize = '20px';
+    backButton.style.cursor = 'pointer';
+
+    backButton.addEventListener('click', () => {
+      location.reload();
+    });
+    document.getElementById('mainCanvas').appendChild(backButton);
+
+    return;
+  }
 
   /* 특정 점수 도달 시 스테이지 이동 */
   if (monsterLevel < stagesData.length && score > stagesData[monsterLevel].score && moveStageFlag) {
@@ -370,14 +400,10 @@ function CheckmonsterProgress(monsters) {
   for (let i = monsters.length - 1; i >= 0; i--) {
     const monster = monsters[i];
     if (monster.hp > 0) {
-      const isDestroyed = monster.monsterId >= 256 ? monster.move(canvas) : monster.move(base);
+      isDestroyed = monster.monsterId >= 256 ? monster.move(canvas) : monster.move(base);
       if (isDestroyed) {
         /* 게임 오버 */
         sendEvent(3, { score });
-
-        diplayEvent(`게임 오버`, 'red', 50, 100);
-        diplayEvent(`스파르타 본부를 지키지 못했다...ㅠㅠ`, 'red', 60, 100);
-        console.log('게임 오버. 스파르타 본부를 지키지 못했다...ㅠㅠ');
         return;
       }
       monster.draw(ctx);
