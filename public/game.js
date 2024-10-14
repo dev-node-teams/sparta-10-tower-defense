@@ -430,7 +430,11 @@ function CheckmonsterProgress(monsters) {
   for (let i = monsters.length - 1; i >= 0; i--) {
     const monster = monsters[i];
     if (monster.hp > 0) {
-      isDestroyed = monster.monsterId >= 256 ? monster.move(canvas) : monster.move(base);
+      if (monster.monsterId >= 256 && !isDestroyed) {
+        monster.move(canvas);
+      } else {
+        isDestroyed = monster.move(base);
+      }
       if (isDestroyed) {
         /* 게임 오버 */
         sendEvent(3, { score });
