@@ -43,7 +43,11 @@ export const gameStart = async (userId, payload) => {
   console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 
   //유저 초기 점수, 유저 초기 보유 금액 추가하기
-  init.initData = { score: await getTotalScore(userId), gold: await getTotalGold(userId) };
+  init.initData = {
+    score: await getTotalScore(userId),
+    gold: await getTotalGold(userId),
+    stageThreshHold: 1000,
+  };
 
   if (!init.stages.length) console.log('@@ gameStartHandler - 서버에 스테이지 정보가 없습니다.');
   else if (!init.monsters.length)
@@ -73,5 +77,4 @@ export const gameEnd = async (userId, payload) => {
 
   console.log('game End =>>> ', payload);
   return { status: 'success', message: 'Game Over', score: payload.score };
-
 };
