@@ -9,8 +9,6 @@ import { setTowerDatas, getTowerDatas, clearTowerDatas } from '../models/mTower.
 import { getDataVersion, setDataVersion, clearDataVersion } from '../models/mVersion.model.js';
 import { setEnhanceDatas, getEnhanceDatas, clearEnhanceDatas } from '../models/mEnhance.model.js';
 
-
-import { TowersRepository } from '../repositories/towers.repository.js';
 import { MonstersRepository } from '../repositories/monsters.repository.js';
 import { SpecialMonstersRepository } from '../repositories/specialmonster.repository.js';
 import { StagesRepository } from '../repositories/stages.repository.js';
@@ -50,7 +48,6 @@ export async function initData() {
   console.log('towerRes =>> ', towerRes);
   console.log('monsterRes =>> ', monsterRes);
   console.log('stagesRes =>> ', stagesRes);
-
 
   if (
     isVersion &&
