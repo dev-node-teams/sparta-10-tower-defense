@@ -21,6 +21,21 @@
         font-size: 16px;
         cursor: pointer;
     }
+
+    label {
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    select {
+        padding: 0.5em;
+        margin-bottom: 1.5em;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1em;
+        width: 100%;
+        box-sizing: border-box;
+    }
 </style>
 
 
@@ -33,6 +48,11 @@
 
     <main>
         <section id="ranking">
+            <label for="ranking-category">카테고리</label>
+            <select id="ranking-category" name="ranking-category">
+                <option value="live">실시간</option>
+                <!-- <option value="daily">데일리</option> -->
+            </select>
             <ul id="ranking-list">
                 <!-- JavaScript에서 동적으로 업데이트될 부분 -->
             </ul>

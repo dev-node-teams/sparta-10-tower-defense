@@ -20,6 +20,7 @@ let baseHp = 100; // 기지 체력
 
 let monsterLevel = 1; // 몬스터 레벨
 let monsterSpawnInterval = 1000; // 몬스터 생성 주기
+const GOLIDEN_GOBLIN_DISAPPEAR = 15000; // 황금 고블린 사라지는 시간
 const monsters = [];
 const specialMonsters = [];
 
@@ -33,6 +34,9 @@ let enhanceData = [];
 
 let score = 0; // 게임 점수
 let highScore = 0; // 기존 최고 점수
+let loopLevel = 0; // 마지막 스테이지 이후 회귀한 횟수
+let scoreAtLastStage = 0; // 지난 스테이지에서의 점수, 스테이지 오를 때마다 score로 갱신됨
+let stageThreshHold = null;
 let isInitGame = false;
 
 let moveStageFlag = true;
@@ -53,6 +57,8 @@ const monsterImages = [];
 const specialMonsterImages = [];
 
 let monsterPath;
+
+let isDestroyed;
 
 // export function displayLevelUpText(level) {
 //   const levelUpText = `${level} 스테이지!`;
@@ -92,7 +98,6 @@ export function diplayEvent(text, color, position, fontSize) {
 
   function textDraw(text) {
     const elapsedTime = Date.now() - startTime;
-    //console.log('경과 시간 : ', elapsedTime, '시작 시간');
     ctx.font = `${fontSize}px Times New Roman`;
     ctx.fillStyle = color;
     ctx.textAlign = 'center';
@@ -107,8 +112,10 @@ export function diplayEvent(text, color, position, fontSize) {
   textDraw();
 }
 
-export function moveStage(targetStage) {
+export function moveStage(targetStage, updatedLoopLevel) {
   monsterLevel = targetStage;
+  scoreAtLastStage = score;
+  loopLevel = updatedLoopLevel;
   moveStageFlag = true;
 }
 
@@ -249,10 +256,22 @@ function placeBase() {
 }
 
 function spawnMonster() {
-  monsters.push(new Monster(monsterPath, monsterData, monsterImages, monsterLevel));
+  monsters.push(new Monster(monsterPath, monsterData, monsterImages, monsterLevel + loopLevel));
 }
 
 function gameLoop() {
+  // console.log(stagesData);
+  // {stageId: 1, score: 100, bonusScore: 0, versionGroupId: 1}
+
+  // {stageId: 2, score: 200, bonusScore: 50, versionGroupId: 1}
+
+  // {stageId: 3, score: 300, bonusScore: 100, versionGroupId: 1}
+
+  // {stageId: 4, score: 500, bonusScore: 150, versionGroupId: 1}
+
+  // {stageId: 5, score: 800, bonusScore: 200, versionGroupId: 1}
+
+  // {stageId: 6, score: 1000, bonusScore: 300
   // 렌더링 시에는 항상 배경 이미지부터 그려야 합니다! 그래야 다른 이미지들이 배경 이미지 위에 그려져요!
   ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height); // 배경 이미지 다시 그리기
   drawPath(monsterPath); // 경로 다시 그리기
@@ -282,13 +301,46 @@ function gameLoop() {
   // 몬스터가 공격을 했을 수 있으므로 기지 다시 그리기
   base.draw(ctx, baseImage);
 
-  CheckmonsterProgress(monsters);
-  if (specialMonsters.length) CheckmonsterProgress(specialMonsters);
+  if (!isDestroyed) {
+    CheckmonsterProgress(monsters);
+    if (specialMonsters.length) CheckmonsterProgress(specialMonsters);
+  } else {
+    diplayEvent(`게임 오버`, 'red', 50, 100);
+    diplayEvent(`스파르타 본부를 지키지 못했다...ㅠㅠ`, 'red', 60, 100);
+
+    // 게임종료 후 버튼 [ 뒤로가기 ]
+    const x = canvas.width / 2;
+    const y = canvas.height / 2;
+
+    // 뒤로가기
+    const backButton = document.createElement('button');
+    backButton.textContent = '뒤로가기';
+    backButton.style.position = 'absolute';
+    backButton.style.bottom = y / 2 + 'px'; //'350px';
+    backButton.style.right = x / 2 + 420 + 'px'; //'30px';
+    backButton.style.padding = '10px 20px';
+    backButton.style.fontSize = '20px';
+    backButton.style.cursor = 'pointer';
+
+    backButton.addEventListener('click', () => {
+      location.reload();
+    });
+    document.getElementById('mainCanvas').appendChild(backButton);
+
+    return;
+  }
 
   /* 특정 점수 도달 시 스테이지 이동 */
   if (monsterLevel < stagesData.length && score > stagesData[monsterLevel].score && moveStageFlag) {
     moveStageFlag = false;
-    sendEvent(4, { score, currentStage: monsterLevel, targetStage: monsterLevel + 1, userGold });
+    sendEvent(4, { score, currentStage: monsterLevel, targetStage: monsterLevel + 1 });
+  } else if (
+    monsterLevel === stagesData.length &&
+    score - scoreAtLastStage >= stageThreshHold &&
+    moveStageFlag
+  ) {
+    moveStageFlag = false;
+    sendEvent(4, { score, currentStage: monsterLevel, targetStage: monsterLevel, loopLevel });
   }
 
   requestAnimationFrame(gameLoop); // 지속적으로 다음 프레임에 gameLoop 함수 호출할 수 있도록 함
@@ -355,14 +407,10 @@ function CheckmonsterProgress(monsters) {
   for (let i = monsters.length - 1; i >= 0; i--) {
     const monster = monsters[i];
     if (monster.hp > 0) {
-      const isDestroyed = monster.monsterId >= 256 ? monster.move(canvas) : monster.move(base);
+      isDestroyed = monster.monsterId >= 256 ? monster.move(canvas) : monster.move(base);
       if (isDestroyed) {
         /* 게임 오버 */
         sendEvent(3, { score });
-
-        diplayEvent(`게임 오버`, 'red', 50, 100);
-        diplayEvent(`스파르타 본부를 지키지 못했다...ㅠㅠ`, 'red', 60, 100);
-        console.log('게임 오버. 스파르타 본부를 지키지 못했다...ㅠㅠ');
         return;
       }
       monster.draw(ctx);
@@ -370,24 +418,20 @@ function CheckmonsterProgress(monsters) {
       // 몬스터가 기지를 공격한 후
       monsters.splice(i, 1);
     } else {
-      console.log(' monsters =>> ', monsters);
-
       /* 몬스터가 죽었을 때 */
       // 몬스터 제거
       monsters.splice(i, 1);
       // 서버에 이벤트 전송
       if (monster.monsterId >= 256) {
-        //Todo: 황금 고블린 처치가 너무 빨리 사라지는 문제 코드 부분
         sendEvent(22, { monsterId: monster.monsterId, monsterLevel });
       } else sendEvent(21, { monsterId: monster.monsterId, monsterLevel });
-
-      console.log(' monsters =>> ', monsters);
     }
   }
 }
 
-export function setStages(stageList) {
+export function setStages(stageList, stageThresh) {
   stagesData = stageList;
+  stageThreshHold = stageThresh;
 }
 
 export function setUserInfo(score, gold) {
@@ -465,7 +509,7 @@ export function spawnSpecialMonster(specialMonster) {
 
     // 황금 고블린 Id를 바탕으로 다른 황금 고블린이 생성돼도
     // 문제 없이 먼저 태어난 황금 고블인이 사라집니다.
-    removeSpecialMonster(specialMonster.monsterId, 15000);
+    removeSpecialMonster(specialMonster.monsterId, GOLIDEN_GOBLIN_DISAPPEAR);
   }
 }
 
@@ -490,4 +534,9 @@ export function spawnGoldenGoblin(isGoldenGobline) {
   monsters.push(new Monster(monsterPath, monsterData, monsterImages, monsterLevel));
 }
 
+export function setHighScore(score) {
+  highScore = score;
+}
+
 export { monsterLevel, towers, enhanceData, towerData };
+

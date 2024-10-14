@@ -11,8 +11,8 @@ export const getMonsterInfo = (monsterMetaData, monsterId) => {
   return monsterMetaData.find((monster) => monster.monsterId === monsterId);
 };
 
-export const addScoreAndGold = async (userId, findMonster) => {
-  await setScore(userId, findMonster.score);
+export const addScoreAndGold = async (userId, findMonster, bonusScore) => {
+  await setScore(userId, findMonster.score + bonusScore);
   const totalScore = await getTotalScore(userId);
 
   await setGold(userId, findMonster.point);
@@ -28,7 +28,7 @@ export const changeSpwanSpecialMonster = async (userId, userKillMonster) => {
     if (userKillMonster === specialMonsterSpawn[i]) {
       await setSpawnSpecialMonstersElement(
         userId,
-        spawnSpecialMonster(userKillMonster + 10, userKillMonster + 25),
+        spawnSpecialMonster(userKillMonster + 20, userKillMonster + 30),
         i,
       );
       specialMonsters.push(await getSpecialMonsterDatas());

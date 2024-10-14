@@ -13,6 +13,7 @@ import {
   towerSellAgree,
   towerEnhanceAgree,
   setEnhance,
+  setHighScore,
 } from './game.js';
 
 const IP = 'http://localhost:3005';
@@ -32,6 +33,7 @@ let score = null;
 let userGold = null;
 
 let targetStage = 0;
+let updatedLoopLevel = 0;
 
 const sendEvent = (handlerId, payload) => {
   const res = socket.emit('event', {
@@ -109,11 +111,12 @@ const socketConnection = () => {
         case 2:
           console.log(data);
           setUserInfo(data.initData.score, data.initData.gold);
-          setStages(data.stages);
+          setStages(data.stages, data.initData.stageThreshHold);
           setMonsters(data.monsters);
           setTowers(data.towers);
           setSpecialMonsters(data.specialMonsters);
           setEnhance(data.enhance);
+          setHighScore(data.initData.highScore);
           break;
 
         case 3: // 게임종료
@@ -125,8 +128,12 @@ const socketConnection = () => {
 
         case 4: // 스테이지 이동
           targetStage = data.payload.targetStage;
-          diplayEvent(`${targetStage} 스테이지! `, 'yellow', 50, 100);
-          moveStage(targetStage);
+          updatedLoopLevel = data.payload.updatedLoopLevel || 0;
+          updatedLoopLevel === 0
+            ? diplayEvent(`${targetStage} 스테이지!`, 'yellow', 50, 100)
+            : diplayEvent(`회귀 레벨: ${updatedLoopLevel}`, 'yellow', 50, 100);
+
+          moveStage(targetStage, updatedLoopLevel);
           break;
 
         case 21:
