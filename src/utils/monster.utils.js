@@ -28,7 +28,7 @@ export const changeSpwanSpecialMonster = async (userId, userKillMonster) => {
     if (userKillMonster === specialMonsterSpawn[i]) {
       await setSpawnSpecialMonstersElement(
         userId,
-        spawnSpecialMonster(userKillMonster + 10, userKillMonster + 25),
+        spawnSpecialMonster(userKillMonster + 20, userKillMonster + 30),
         i,
       );
       specialMonsters.push(await getSpecialMonsterDatas());

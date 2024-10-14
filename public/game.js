@@ -19,6 +19,7 @@ let baseHp = 100; // 기지 체력
 
 let monsterLevel = 1; // 몬스터 레벨
 let monsterSpawnInterval = 1000; // 몬스터 생성 주기
+const GOLIDEN_GOBLIN_DISAPPEAR = 15000; // 황금 고블린 사라지는 시간
 const monsters = [];
 const specialMonsters = [];
 
@@ -95,7 +96,6 @@ export function diplayEvent(text, color, position, fontSize) {
 
   function textDraw(text) {
     const elapsedTime = Date.now() - startTime;
-    //console.log('경과 시간 : ', elapsedTime, '시작 시간');
     ctx.font = `${fontSize}px Times New Roman`;
     ctx.fillStyle = color;
     ctx.textAlign = 'center';
@@ -292,14 +292,12 @@ function gameLoop() {
   // 몬스터가 공격을 했을 수 있으므로 기지 다시 그리기
   base.draw(ctx, baseImage);
 
-
   if (!isDestroyed) {
     CheckmonsterProgress(monsters);
     if (specialMonsters.length) CheckmonsterProgress(specialMonsters);
   } else {
     diplayEvent(`게임 오버`, 'red', 50, 100);
     diplayEvent(`스파르타 본부를 지키지 못했다...ㅠㅠ`, 'red', 60, 100);
-    console.log('게임 오버. 스파르타 본부를 지키지 못했다...ㅠㅠ');
 
     // 게임종료 후 버튼 [ 뒤로가기 ]
     const x = canvas.width / 2;
@@ -411,18 +409,13 @@ function CheckmonsterProgress(monsters) {
       // 몬스터가 기지를 공격한 후
       monsters.splice(i, 1);
     } else {
-      console.log(' monsters =>> ', monsters);
-
       /* 몬스터가 죽었을 때 */
       // 몬스터 제거
       monsters.splice(i, 1);
       // 서버에 이벤트 전송
       if (monster.monsterId >= 256) {
-        //Todo: 황금 고블린 처치가 너무 빨리 사라지는 문제 코드 부분
         sendEvent(22, { monsterId: monster.monsterId, monsterLevel });
       } else sendEvent(21, { monsterId: monster.monsterId, monsterLevel });
-
-      console.log(' monsters =>> ', monsters);
     }
   }
 }
@@ -503,7 +496,7 @@ export function spawnSpecialMonster(specialMonster) {
 
     // 황금 고블린 Id를 바탕으로 다른 황금 고블린이 생성돼도
     // 문제 없이 먼저 태어난 황금 고블인이 사라집니다.
-    removeSpecialMonster(specialMonster.monsterId, 15000);
+    removeSpecialMonster(specialMonster.monsterId, GOLIDEN_GOBLIN_DISAPPEAR);
   }
 }
 

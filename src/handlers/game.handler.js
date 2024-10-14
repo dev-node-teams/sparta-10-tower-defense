@@ -29,18 +29,9 @@ export const gameStart = async (userId, payload) => {
   const init = await gameStartService.initSendData();
 
   for (let i = 0; i < init.specialMonsters.length; i++)
-    specialMonsterSpawnTime.push(spawnSpecialMonster(10, 25));
+    specialMonsterSpawnTime.push(spawnSpecialMonster(20, 30));
 
   await setSpawnSpecialMonsters(userId, specialMonsterSpawnTime);
-  //console.log('몬스터 스폰 확인 : ', await getSpawnSpecialMonsters(userId));
-  console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-
-  console.log(`@@ gameStartHandler =>>> `, init.stages);
-  console.log(`@@ gameStartHandler =>>> `, init.towers);
-  console.log(`@@ gameStartHandler =>>> `, init.monsters);
-  console.log(`@@ gameStartHandler =>>> `, init.specialMonsters);
-
-  console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 
   //유저 초기 점수, 유저 초기 보유 금액 추가하기
   init.initData = {
