@@ -213,7 +213,7 @@ function getRandomPositionNearPath(maxDistance) {
   const offsetY = (Math.random() - 0.5) * 2 * maxDistance;
 
   return {
-    x: posX + offsetX,
+    x: posX * 0.95,
     y: posY + offsetY,
   };
 }
