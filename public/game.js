@@ -257,7 +257,6 @@ export function towerSellAgree(target) {
 export function towerEnhanceAgree(position, data) {
   const findTower = towers.find((i) => i.x === position.x && i.y === position.y);
   findTower.enhance(data);
-  console.log('findfindfindfindfindfindfindfindfindfindfind', findTower);
   towerMenu(findTower);
 }
 
