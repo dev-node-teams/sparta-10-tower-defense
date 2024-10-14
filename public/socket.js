@@ -12,6 +12,7 @@ import {
   diplayEvent,
   towerSellAgree,
   towerEnhanceAgree,
+  setEnhance,
 } from './game.js';
 
 const IP = 'http://localhost:3005';
@@ -112,6 +113,7 @@ const socketConnection = () => {
           setMonsters(data.monsters);
           setTowers(data.towers);
           setSpecialMonsters(data.specialMonsters);
+          setEnhance(data.enhance);
           break;
 
         case 3: // 게임종료
@@ -144,7 +146,7 @@ const socketConnection = () => {
             diplayEvent(data.message, 'crimson', 65, 70);
           } else {
             diplayEvent(data.message, 'black', 25, 35);
-            towerBuyAgree(data.towerType - 1, data.position);
+            towerBuyAgree(data.towerData, data.position);
             setMonstersGold(data.totalGold);
           }
           break;

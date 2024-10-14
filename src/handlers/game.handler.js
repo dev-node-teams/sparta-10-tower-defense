@@ -9,7 +9,6 @@ import {
   getSpawnSpecialMonsters,
 } from '../models/spawnspecialmonster.model.js';
 import { spawnSpecialMonster } from '../utils/mymath.js';
-
 const gameStartService = new GameStartService();
 export const gameStart = async (userId, payload) => {
   // 게임이 시작할 경우 호출되는 Handler
@@ -39,6 +38,7 @@ export const gameStart = async (userId, payload) => {
   console.log(`@@ gameStartHandler =>>> `, init.towers);
   console.log(`@@ gameStartHandler =>>> `, init.monsters);
   console.log(`@@ gameStartHandler =>>> `, init.specialMonsters);
+  console.log(`@@ gameStartHandler =>>> `, init.enhance);
 
   console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 
@@ -51,6 +51,7 @@ export const gameStart = async (userId, payload) => {
   else if (!init.specialMonsters.length)
     console.log('@@ gameStartHandler - 서버에 스페이셜 몬스터 정보가 없습니다.');
   else if (!init.towers.length) console.log('@@ gameStartHandler - 서버에 타워 정보가 없습니다.');
+  else if (!init.enhance.length) console.log('@@ gameStartHandler - 서버에 강화 정보가 없습니다.');
 
   return { status: 'success', handlerId: 2, ...init };
 };
@@ -73,5 +74,4 @@ export const gameEnd = async (userId, payload) => {
 
   console.log('game End =>>> ', payload);
   return { status: 'success', message: 'Game Over', score: payload.score };
-
 };
