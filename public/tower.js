@@ -1,4 +1,6 @@
 export class Tower {
+  attackColor = ['#FF1493', '#ADD8E6', '#6495ED', '#8B008B', '#191970'];
+
   constructor(x, y, attackPower, attackRange, attackSpeed, cost, image, type, name) {
     // 생성자 안에서 타워들의 속성을 정의한다고 생각하시면 됩니다!
     this.x = x; // 타워 이미지 x 좌표
@@ -24,7 +26,7 @@ export class Tower {
       ctx.beginPath();
       ctx.moveTo(this.x + this.width / 2, this.y + this.height / 2);
       ctx.lineTo(this.target.x + this.target.width / 2, this.target.y + this.target.height / 2);
-      ctx.strokeStyle = 'skyblue';
+      ctx.strokeStyle = this.attackColor[this.type % 5];
       ctx.lineWidth = 10;
       ctx.stroke();
       ctx.closePath();
