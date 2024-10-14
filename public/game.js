@@ -86,7 +86,7 @@ let isDestroyed;
 //   renderLevelUpText();
 // }
 
-// 텍스트 출력 이벤트?
+// 텍스트 출력
 export function diplayEvent(text, color, position, fontSize) {
   const eventText = text;
   const x = canvas.width / 2;

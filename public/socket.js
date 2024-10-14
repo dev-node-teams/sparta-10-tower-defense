@@ -108,7 +108,7 @@ const socketConnection = () => {
 
     if (data && data.handlerId) {
       switch (data.handlerId) {
-        case 2:
+        case 2: // 게임 시작 핸들러
           console.log(data);
           setUserInfo(data.initData.score, data.initData.gold);
           setStages(data.stages, data.initData.stageThreshHold);
@@ -136,13 +136,13 @@ const socketConnection = () => {
           moveStage(targetStage, updatedLoopLevel);
           break;
 
-        case 21:
+        case 21: // 일반 몬스터 제거
           setMonstersScore(data.totalScore);
           setMonstersGold(data.totalGold);
           spawnSpecialMonster(data.specialMonsters);
           break;
 
-        case 22:
+        case 22: // 황금 고블린 제거
           diplayEvent('황금 고블린 처치', 'darkorange', 50, 100);
           setMonstersScore(data.totalScore);
           setMonstersGold(data.totalGold);

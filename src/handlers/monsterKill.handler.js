@@ -7,45 +7,29 @@ import {
   changeSpwanSpecialMonster,
   addScoreAndGold,
 } from '../utils/monster.utils.js';
-import { getStage } from '../models/stage.model.js';
 import { getStageDatas } from '../models/mStages.model.js';
+import { getMonsterDatas } from '../models/mMonster.model.js';
 
 // 몬스터 kill 시 작동하는 핸들러
 export const monsterKill = async (userId, payload) => {
-  let currentStages = await getStage(userId); // 유저가 보유한 스테이지
-  if (!currentStages) {
-    await createStage(userId);
-    currentStages = await getStage(userId);
-  }
-
-  if (!currentStages.length) {
-    return { status: 'fail', message: '스테이지가 없습니다.' };
-  }
-
-  // 오름차순 정렬 후 가장 큰 스테이지 ID 확인 = 가장 상위의 스테이지 = 현재 스테이지
-  if (currentStages.length > 0) {
-    currentStages.sort((a, b) => a.id - b.id);
-  }
-
-  const currentStage = currentStages[currentStages.length - 1].id; // 유저의 현재 스테이지 id number
-  const stageDatas = await getStageDatas();
-  const bonusScore = stageDatas.find((stage) => stage.stageId === currentStage)?.bonusScore;
-
-  const monsterMetadata = await findMonsters();
+  const { monsterId, monsterLevel } = payload;
 
   const monsters = await getMonsters(userId);
   if (!monsters) {
     return { status: 'fail', message: 'Monsters not found' };
   }
-
+  const monsterMetadata = await getMonsterDatas();
   // 스페이셜 몬스터 생성 타이밍 확인 및 변경
   let specialMonsters = await changeSpwanSpecialMonster(userId, monsters.length);
+  const findMonster = getMonsterInfo(monsterMetadata, monsterId);
 
-  const findMonster = monsterMetadata.find((monster) => monster.monsterId === payload.monsterId);
+  const stagesMetaData = await getStageDatas();
+  const findBonusScore = stagesMetaData.find((stage) => stage.stageId === monsterLevel);
 
-  const { totalScore, totalGold } = await addScoreAndGold(userId, findMonster, bonusScore);
+  const { totalScore, totalGold } = await addScoreAndGold(userId, findMonster, findBonusScore);
 
-  await setMonster(userId, payload.monsterId, payload.monsterLevel);
+
+  await setMonster(userId, monsterId, monsterLevel);
   return { status: 'success', handlerId: 21, totalScore, totalGold, specialMonsters };
 };
 
@@ -60,7 +44,10 @@ export const specialMonsterKill = async (userId, payload) => {
 
   const findMonster = getMonsterInfo(specialMonstersMetaData, monsterId);
 
-  const { totalScore, totalGold } = await addScoreAndGold(userId, findMonster);
+  const stagesMetaData = await getStageDatas();
+  const findBonusScore = stagesMetaData.find((stage) => stage.stageId === monsterLevel);
+
+  const { totalScore, totalGold } = await addScoreAndGold(userId, findMonster, findBonusScore);
   await setSpecialMonster(userId, payload.monsterId, monsterLevel);
   return { status: 'success', handlerId: 22, totalScore, totalGold };
 };

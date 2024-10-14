@@ -11,8 +11,11 @@ export const getSpecialMonsters = async (userId) => {
 };
 
 // 유저가 죽인 스페이셜 몬스터 기록 추가
-export const setSpecialMonster = async (userId, id, level) => {
-  return await redisClient.rPush(KEY_PREFIX + userId, JSON.stringify({ id, level }, { EX: TTL }));
+export const setSpecialMonster = async (userId, monsterId, level) => {
+  return await redisClient.rPush(
+    KEY_PREFIX + userId,
+    JSON.stringify({ monsterId, level }, { EX: TTL }),
+  );
 };
 
 // 유저가 죽인 스페이셜 몬스터 몬스터 기록 초기화

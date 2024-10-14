@@ -16,8 +16,11 @@ export const getMonsters = async (userId) => {
 };
 
 // 새로운 몬스터 추가 확인
-export const setMonster = async (userId, id, level) => {
-  return await redisClient.rPush(KEY_PREFIX + userId, JSON.stringify({ id, level }, { EX: TTL }));
+export const setMonster = async (userId, monsterId, level) => {
+  return await redisClient.rPush(
+    KEY_PREFIX + userId,
+    JSON.stringify({ monsterId, level }, { EX: TTL }),
+  );
 };
 
 // 몬스터 기록 초기화
