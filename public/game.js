@@ -394,6 +394,8 @@ export function setTowers(towerList) {
   towerData = towerList;
 
   for (let i = 0; i < towerData.length; i++) {
+    const imgDiv = document.getElementById(`shopimg${i + 1}`);
+
     const img = new Image();
     img.src = towerData[i].image;
     towerImage.push(img);
@@ -412,7 +414,10 @@ export function setTowers(towerList) {
     productButton.style.cursor = 'pointer';
     productButton.addEventListener('click', () => {
       towerBuy(i);
+
+      // 상점 이미지 갱신
     });
+    imgDiv.appendChild(img);
     div.appendChild(productButton);
   }
 }
