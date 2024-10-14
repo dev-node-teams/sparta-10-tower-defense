@@ -1,5 +1,6 @@
 import { towers, enhanceData, towerData } from './game.js';
 import { sendEvent } from './socket.js';
+
 // 상점 UI 열기
 function openTowerShop() {
   const getShop = document.getElementById('shopModal');
@@ -25,6 +26,12 @@ const cCanvas = document.getElementById('gameCanvas');
 const buttonContainer = document.getElementById('buttonContainer');
 const towerRangeDiv = document.getElementById('towerRange');
 
+function closeMenu() {
+  buttonContainer.innerHTML = '';
+  buttonContainer.style.display = 'none';
+  towerRangeDiv.style.display = 'none';
+}
+
 cCanvas.addEventListener('click', (event) => {
   // 클릭한 위치 찾기
   const rectCanvas = cCanvas.getBoundingClientRect();
@@ -47,6 +54,25 @@ cCanvas.addEventListener('click', (event) => {
 
 // 타워 클릭 시 메뉴
 function towerMenu(tower) {
+  let x = tower.x;
+  let y = tower.y;
+  const towerWidth = tower.width;
+  const towerHeight = tower.height;
+  const CenterX = x + towerWidth / 2;
+  const CenterY = y + towerHeight / 2;
+
+  if (x > 1600) {
+    x -= 300;
+  }
+  if (y > 800) {
+    y -= 200;
+  }
+  if (y < 100) {
+    y += 100;
+  }
+
+  const radius = tower.attackRange;
+
   buttonContainer.innerHTML = '';
   buttonContainer.style.display = 'block';
   towerRangeDiv.style.display = 'block';
@@ -82,8 +108,8 @@ function towerMenu(tower) {
   buttonContainer.style.position = 'absolute';
   buttonContainer.style.width = '220px';
   buttonContainer.style.height = '280px';
-  buttonContainer.style.left = `${tower.x + 115}px`;
-  buttonContainer.style.top = `${tower.y}px`;
+  buttonContainer.style.left = `${x + 115}px`;
+  buttonContainer.style.top = `${y}px`;
   buttonContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.66)';
   buttonContainer.style.border = '3px solid black';
   buttonContainer.style.borderRadius = '14px';
@@ -94,20 +120,13 @@ function towerMenu(tower) {
   buttonContainer.style.zIndex = '3';
 
   // 타워 사거리 그리기
-  const towerX = tower.x;
-  const towerY = tower.y;
-  const towerWidth = tower.width;
-  const towerHeight = tower.height;
-  const CenterX = towerX + towerWidth / 2;
-  const CenterY = towerY + towerHeight / 2;
-
   towerRangeDiv.style.position = 'absolute';
-  towerRangeDiv.style.width = `${tower.attackRange * 2}px`;
-  towerRangeDiv.style.height = `${tower.attackRange * 2}px`;
+  towerRangeDiv.style.width = `${radius * 2}px`;
+  towerRangeDiv.style.height = `${radius * 2}px`;
   towerRangeDiv.style.borderRadius = '50%'; // 원 모양
   towerRangeDiv.style.border = '10px solid red'; // 테두리
-  towerRangeDiv.style.left = `${CenterX - tower.attackRange}px`;
-  towerRangeDiv.style.top = `${CenterY - tower.attackRange}px`;
+  towerRangeDiv.style.left = `${CenterX - radius}px`;
+  towerRangeDiv.style.top = `${CenterY - radius}px`;
   towerRangeDiv.style.pointerEvents = 'none';
   towerRangeDiv.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
   towerRangeDiv.style.zIndex = '1';
@@ -133,9 +152,7 @@ function towerMenu(tower) {
     const x = tower.x;
     const y = tower.y;
     sendEvent(31, { position: { x, y } });
-    buttonContainer.innerHTML = '';
-    buttonContainer.style.display = 'none';
-    towerRangeDiv.style.display = 'none';
+    closeMenu();
   });
 
   // 강화 버튼 기능 #32
@@ -143,9 +160,7 @@ function towerMenu(tower) {
     const x = tower.x;
     const y = tower.y;
     sendEvent(32, { position: { x, y } });
-    buttonContainer.innerHTML = '';
-    buttonContainer.style.display = 'none';
-    towerRangeDiv.style.display = 'none';
+    closeMenu();
   });
 
   // 버튼을 컨테이너에 추가
