@@ -36,6 +36,30 @@
         width: 100%;
         box-sizing: border-box;
     }
+
+    .pagination {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1em;
+    }
+
+    button {
+        padding: 0.5em 1em;
+        font-size: 1em;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #f4f4f4;
+        cursor: pointer;
+    }
+
+    button:disabled {
+        background-color: #e0e0e0;
+        cursor: not-allowed;
+    }
+
+    #page-info {
+        padding: 0.5em 1em;
+    }
 </style>
 
 
@@ -43,8 +67,6 @@
     <header>
         <h1>랭킹 리스트</h1>
     </header>
-
-
 
     <main>
         <section id="ranking">
@@ -56,7 +78,14 @@
             <ul id="ranking-list">
                 <!-- JavaScript에서 동적으로 업데이트될 부분 -->
             </ul>
+            <!-- 페이징 버튼 -->
+            <div class="pagination">
+                <button id="prev" disabled>이전</button>
+                <span id="page-info"></span>
+                <button id="next">다음</button>
+            </div>
         </section>
+
 
     </main>
     <div class="button-container">
@@ -70,7 +99,6 @@
 </body>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-
 
         fetch('http://localhost:3005/api/ranks', {
             method: 'GET',
@@ -89,12 +117,11 @@
             .then(data => {
                 if (isStatusOk) {
                     console.log('Success:', data); // 성공 시 응답 데이터를 처리
-                    const rankingContainer = document.getElementById('ranking-list');
-                    data.data.forEach((item, index) => {
-                        const listItem = document.createElement('li');
-                        listItem.textContent = `${index + 1}. ${item.value} - ${item.score}점`;
-                        rankingContainer.appendChild(listItem);
-                    });
+                    rankings = data.data;
+
+                    // 초기 렌더링
+                    renderRankings();
+
                 } else {
                     console.log('Fail:', data); // 실패 시 응답 데이터를 처리
                     alert('오류가 발생하였습니다.');
@@ -107,6 +134,55 @@
 
     document.getElementById("back").addEventListener("click", () => {
         window.location.href = "index.html";
+    });
+
+    let currentPage = 1;
+    const itemsPerPage = 5;  // 페이지 당 항목 수
+    let selectedCategory = "전체";
+    let rankings;
+
+
+    // 페이징 처리된 항목을 렌더링하는 함수
+    function renderRankings() {
+        const rankingList = document.getElementById("ranking-list");
+        rankingList.innerHTML = "";
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const currentRankings = rankings.slice(startIndex, endIndex);
+
+        currentRankings.forEach((ranking, index) => {
+            const li = document.createElement("li");
+            li.textContent = `${((currentPage - 1) * itemsPerPage) + index + 1}. ${ranking.value} - ${ranking.score}점`;
+            rankingList.appendChild(li);
+        });
+
+        document.getElementById("page-info").textContent = `${currentPage} / ${Math.ceil(rankings.length / itemsPerPage)}`;
+        document.getElementById("prev").disabled = currentPage === 1;
+        document.getElementById("next").disabled = currentPage === Math.ceil(rankings.length / itemsPerPage);
+    }
+
+    // 카테고리가 변경될 때 처리
+    document.getElementById("ranking-category").addEventListener("change", function () {
+        selectedCategory = this.value;
+        currentPage = 1;
+        renderRankings();
+    });
+
+    // 이전 페이지
+    document.getElementById("prev").addEventListener("click", function () {
+        if (currentPage > 1) {
+            currentPage--;
+            renderRankings();
+        }
+    });
+
+    // 다음 페이지
+    document.getElementById("next").addEventListener("click", function () {
+        if (currentPage < Math.ceil(rankings.length / itemsPerPage)) {
+            currentPage++;
+            renderRankings();
+        }
     });
 
 </script>
