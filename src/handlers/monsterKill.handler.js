@@ -7,6 +7,7 @@ import {
   changeSpwanSpecialMonster,
   addScoreAndGold,
 } from '../utils/monster.utils.js';
+import { getStageDatas } from '../models/mStages.model.js';
 import { getMonsterDatas } from '../models/mMonster.model.js';
 
 // 몬스터 kill 시 작동하는 핸들러
@@ -20,7 +21,12 @@ export const monsterKill = async (userId, payload) => {
   // 스페이셜 몬스터 생성 타이밍 확인 및 변경
   let specialMonsters = await changeSpwanSpecialMonster(userId, monsters.length);
   const findMonster = getMonsterInfo(monsterMetadata, monsterId);
-  const { totalScore, totalGold } = await addScoreAndGold(userId, findMonster);
+
+  const stagesMetaData = await getStageDatas();
+  const findBonusScore = stagesMetaData.find((stage) => stage.stageId === monsterLevel);
+
+  const { totalScore, totalGold } = await addScoreAndGold(userId, findMonster, findBonusScore);
+
   await setMonster(userId, monsterId, monsterLevel);
   return { status: 'success', handlerId: 21, totalScore, totalGold, specialMonsters };
 };
@@ -36,7 +42,10 @@ export const specialMonsterKill = async (userId, payload) => {
 
   const findMonster = getMonsterInfo(specialMonstersMetaData, monsterId);
 
-  const { totalScore, totalGold } = await addScoreAndGold(userId, findMonster);
+  const stagesMetaData = await getStageDatas();
+  const findBonusScore = stagesMetaData.find((stage) => stage.stageId === monsterLevel);
+
+  const { totalScore, totalGold } = await addScoreAndGold(userId, findMonster, findBonusScore);
   await setSpecialMonster(userId, payload.monsterId, monsterLevel);
   return { status: 'success', handlerId: 22, totalScore, totalGold };
 };
