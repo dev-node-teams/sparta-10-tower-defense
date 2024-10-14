@@ -11,6 +11,7 @@ import {
   moveStage,
   diplayEvent,
   towerSellAgree,
+  towerEnhanceAgree,
 } from './game.js';
 
 const IP = 'http://localhost:3005';
@@ -20,6 +21,14 @@ let socket = null;
 let token = `Bearer ${getCookie('accessToken')}`;
 let refreshToken = `Bearer ${getCookie('refreshToken')}`;
 let CLIENT_VERSION = '1.0.0';
+
+let userInfo = null;
+let stages = null;
+let towers = null;
+let monsters = null;
+let roundMonsters = null;
+let score = null;
+let userGold = null;
 
 let targetStage = 0;
 
@@ -130,21 +139,32 @@ const socketConnection = () => {
           setMonstersGold(data.totalGold);
           break;
 
-        case 30:
-          if (data.error) {
-            diplayEvent(data.message, 'red', 65, 70);
+        case 30: // 타워 구매
+          if (data.status === 'fail' && data.error) {
+            diplayEvent(data.message, 'crimson', 65, 70);
           } else {
+            diplayEvent(data.message, 'black', 25, 35);
             towerBuyAgree(data.towerType - 1, data.position);
             setMonstersGold(data.totalGold);
           }
-
           break;
 
-        case 31:
-          if (data.error) {
+        case 31: // 타워 판매
+          if (data.status === 'fail' && data.error) {
             diplayEvent(data.message, 'red', 65, 70);
           } else {
+            diplayEvent(data.message, 'black', 30, 35);
             towerSellAgree(data.position);
+            setMonstersGold(data.totalGold);
+          }
+          break;
+
+        case 32: // 타워 강화
+          if (data.status === 'fail' && data.error) {
+            diplayEvent(data.message, 'crimson', 55, 40);
+          } else {
+            diplayEvent(data.message, 'blue', 35, 40);
+            towerEnhanceAgree(data.position, data.enhanceData);
             setMonstersGold(data.totalGold);
           }
           break;

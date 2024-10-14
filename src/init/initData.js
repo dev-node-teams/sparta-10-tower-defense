@@ -7,16 +7,22 @@ import {
 } from '../models/mSpecialMonster.model.js';
 import { setTowerDatas, getTowerDatas, clearTowerDatas } from '../models/mTower.model.js';
 import { getDataVersion, setDataVersion, clearDataVersion } from '../models/mVersion.model.js';
+import { setEnhanceDatas, getEnhanceDatas, clearEnhanceDatas } from '../models/mEnhance.model.js';
+
 
 import { TowersRepository } from '../repositories/towers.repository.js';
 import { MonstersRepository } from '../repositories/monsters.repository.js';
 import { SpecialMonstersRepository } from '../repositories/specialmonster.repository.js';
 import { StagesRepository } from '../repositories/stages.repository.js';
+import { TowersRepository } from '../repositories/towers.repository.js';
+import { EnhanceRepository } from '../repositories/enhance.repository.js';
 
 const towersRepository = new TowersRepository();
 const monstersRepository = new MonstersRepository();
 const stagesRepository = new StagesRepository();
+const enhanceRepository = new EnhanceRepository();
 const specialMonstersRepository = new SpecialMonstersRepository();
+
 /**
  * 서버 최초 기동 시,
  * 게임 데이터 레디스에 등록
@@ -27,6 +33,7 @@ export async function initData() {
    * Monsters
    * Stage
    * CreateMonsterPerStage
+   * TowerEnhance
    */
 
   const DATA_VERSION = '1.0.0';
@@ -37,11 +44,13 @@ export async function initData() {
   let towerRes = await getTowerDatas();
   let monsterRes = await getMonsterDatas();
   let stagesRes = await getStageDatas();
+  let enhanceRes = await getEnhanceDatas();
   let specialMonsterRes = await getSpecialMonsterDatas();
 
   console.log('towerRes =>> ', towerRes);
   console.log('monsterRes =>> ', monsterRes);
   console.log('stagesRes =>> ', stagesRes);
+
 
   if (
     isVersion &&
@@ -49,6 +58,7 @@ export async function initData() {
     towerRes.length &&
     monsterRes.length &&
     stagesRes.length &&
+    enhanceRes.length &&
     specialMonsterRes.length
   ) {
     console.log('@@@ 같은 버전의 게임 데이터가 레디스에 존재합니다.');
@@ -61,6 +71,7 @@ export async function initData() {
       clearSpecialMonsterDatas(),
 
       clearDataVersion(),
+      clearEnhanceDatas(),
     ]).then(async () => {
       //--
       // TOWER
@@ -80,6 +91,10 @@ export async function initData() {
       await setSpecialMonsterDatas(specialMonsters);
 
       await setDataVersion(DATA_VERSION);
+
+      // TOWER_ENHANCE
+      const towerEnhance = await enhanceRepository.viewEntireEnhance();
+      await setEnhanceDatas(towerEnhance);
     });
   }
 }

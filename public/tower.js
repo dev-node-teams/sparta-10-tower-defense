@@ -14,6 +14,7 @@ export class Tower {
     this.cooldown = 0;
     this.image = image;
     this.type = type;
+    this.enhanceLevel = 0;
   }
 
   draw(ctx) {
@@ -28,6 +29,16 @@ export class Tower {
       ctx.closePath();
       this.beamDuration--;
     }
+
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+    ctx.fillRect(this.x - 22, this.y + 155, 120, 27);
+
+    ctx.fillStyle = 'yellow';
+    ctx.fillText(
+      `${'★'.repeat(this.enhanceLevel)}` + `${'☆'.repeat(5 - this.enhanceLevel)}`,
+      this.x + 37,
+      this.y + 175,
+    );
   }
 
   attack(monster) {
@@ -44,5 +55,13 @@ export class Tower {
     if (this.cooldown > 0) {
       this.cooldown--;
     }
+  }
+
+  enhance(data) {
+    this.attackPower += data.increasePower;
+    this.attackRange += data.increaseRange;
+    this.attackSpeed -= data.increaseSpeed;
+    this.enhanceLevel = data.enhanceLevel;
+    // this.image = 강화 이미지 계획은 폐기
   }
 }
