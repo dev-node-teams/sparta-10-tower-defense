@@ -135,7 +135,7 @@ function towerMenu(tower) {
     sendEvent(31, { position: { x, y } });
     buttonContainer.innerHTML = '';
     buttonContainer.style.display = 'none';
-    towerRangeDiv.style.display = 'block';
+    towerRangeDiv.style.display = 'none';
   });
 
   // 강화 버튼 기능 #32
@@ -145,7 +145,7 @@ function towerMenu(tower) {
     sendEvent(32, { position: { x, y } });
     buttonContainer.innerHTML = '';
     buttonContainer.style.display = 'none';
-    towerRangeDiv.style.display = 'block';
+    towerRangeDiv.style.display = 'none';
   });
 
   // 버튼을 컨테이너에 추가
