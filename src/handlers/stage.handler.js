@@ -43,6 +43,18 @@ export const moveStage = async (userId, payload) => {
   }
   /** 잡은 몬스터로 점수 검증 끝 */
 
+  /** 최대 스테이지 이후부터는 회귀 시작 */
+  if (payload.loopLevel >= 0) {
+    const updatedLoopLevel = payload.loopLevel + 1;
+    return {
+      status: 'success',
+      message: '스테이지 난이도 증가',
+      handlerId: 4,
+      payload: { targetStage: payload.targetStage, updatedLoopLevel },
+    };
+  }
+  /** 최대 스테이지 이후부터는 회귀 끝 */
+
   // 유저의 다음 스테이지 정보 업데이트
   await setStage(userId, payload.targetStage);
   return {
