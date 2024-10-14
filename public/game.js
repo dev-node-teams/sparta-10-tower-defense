@@ -21,6 +21,8 @@ let baseHp = 100; // 기지 체력
 let monsterLevel = 1; // 몬스터 레벨
 let monsterSpawnInterval = 1000; // 몬스터 생성 주기
 const GOLIDEN_GOBLIN_DISAPPEAR = 15000; // 황금 고블린 사라지는 시간
+let goldenGoblineTempTimer = 0;
+let goblineStartTime = null;
 const monsters = [];
 const specialMonsters = [];
 
@@ -286,6 +288,27 @@ function gameLoop() {
   ctx.fillStyle = 'black';
   ctx.fillText(`현재 레벨: ${monsterLevel}`, 100, 200); // 최고 기록 표시
 
+  const elapsedTime = Date.now() - goblineStartTime; // 경과 시간 계산
+  const leftTime = Math.max(0, goldenGoblineTempTimer - elapsedTime);
+  ctx.font = '40px Times New Roman';
+  ctx.fillStyle = 'yellow';
+  ctx.lineWidth = 4; // 외곽선 두께 설정
+  ctx.strokeStyle = 'black'; // 외곽선 색상
+  ctx.textAlign = 'center';
+  const centerX = canvas.width / 2;
+
+  if (leftTime > 0) {
+    const timeText = `🕒황금 고블린 남은 시간: ${(leftTime / 1000).toFixed(1)}초`; // 소수점 1자리
+    ctx.strokeText(timeText, centerX, 1000); // 외곽선 텍스트 그리기
+    ctx.fillText(timeText, centerX, 1000); // 안쪽 텍스트 그리기
+  } else {
+    const findingText = `황금 고블린 찾는 중...`;
+    ctx.strokeText(findingText, centerX, 1000); // 외곽선 텍스트 그리기
+    ctx.fillText(findingText, centerX, 1000); // 안쪽 텍스트 그리기
+  }
+
+  ctx.font = '25px Times New Roman';
+
   // 타워 그리기 및 몬스터 공격 처리
   towers.forEach((tower) => {
     tower.draw(ctx);
@@ -514,11 +537,15 @@ export function spawnSpecialMonster(specialMonster) {
 }
 
 function removeSpecialMonster(monsterId, delay) {
+  goldenGoblineTempTimer = GOLIDEN_GOBLIN_DISAPPEAR;
+  goblineStartTime = Date.now();
   setTimeout(() => {
+    goldenGoblineTempTimer = 0;
     const index = specialMonsters.findIndex(
       (specialMonster) => specialMonster.monsterId === monsterId,
     );
     if (index != -1) specialMonsters.splice(index, 1);
+    diplayEvent('황금 고블린이 도망갔다..', 'darkorange', 50, 100);
   }, delay);
 }
 
