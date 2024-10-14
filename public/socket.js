@@ -12,6 +12,7 @@ import {
   diplayEvent,
   towerSellAgree,
   towerEnhanceAgree,
+  setHighScore,
 } from './game.js';
 
 const IP = 'http://localhost:3005';
@@ -113,6 +114,8 @@ const socketConnection = () => {
           setMonsters(data.monsters);
           setTowers(data.towers);
           setSpecialMonsters(data.specialMonsters);
+          console.log('setHighScore =>>> ', data.initData.highScore);
+          setHighScore(data.initData.highScore);
           break;
 
         case 3: // 게임종료

@@ -533,6 +533,10 @@ export function spawnGoldenGoblin(isGoldenGobline) {
   monsters.push(new Monster(monsterPath, monsterData, monsterImages, monsterLevel));
 }
 
+export function setHighScore(score) {
+  highScore = score;
+}
+
 // 상점 열기 버튼
 const buyTowerButton = document.createElement('button');
 buyTowerButton.textContent = '타워 구입';
