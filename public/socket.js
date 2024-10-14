@@ -32,7 +32,7 @@ const sendEvent = (handlerId, payload) => {
     payload,
   });
 
-  console.log('res =>> ', res);
+  // console.log('#sendEvent - res =>> ', res);
 };
 
 const getSocket = () => {
@@ -103,6 +103,13 @@ const socketConnection = () => {
           setMonsters(data.monsters);
           setTowers(data.towers);
           setSpecialMonsters(data.specialMonsters);
+          break;
+
+        case 3: // 게임종료
+          console.log('게임종료 검증 완료 =>>>> ', data);
+          /** 최고 점수 저장 */
+          sendEvent(90, { score: data.score });
+
           break;
 
         case 4: // 스테이지 이동

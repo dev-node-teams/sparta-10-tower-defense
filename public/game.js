@@ -279,8 +279,10 @@ function gameLoop() {
   // 몬스터가 공격을 했을 수 있으므로 기지 다시 그리기
   base.draw(ctx, baseImage);
 
+
   CheckmonsterProgress(monsters);
   if (specialMonsters.length) CheckmonsterProgress(specialMonsters);
+
 
   /* 특정 점수 도달 시 스테이지 이동 */
   if (monsterLevel < stagesData.length && score > stagesData[monsterLevel].score && moveStageFlag) {
@@ -356,8 +358,10 @@ function CheckmonsterProgress(monsters) {
       if (isDestroyed) {
         /* 게임 오버 */
         sendEvent(3, { score });
-        alert('게임 오버. 스파르타 본부를 지키지 못했다...ㅠㅠ');
-        location.reload();
+
+        diplayEvent(`게임 오버`, 'red', 50, 100);
+        diplayEvent(`스파르타 본부를 지키지 못했다...ㅠㅠ`, 'red', 60, 100);
+        console.log('게임 오버. 스파르타 본부를 지키지 못했다...ㅠㅠ');
         return;
       }
       monster.draw(ctx);

@@ -69,5 +69,9 @@ export const gameEnd = async (userId, payload) => {
   // if (verificationScore !== payload.score) {
   //   return { status: 'fail', message: 'Score verification failed' };
   // }
-  return { status: 'success', message: 'Game Over' };
+  // return { status: 'success', message: 'Game Over' };
+
+  console.log('game End =>>> ', payload);
+  return { status: 'success', message: 'Game Over', score: payload.score };
+
 };
