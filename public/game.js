@@ -42,6 +42,10 @@ let stageThreshHold = null;
 let isInitGame = false;
 
 let moveStageFlag = true;
+let settedEnd = null;
+let timerEnd = (boo = true) => {
+  settedEnd = boo;
+};
 
 // 이미지 로딩 파트
 const backgroundImage = new Image();
@@ -100,10 +104,13 @@ export function diplayEvent(text, color, position, fontSize) {
 
   function textDraw(text) {
     const elapsedTime = Date.now() - startTime;
+    ctx.lineWidth = 2; // 외곽선 두께 설정
+    ctx.strokeStyle = 'black'; // 외곽선 색상
     ctx.font = `${fontSize}px Times New Roman`;
     ctx.fillStyle = color;
     ctx.textAlign = 'center';
     ctx.fillText(eventText, x, y);
+    ctx.strokeText(eventText, x, y);
 
     if (elapsedTime < duration) {
       requestAnimationFrame(textDraw);
@@ -289,7 +296,7 @@ function gameLoop() {
   ctx.fillText(`현재 레벨: ${monsterLevel}`, 100, 200); // 최고 기록 표시
 
   const elapsedTime = Date.now() - goblineStartTime; // 경과 시간 계산
-  const leftTime = Math.max(0, goldenGoblineTempTimer - elapsedTime);
+  let leftTime = !settedEnd ? Math.max(0, goldenGoblineTempTimer - elapsedTime) : 0;
   ctx.font = '40px Times New Roman';
   ctx.fillStyle = 'yellow';
   ctx.lineWidth = 4; // 외곽선 두께 설정
@@ -529,6 +536,7 @@ export function spawnSpecialMonster(specialMonster) {
 
     specialMonsters.push(specialMonster);
     diplayEvent('황금 고블린 출현!!', 'darkorange', 50, 100);
+    timerEnd(false);
 
     // 황금 고블린 Id를 바탕으로 다른 황금 고블린이 생성돼도
     // 문제 없이 먼저 태어난 황금 고블인이 사라집니다.
@@ -544,8 +552,10 @@ function removeSpecialMonster(monsterId, delay) {
     const index = specialMonsters.findIndex(
       (specialMonster) => specialMonster.monsterId === monsterId,
     );
-    if (index != -1) specialMonsters.splice(index, 1);
-    diplayEvent('황금 고블린이 도망갔다..', 'darkorange', 50, 100);
+    if (index != -1) {
+      specialMonsters.splice(index, 1);
+      diplayEvent('황금 고블린이 도망갔다..', 'darkorange', 50, 100);
+    }
   }, delay);
 }
 
@@ -565,5 +575,4 @@ export function setHighScore(score) {
   highScore = score;
 }
 
-export { monsterLevel, towers, enhanceData, towerData };
-
+export { monsterLevel, towers, enhanceData, towerData, timerEnd };

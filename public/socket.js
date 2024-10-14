@@ -14,6 +14,7 @@ import {
   towerEnhanceAgree,
   setEnhance,
   setHighScore,
+  timerEnd,
 } from './game.js';
 
 const IP = 'http://localhost:3005';
@@ -38,8 +39,8 @@ let updatedLoopLevel = 0;
 const sendEvent = (handlerId, payload) => {
   const res = socket.emit('event', {
     token,
-    refreshToken,
     clientVersion: CLIENT_VERSION,
+    refreshToken,
     handlerId,
     payload,
   });
@@ -144,6 +145,7 @@ const socketConnection = () => {
 
         case 22: // 황금 고블린 제거
           diplayEvent('황금 고블린 처치', 'darkorange', 50, 100);
+          timerEnd();
           setMonstersScore(data.totalScore);
           setMonstersGold(data.totalGold);
           break;
