@@ -8,6 +8,7 @@ import errorMiddleware from './middlewares/error.middleware.js';
 import { initRedisClient } from './init/redis.js';
 import { initData } from './init/initData.js';
 import { ScheduleController } from './controllers/schedule.controller.js';
+import { logger } from '../config/winston.config.js';
 
 // .env => process.env
 dotenv.config();
@@ -43,6 +44,12 @@ server.listen(PORT, async () => {
     scheduleController.createRankHistory();
 
     console.log(`Server is running on port ${PORT}`);
+
+    // WINSTON LOG
+    logger.info(`Server is running on port ${PORT}`);
+    logger.error(`Server is running on port ${PORT}`);
+    logger.warn(`Server is running on port ${PORT}`);
+    logger.debug(`Server is running on port ${PORT}`);
   } catch (e) {
     console.error('Failed to load Redis ', e);
   }
