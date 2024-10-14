@@ -33,6 +33,7 @@ let score = 0; // 게임 점수
 let highScore = 0; // 기존 최고 점수
 let loopLevel = 0; // 마지막 스테이지 이후 회귀한 횟수
 let scoreAtLastStage = 0; // 지난 스테이지에서의 점수, 스테이지 오를 때마다 score로 갱신됨
+let stageThreshHold = null;
 let isInitGame = false;
 
 let moveStageFlag = true;
@@ -111,7 +112,6 @@ export function moveStage(targetStage, updatedLoopLevel) {
   monsterLevel = targetStage;
   scoreAtLastStage = score;
   loopLevel = updatedLoopLevel;
-  alert(`회귀레벨: ${loopLevel}`);
   moveStageFlag = true;
 }
 
@@ -299,7 +299,7 @@ function gameLoop() {
     sendEvent(4, { score, currentStage: monsterLevel, targetStage: monsterLevel + 1 });
   } else if (
     monsterLevel === stagesData.length &&
-    score - scoreAtLastStage >= 1000 &&
+    score - scoreAtLastStage >= stageThreshHold &&
     moveStageFlag
   ) {
     moveStageFlag = false;
@@ -401,8 +401,9 @@ function CheckmonsterProgress(monsters) {
   }
 }
 
-export function setStages(stageList) {
+export function setStages(stageList, stageThresh) {
   stagesData = stageList;
+  stageThreshHold = stageThresh;
 }
 
 export function setUserInfo(score, gold) {

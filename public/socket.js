@@ -109,7 +109,7 @@ const socketConnection = () => {
         case 2:
           console.log(data);
           setUserInfo(data.initData.score, data.initData.gold);
-          setStages(data.stages);
+          setStages(data.stages, data.initData.stageThreshHold);
           setMonsters(data.monsters);
           setTowers(data.towers);
           setSpecialMonsters(data.specialMonsters);
@@ -125,7 +125,10 @@ const socketConnection = () => {
         case 4: // 스테이지 이동
           targetStage = data.payload.targetStage;
           updatedLoopLevel = data.payload.updatedLoopLevel || 0;
-          diplayEvent(`${targetStage} 스테이지! `, 'yellow', 50, 100);
+          updatedLoopLevel === 0
+            ? diplayEvent(`${targetStage} 스테이지!`, 'yellow', 50, 100)
+            : diplayEvent(`회귀 레벨: ${updatedLoopLevel}`, 'yellow', 50, 100);
+
           moveStage(targetStage, updatedLoopLevel);
           break;
 
