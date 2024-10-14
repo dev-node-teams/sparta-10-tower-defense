@@ -22,7 +22,6 @@ export const addScoreAndGold = async (userId, findMonster) => {
 };
 
 export const changeSpwanSpecialMonster = async (userId, userKillMonster) => {
-  console.log('userId 확인할거야', userId);
   const specialMonsterSpawn = await getSpawnSpecialMonsters(userId);
   let specialMonsters = [];
   for (let i = 0; i < specialMonsterSpawn.length; i++) {
