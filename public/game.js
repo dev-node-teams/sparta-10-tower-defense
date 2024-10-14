@@ -4,6 +4,7 @@ import { Tower } from './tower.js';
 import { socketConnection, sendEvent } from './socket.js';
 import { SpecialMonster } from './specialmonster.js';
 import './gameUtils.js';
+import { towerMenu } from './gameUtils.js';
 
 /* 
   어딘가에 엑세스 토큰이 저장이 안되어 있다면 로그인을 유도하는 코드를 여기에 추가해주세요!
@@ -256,6 +257,8 @@ export function towerSellAgree(target) {
 export function towerEnhanceAgree(position, data) {
   const findTower = towers.find((i) => i.x === position.x && i.y === position.y);
   findTower.enhance(data);
+  console.log('findfindfindfindfindfindfindfindfindfindfind', findTower);
+  towerMenu(findTower);
 }
 
 function placeBase() {
@@ -285,6 +288,7 @@ function gameLoop() {
   ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height); // 배경 이미지 다시 그리기
   drawPath(monsterPath); // 경로 다시 그리기
 
+  ctx.textAlign = 'left';
   ctx.font = '25px Times New Roman';
   ctx.fillStyle = 'skyblue';
   ctx.fillText(`최고 기록: ${highScore}`, 100, 50); // 최고 기록 표시

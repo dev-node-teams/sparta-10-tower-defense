@@ -53,7 +53,7 @@ cCanvas.addEventListener('click', (event) => {
 });
 
 // 타워 클릭 시 메뉴
-function towerMenu(tower) {
+export function towerMenu(tower) {
   let x = tower.x;
   let y = tower.y;
   const towerWidth = tower.width;
@@ -160,7 +160,6 @@ function towerMenu(tower) {
     const x = tower.x;
     const y = tower.y;
     sendEvent(32, { position: { x, y } });
-    closeMenu();
   });
 
   // 버튼을 컨테이너에 추가
