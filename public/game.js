@@ -263,6 +263,18 @@ function spawnMonster() {
 }
 
 function gameLoop() {
+  // console.log(stagesData);
+  // {stageId: 1, score: 100, bonusScore: 0, versionGroupId: 1}
+
+  // {stageId: 2, score: 200, bonusScore: 50, versionGroupId: 1}
+
+  // {stageId: 3, score: 300, bonusScore: 100, versionGroupId: 1}
+
+  // {stageId: 4, score: 500, bonusScore: 150, versionGroupId: 1}
+
+  // {stageId: 5, score: 800, bonusScore: 200, versionGroupId: 1}
+
+  // {stageId: 6, score: 1000, bonusScore: 300
   // 렌더링 시에는 항상 배경 이미지부터 그려야 합니다! 그래야 다른 이미지들이 배경 이미지 위에 그려져요!
   ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height); // 배경 이미지 다시 그리기
   drawPath(monsterPath); // 경로 다시 그리기
