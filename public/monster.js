@@ -4,26 +4,21 @@ export class Monster {
     if (!path || path.length <= 0) {
       throw new Error('몬스터가 이동할 경로가 필요합니다.');
     }
-    this.monsterId = Math.floor(Math.random() * monsterData.length);
-    this.monsterInfo = monsterData[this.monsterId];
+    this.monsterId = Math.floor(Math.random() * monsterData.length) + 1;
+    this.monsterInfo = monsterData[this.monsterId - 1];
     this.path = path; // 몬스터가 이동할 경로
     this.currentIndex = 0; // 몬스터가 이동 중인 경로의 인덱스
     this.x = path[0].x; // 몬스터의 x 좌표 (최초 위치는 경로의 첫 번째 지점)
     this.y = path[0].y; // 몬스터의 y 좌표 (최초 위치는 경로의 첫 번째 지점)
     this.width = this.monsterInfo.width; // 몬스터 이미지 가로 길이
     this.height = this.monsterInfo.height; // 몬스터 이미지 세로 길이
-    this.speed = 2; // 몬스터의 이동 속도
-    this.image = monsterImages[this.monsterId]; // 몬스터 이미지
+    this.speed = this.monsterInfo.speed; // 몬스터의 이동 속도
+    this.image = monsterImages[this.monsterId - 1]; // 몬스터 이미지
     this.level = level; // 몬스터 레벨
     this.init(level);
   }
 
   init(level) {
-    console.log('이미지 크기 : ', this.width, ', ', this.height);
-    console.log('this.monsterNumber : ', this.monsterId);
-    console.log('monsterData', this.monsterInfo);
-    console.log('monsterMaxHp : ', this.monsterInfo.maxHp);
-    console.log('level : ', level);
     this.maxHp = this.monsterInfo.maxHp + 10 * level; // 몬스터의 현재 HP
     this.hp = this.maxHp; // 몬스터의 현재 HP
     this.attackPower = this.monsterInfo.attackPower + 5 * level; // 몬스터의 공격력 (기지에 가해지는 데미지)

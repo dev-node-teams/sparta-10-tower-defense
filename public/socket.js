@@ -5,6 +5,8 @@ import {
   setUserInfo,
   setMonstersScore,
   setMonstersGold,
+  setSpecialMonsters,
+  spawnSpecialMonster,
   towerBuyAgree,
   moveStage,
   diplayEvent,
@@ -18,7 +20,6 @@ let socket = null;
 
 let token = `Bearer ${getCookie('accessToken')}`;
 let refreshToken = `Bearer ${getCookie('refreshToken')}`;
-let userId = null;
 let CLIENT_VERSION = '1.0.0';
 
 let userInfo = null;
@@ -28,6 +29,7 @@ let monsters = null;
 let roundMonsters = null;
 let score = null;
 let userGold = null;
+
 let targetStage = 0;
 
 const sendEvent = (handlerId, payload) => {
@@ -39,7 +41,7 @@ const sendEvent = (handlerId, payload) => {
     payload,
   });
 
-  console.log('res =>> ', res);
+  // console.log('#sendEvent - res =>> ', res);
 };
 
 const getSocket = () => {
@@ -104,16 +106,19 @@ const socketConnection = () => {
     if (data && data.handlerId) {
       switch (data.handlerId) {
         case 2:
-          userInfo = data.init.initData;
-          stages = data.init.stages;
-          monsters = data.init.monsters;
-          towers = data.init.towers;
-          // roundMonsters = data.init.roundMonsters;
-          setUserInfo(userInfo.score, userInfo.gold);
-          setStages(stages);
-          setMonsters(monsters);
-          setTowers(towers);
-          // setRountMonsters(roundMonsters);
+          console.log(data);
+          setUserInfo(data.initData.score, data.initData.gold);
+          setStages(data.stages);
+          setMonsters(data.monsters);
+          setTowers(data.towers);
+          setSpecialMonsters(data.specialMonsters);
+          break;
+
+        case 3: // 게임종료
+          console.log('게임종료 검증 완료 =>>>> ', data);
+          /** 최고 점수 저장 */
+          sendEvent(90, { score: data.score });
+
           break;
 
         case 4: // 스테이지 이동
@@ -123,6 +128,13 @@ const socketConnection = () => {
           break;
 
         case 21:
+          setMonstersScore(data.totalScore);
+          setMonstersGold(data.totalGold);
+          spawnSpecialMonster(data.specialMonsters);
+          break;
+
+        case 22:
+          diplayEvent('황금 고블린 처치', 'darkorange', 50, 100);
           setMonstersScore(data.totalScore);
           setMonstersGold(data.totalGold);
           break;

@@ -1,7 +1,8 @@
 import { Base } from './base.js';
 import { Monster } from './monster.js';
 import { Tower } from './tower.js';
-import { getSocket, socketConnection, sendEvent, targetStage } from './socket.js';
+import { socketConnection, sendEvent } from './socket.js';
+import { SpecialMonster } from './specialmonster.js';
 
 /* 
   어딘가에 엑세스 토큰이 저장이 안되어 있다면 로그인을 유도하는 코드를 여기에 추가해주세요!
@@ -11,19 +12,20 @@ let serverSocket; // 서버 웹소켓 객체
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-const NUM_OF_MONSTERS = 5; // 몬스터 개수
-
 let userGold = 0; // 유저 골드
 
 let base; // 기지 객체
 let baseHp = 100; // 기지 체력
 
 let monsterLevel = 1; // 몬스터 레벨
-let monsterSpawnInterval = 1500; // 몬스터 생성 주기
+let monsterSpawnInterval = 1000; // 몬스터 생성 주기
 const monsters = [];
+const specialMonsters = [];
+
 let towers = [];
 
 let monsterData = [];
+let specialMonsterData = [];
 let towerData;
 let stagesData = [];
 
@@ -46,6 +48,7 @@ pathImage.src = 'images/path.png';
 const towerImage = [];
 
 const monsterImages = [];
+const specialMonsterImages = [];
 
 let monsterPath;
 
@@ -87,7 +90,7 @@ export function diplayEvent(text, color, position, fontSize) {
 
   function textDraw(text) {
     const elapsedTime = Date.now() - startTime;
-
+    //console.log('경과 시간 : ', elapsedTime, '시작 시간');
     ctx.font = `${fontSize}px Times New Roman`;
     ctx.fillStyle = color;
     ctx.textAlign = 'center';
@@ -271,48 +274,21 @@ function gameLoop() {
   towers.forEach((tower) => {
     tower.draw(ctx);
     tower.updateCooldown();
-    monsters.forEach((monster) => {
-      const distance = Math.sqrt(
-        Math.pow(tower.x - monster.x, 2) + Math.pow(tower.y - monster.y, 2),
-      );
-      if (distance < tower.attackRange) {
-        tower.attack(monster);
-      }
-    });
+
+    // 공격 범위 내에 황금 고블린이 있으면 먼저 황금 고블린을 때리게 수정
+    let targetMonster = findTargetInRange(tower, specialMonsters)
+      ? findTargetInRange(tower, specialMonsters)
+      : findTargetInRange(tower, monsters);
+    if (targetMonster) tower.attack(targetMonster);
   });
 
   // 몬스터가 공격을 했을 수 있으므로 기지 다시 그리기
   base.draw(ctx, baseImage);
 
-  for (let i = monsters.length - 1; i >= 0; i--) {
-    const monster = monsters[i];
-    if (monster.hp > 0) {
-      const isDestroyed = monster.move(base);
-      if (isDestroyed) {
-        /* 게임 오버 */
-        sendEvent(3, { score });
-        alert('게임 오버. 스파르타 본부를 지키지 못했다...ㅠㅠ');
-        location.reload();
-        return;
-      }
-      monster.draw(ctx);
-    } else if (monster.hp === -Infinity) {
-      // 몬스터가 기지를 공격한 후
-      monsters.splice(i, 1);
-    } else {
-      console.log(' monsters =>> ', monsters);
 
-      /* 몬스터가 죽었을 때 */
-      // 몬스터 제거
-      monsters.splice(i, 1);
+  CheckmonsterProgress(monsters);
+  if (specialMonsters.length) CheckmonsterProgress(specialMonsters);
 
-      // 서버에 이벤트 전송
-      sendEvent(21, { monsterId: monster.monsterId, monsterLevel });
-
-      console.log(' monsters =>> ', monsters);
-    }
-  }
-  // for (let i = 0; i < monsters.length; i++) {}
 
   /* 특정 점수 도달 시 스테이지 이동 */
   if (monsterLevel < stagesData.length && score > stagesData[monsterLevel].score && moveStageFlag) {
@@ -321,6 +297,16 @@ function gameLoop() {
   }
 
   requestAnimationFrame(gameLoop); // 지속적으로 다음 프레임에 gameLoop 함수 호출할 수 있도록 함
+}
+
+function findTargetInRange(tower, enemies) {
+  for (let enemy of enemies) {
+    const distance = Math.sqrt(Math.pow(tower.x - enemy.x, 2) + Math.pow(tower.y - enemy.y, 2));
+    if (distance < tower.attackRange) {
+      return enemy;
+    }
+  }
+  return null;
 }
 
 function initGame() {
@@ -347,6 +333,7 @@ Promise.all([
   // new Promise((resolve) => (towerImage.onload = resolve)),
   ...towerImage.map((img) => new Promise((resolve) => (img.onload = resolve))),
   ...monsterImages.map((img) => new Promise((resolve) => (img.onload = resolve))),
+  ...specialMonsterImages.map((img) => new Promise((resolve) => (img.onload = resolve))),
 ]).then(() => {
   /* 서버 접속 코드 (여기도 완성해주세요!) */
 
@@ -369,15 +356,48 @@ Promise.all([
   */
 });
 
+function CheckmonsterProgress(monsters) {
+  for (let i = monsters.length - 1; i >= 0; i--) {
+    const monster = monsters[i];
+    if (monster.hp > 0) {
+      const isDestroyed = monster.monsterId >= 256 ? monster.move(canvas) : monster.move(base);
+      if (isDestroyed) {
+        /* 게임 오버 */
+        sendEvent(3, { score });
+
+        diplayEvent(`게임 오버`, 'red', 50, 100);
+        diplayEvent(`스파르타 본부를 지키지 못했다...ㅠㅠ`, 'red', 60, 100);
+        console.log('게임 오버. 스파르타 본부를 지키지 못했다...ㅠㅠ');
+        return;
+      }
+      monster.draw(ctx);
+    } else if (monster.hp === -Infinity) {
+      // 몬스터가 기지를 공격한 후
+      monsters.splice(i, 1);
+    } else {
+      console.log(' monsters =>> ', monsters);
+
+      /* 몬스터가 죽었을 때 */
+      // 몬스터 제거
+      monsters.splice(i, 1);
+      // 서버에 이벤트 전송
+      if (monster.monsterId >= 256) {
+        //Todo: 황금 고블린 처치가 너무 빨리 사라지는 문제 코드 부분
+        sendEvent(22, { monsterId: monster.monsterId, monsterLevel });
+      } else sendEvent(21, { monsterId: monster.monsterId, monsterLevel });
+
+      console.log(' monsters =>> ', monsters);
+    }
+  }
+}
+
 export function setStages(stageList) {
   stagesData = stageList;
-  console.log('스테이지 정보: ', stagesData);
 }
 
 export function setUserInfo(score, gold) {
   userGold = gold;
   score = score;
-  console.log('확인 : ', userGold, score);
 }
 
 export function setMonsters(monsterList) {
@@ -422,9 +442,42 @@ export function setTowers(towerList) {
   }
 }
 
-// export function setRountMonsters(roundMonsterList) {
-//   roundMonsterData = roundMonsterList;
-// }
+export function setSpecialMonsters(specialMonsterList) {
+  specialMonsterData = specialMonsterList;
+  for (let i = 0; i < specialMonsterData.length; i++) {
+    const img = new Image();
+    img.src = specialMonsterData[i].imageUrl;
+    specialMonsterImages.push(img);
+  }
+}
+
+export function spawnSpecialMonster(specialMonster) {
+  const temp = specialMonster;
+  for (let i = 0; i < temp.length; i++) {
+    const specialMonster = new SpecialMonster(
+      monsterPath[0],
+      specialMonsterData[i],
+      specialMonsterImages[i],
+      monsterLevel,
+    );
+
+    specialMonsters.push(specialMonster);
+    diplayEvent('황금 고블린 출현!!', 'darkorange', 50, 100);
+
+    // 황금 고블린 Id를 바탕으로 다른 황금 고블린이 생성돼도
+    // 문제 없이 먼저 태어난 황금 고블인이 사라집니다.
+    removeSpecialMonster(specialMonster.monsterId, 15000);
+  }
+}
+
+function removeSpecialMonster(monsterId, delay) {
+  setTimeout(() => {
+    const index = specialMonsters.findIndex(
+      (specialMonster) => specialMonster.monsterId === monsterId,
+    );
+    if (index != -1) specialMonsters.splice(index, 1);
+  }, delay);
+}
 
 export function setMonstersScore(setMonsterScoreList) {
   score = setMonsterScoreList;
@@ -432,6 +485,10 @@ export function setMonstersScore(setMonsterScoreList) {
 
 export function setMonstersGold(setMonsterGoldList) {
   userGold = setMonsterGoldList;
+}
+
+export function spawnGoldenGoblin(isGoldenGobline) {
+  monsters.push(new Monster(monsterPath, monsterData, monsterImages, monsterLevel));
 }
 
 // 상점 열기 버튼

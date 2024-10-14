@@ -78,7 +78,7 @@
     .shopsub {
       display: flex;
       justify-content: space-between;
-      align-items: center; 
+      align-items: center;
       width: 250px;
       height: 50px;
       margin-top: 230px;
@@ -114,16 +114,107 @@
       font-size: 30px;
 
     }
+
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url('./images/backgroundImage.webp');
+      /* 이미지 경로 설정 */
+      background-size: cover;
+      /* 이미지가 화면을 덮도록 설정 */
+      background-position: center;
+      /* 이미지가 중앙에 위치 */
+      background-repeat: no-repeat;
+      /* 이미지를 반복하지 않음 */
+      height: 100vh;
+    }
+
+    .signup-container {
+      background-color: white;
+      padding: 2em;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 1.5em;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 0.5em;
+      text-align: left;
+    }
+
+    input {
+      padding: 0.8em;
+      margin-bottom: 1.5em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1em;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+
+    .submit {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 1em;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    .submit:hover {
+      background-color: #0056b3;
+    }
+
+    .btn {
+      background-color: white;
+      color: black;
+      border: 1px solid;
+      padding: 1em;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 
 <body>
   <div class="button-container">
-    <h1 style="color: white">타워 짓고 10조 타워 디펜스 게임</h1>
+    <!-- <h1 style="color: white">타워 짓고 10조 타워 디펜스 게임</h1>
     <button id="registerButton">회원가입</button>
     <button id="loginButton">로그인</button>
-    <button id="loginOutButton" style="display: none;">로그아웃</button>
     <button id="playButton">게임 플레이</button>
+    <button id="rankButton">랭킹 조회</button>
+    <button id="loginOutButton" style="display: none;">로그아웃</button> -->
   </div>
 
   <div class="canvasContainer" id="mainCanvas">
@@ -165,52 +256,70 @@
   <div id="productName5" class="shopsub">
   </div>
 </div>
+
     </div>
-  </div>
-  <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-  <script src="./utils.js"></script>
-  <script type="module">
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="./utils.js"></script>
+    <script type="module">
 
-    const isLogin = getCookie('accessToken');
-    console.log('isLogin =>>> ', isLogin);
-    if (isLogin) {
-      document.getElementById('registerButton').style.display = 'none';
-      document.getElementById('loginButton').style.display = 'none';
-      document.getElementById('loginOutButton').style.display = 'block';
+      const isLogin = getCookie('accessToken');
+      console.log('isLogin =>>> ', isLogin);
+      if (isLogin) {
+        document.getElementById('registerButton').style.display = 'none';
+        document.getElementById('loginButton').style.display = 'none';
+        document.getElementById('loginOutButton').style.display = 'block';
 
-    } else {
-      document.getElementById('registerButton').style.display = 'block';
-      document.getElementById('loginButton').style.display = 'block';
-      document.getElementById('loginOutButton').style.display = 'none';
-    }
+      } else {
+        document.getElementById('registerButton').style.display = 'block';
+        document.getElementById('loginButton').style.display = 'block';
+        document.getElementById('loginOutButton').style.display = 'none';
+      }
 
-    document
-      .getElementById("registerButton")
-      .addEventListener("click", () => {
-        window.location.href = "register.html";
+      //rankButton
+      document
+        .getElementById("rankButton")
+        .addEventListener("click", () => {
+          window.location.href = "rank.html";
+        });
+
+      document
+        .getElementById("registerButton")
+        .addEventListener("click", () => {
+          window.location.href = "register.html";
+        });
+
+      document.getElementById("loginButton").addEventListener("click", () => {
+        window.location.href = "login.html";
       });
 
-    document.getElementById("loginButton").addEventListener("click", () => {
-      window.location.href = "login.html";
-    });
+      document.getElementById("loginOutButton").addEventListener("click", () => {
+        deleteCookie('accessToken');
+        deleteCookie('refreshToken');
+        window.location.href = 'index.html';
+      });
 
-    document.getElementById("loginOutButton").addEventListener("click", () => {
-      deleteCookie('accessToken');
-      deleteCookie('refreshToken');
-      window.location.href = 'index.html';
-    });
+      document.getElementById("playButton").addEventListener("click", () => {
 
-    document.getElementById("playButton").addEventListener("click", () => {
-      document.querySelector(".button-container").style.display = "none";
-      document.getElementById("gameCanvas").style.display = "block";
-      import("./game.js");
 
-      document.getElementById("shopClose").addEventListener("click", () => {
-        document.getElementById("shopModal").style.display = 'none'
-      })
+        const isLogin = getCookie('accessToken');
 
-    });
-  </script>
+        if (!isLogin) {
+          alert('로그인을 해주세요.');
+          return;
+        }
+
+
+        document.querySelector(".signup-container").style.display = "none";
+        document.querySelector(".button-container").style.display = "none";
+        document.getElementById("gameCanvas").style.display = "block";
+        import("./game.js");
+
+        document.getElementById("shopClose").addEventListener("click", () => {
+          document.getElementById("shopModal").style.display = 'none'
+        })
+
+      });
+    </script>
 </body>
 
 </html>
