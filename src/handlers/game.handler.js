@@ -8,10 +8,17 @@ import {
   setSpawnSpecialMonsters,
 } from '../models/spawnspecialmonster.model.js';
 import { spawnSpecialMonster } from '../utils/mymath.js';
+
 import { getSpecialMonsters, clearSpecialMonsters } from '../models/specialmonster.model.js';
 import { getMonsterDatas } from '../models/mMonster.model.js';
 import { getSpecialMonsterDatas } from '../models/mSpecialMonster.model.js';
 import { getStageDatas } from '../models/mStages.model.js';
+
+import { getUserHighScore } from '../models/rank.model.js';
+import { UsersService } from '../services/users.service.js';
+
+const userService = new UsersService();
+
 const gameStartService = new GameStartService();
 export const gameStart = async (userId, payload) => {
   // 게임이 시작할 경우 호출되는 Handler
@@ -30,11 +37,26 @@ export const gameStart = async (userId, payload) => {
   for (let i = 0; i < init.specialMonsters.length; i++)
     specialMonsterSpawnTime.push(spawnSpecialMonster(20, 30));
   await setSpawnSpecialMonsters(userId, specialMonsterSpawnTime);
+
+
+
+  console.log(`@@ gameStartHandler =>>> `, init.stages);
+  console.log(`@@ gameStartHandler =>>> `, init.towers);
+  console.log(`@@ gameStartHandler =>>> `, init.monsters);
+  console.log(`@@ gameStartHandler =>>> `, init.specialMonsters);
+  console.log(`@@ gameStartHandler =>>> `, init.enhance);
+  console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+  // 유저 정보 조회
+  const userName = await userService.getUserName(userId);
+  let userKey = `${userName}(${userId})`;
+  let highScore = await getUserHighScore(userKey);
+
   //유저 초기 점수, 유저 초기 보유 금액 추가하기
   init.initData = {
     score: await getTotalScore(userId),
     gold: await getTotalGold(userId),
     stageThreshHold: 1000,
+    highScore: highScore || 0,
   };
   if (!init.stages.length) console.log('@@ gameStartHandler - 서버에 스테이지 정보가 없습니다.');
   else if (!init.monsters.length)
@@ -42,6 +64,9 @@ export const gameStart = async (userId, payload) => {
   else if (!init.specialMonsters.length)
     console.log('@@ gameStartHandler - 서버에 스페이셜 몬스터 정보가 없습니다.');
   else if (!init.towers.length) console.log('@@ gameStartHandler - 서버에 타워 정보가 없습니다.');
+  else if (!init.enhance.length) console.log('@@ gameStartHandler - 서버에 강화 정보가 없습니다.');
+
+
   return { status: 'success', handlerId: 2, ...init };
 };
 export const gameEnd = async (userId, payload) => {

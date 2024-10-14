@@ -3,6 +3,7 @@ import { Monster } from './monster.js';
 import { Tower } from './tower.js';
 import { socketConnection, sendEvent } from './socket.js';
 import { SpecialMonster } from './specialmonster.js';
+import './gameUtils.js';
 
 /* 
   어딘가에 엑세스 토큰이 저장이 안되어 있다면 로그인을 유도하는 코드를 여기에 추가해주세요!
@@ -29,6 +30,7 @@ let monsterData = [];
 let specialMonsterData = [];
 let towerData;
 let stagesData = [];
+let enhanceData = [];
 
 let score = 0; // 게임 점수
 let highScore = 0; // 기존 최고 점수
@@ -207,12 +209,6 @@ function getRandomPositionNearPath(maxDistance) {
   };
 }
 
-// 상점 UI 열기
-function openTowerShop() {
-  const getShop = document.getElementById('shopModal');
-  getShop.style.display = 'block';
-}
-
 // 타워 구매 함수 #30
 function towerBuy(shopNumber) {
   const { x, y } = getRandomPositionNearPath(200);
@@ -224,18 +220,19 @@ function towerBuy(shopNumber) {
 }
 
 // 타워 구매 승인
-export function towerBuyAgree(towerType, position) {
+export function towerBuyAgree(data, position) {
   const { x, y } = position;
 
   const tower = new Tower(
     x,
     y,
-    towerData[towerType].attackPower,
-    towerData[towerType].attackRange,
-    towerData[towerType].attackSpeed,
-    towerData[towerType].price,
-    towerImage[towerType],
-    towerData[towerType].towerId,
+    data.attackPower,
+    data.attackRange,
+    data.attackSpeed,
+    data.price,
+    towerImage[data.towerId - 1],
+    data.towerId,
+    data.name,
   );
   towers.push(tower);
   tower.draw(ctx);
@@ -263,6 +260,18 @@ function spawnMonster() {
 }
 
 function gameLoop() {
+  // console.log(stagesData);
+  // {stageId: 1, score: 100, bonusScore: 0, versionGroupId: 1}
+
+  // {stageId: 2, score: 200, bonusScore: 50, versionGroupId: 1}
+
+  // {stageId: 3, score: 300, bonusScore: 100, versionGroupId: 1}
+
+  // {stageId: 4, score: 500, bonusScore: 150, versionGroupId: 1}
+
+  // {stageId: 5, score: 800, bonusScore: 200, versionGroupId: 1}
+
+  // {stageId: 6, score: 1000, bonusScore: 300
   // 렌더링 시에는 항상 배경 이미지부터 그려야 합니다! 그래야 다른 이미지들이 배경 이미지 위에 그려져요!
   ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height); // 배경 이미지 다시 그리기
   drawPath(monsterPath); // 경로 다시 그리기
@@ -472,6 +481,10 @@ export function setTowers(towerList) {
   }
 }
 
+export function setEnhance(enhance) {
+  enhanceData = enhance;
+}
+
 export function setSpecialMonsters(specialMonsterList) {
   specialMonsterData = specialMonsterList;
   for (let i = 0; i < specialMonsterData.length; i++) {
@@ -521,83 +534,9 @@ export function spawnGoldenGoblin(isGoldenGobline) {
   monsters.push(new Monster(monsterPath, monsterData, monsterImages, monsterLevel));
 }
 
-// 상점 열기 버튼
-const buyTowerButton = document.createElement('button');
-buyTowerButton.textContent = '타워 구입';
-buyTowerButton.style.position = 'absolute';
-buyTowerButton.style.bottom = '50px';
-buyTowerButton.style.right = '30px';
-buyTowerButton.style.padding = '10px 20px';
-buyTowerButton.style.fontSize = '20px';
-buyTowerButton.style.cursor = 'pointer';
-
-buyTowerButton.addEventListener('click', openTowerShop);
-
-document.getElementById('mainCanvas').appendChild(buyTowerButton);
-
-// 클릭 이벤트
-const cCanvas = document.getElementById('gameCanvas');
-const buttonContainer = document.getElementById('buttonContainer');
-
-cCanvas.addEventListener('click', (event, tower) => {
-  //클릭한 위치 찾기
-  const rectCanvas = cCanvas.getBoundingClientRect();
-  const x = event.clientX - rectCanvas.left;
-  const y = event.clientY - rectCanvas.top;
-
-  // 클릭한 곳에 타워가 포함되는지
-  const findClick = towers.find(
-    (i) => x > i.x && x < i.x + i.width && y > i.y && y < i.y + i.height,
-  );
-
-  if (findClick) {
-    towerMenu(findClick);
-  } else {
-    buttonContainer.innerHTML = '';
-  }
-});
-
-// 타워 클릭 시 메뉴
-function towerMenu(tower) {
-  buttonContainer.innerHTML = '';
-
-  // 판매 버튼 생성
-  const sellButton = document.createElement('button');
-  sellButton.textContent = '타워 판매';
-  sellButton.style.position = 'absolute';
-  sellButton.style.left = `${tower.x + 80}px`; // 사각형 근처에 위치
-  sellButton.style.top = `${tower.y + 80}px`;
-  sellButton.style.width = '80px';
-  sellButton.style.height = '30px';
-
-  // 강화 버튼 생성
-  const enhanceButton = document.createElement('button');
-  enhanceButton.textContent = '타워 강화';
-  enhanceButton.style.position = 'absolute';
-  enhanceButton.style.left = `${tower.x + 80}px`; // 사각형 근처에 위치
-  enhanceButton.style.top = `${tower.y + 30}px`;
-  enhanceButton.style.width = '80px';
-  enhanceButton.style.height = '30px';
-
-  // 판매 버튼 기능 #31
-  sellButton.addEventListener('click', () => {
-    const x = tower.x;
-    const y = tower.y;
-    sendEvent(31, { position: { x, y } });
-    buttonContainer.innerHTML = '';
-  });
-
-  // 강화 버튼 기능 #32
-  enhanceButton.addEventListener('click', () => {
-    const x = tower.x;
-    const y = tower.y;
-    sendEvent(32, { position: { x, y } });
-    buttonContainer.innerHTML = '';
-  });
-
-  // 버튼을 컨테이너에 추가
-  buttonContainer.appendChild(sellButton);
-  buttonContainer.appendChild(enhanceButton);
+export function setHighScore(score) {
+  highScore = score;
 }
 
-export { monsterLevel };
+export { monsterLevel, towers, enhanceData, towerData };
+

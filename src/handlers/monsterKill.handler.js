@@ -13,6 +13,7 @@ import { getMonsterDatas } from '../models/mMonster.model.js';
 // 몬스터 kill 시 작동하는 핸들러
 export const monsterKill = async (userId, payload) => {
   const { monsterId, monsterLevel } = payload;
+
   const monsters = await getMonsters(userId);
   if (!monsters) {
     return { status: 'fail', message: 'Monsters not found' };
@@ -26,6 +27,7 @@ export const monsterKill = async (userId, payload) => {
   const findBonusScore = stagesMetaData.find((stage) => stage.stageId === monsterLevel);
 
   const { totalScore, totalGold } = await addScoreAndGold(userId, findMonster, findBonusScore);
+
 
   await setMonster(userId, monsterId, monsterLevel);
   return { status: 'success', handlerId: 21, totalScore, totalGold, specialMonsters };

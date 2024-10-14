@@ -7,6 +7,7 @@ import rankRouter from './routers/ranks.router.js';
 import errorMiddleware from './middlewares/error.middleware.js';
 import { initRedisClient } from './init/redis.js';
 import { initData } from './init/initData.js';
+import { ScheduleController } from './controllers/schedule.controller.js';
 
 // .env => process.env
 dotenv.config();
@@ -35,7 +36,12 @@ server.listen(PORT, async () => {
   try {
     // redis 설정
     await initRedisClient();
+    // 초기 데이터 세팅 ( MySQL -> Redis )
     await initData();
+
+    const scheduleController = new ScheduleController();
+    scheduleController.createRankHistory();
+
     console.log(`Server is running on port ${PORT}`);
   } catch (e) {
     console.error('Failed to load Redis ', e);

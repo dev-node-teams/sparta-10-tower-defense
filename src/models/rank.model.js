@@ -1,27 +1,7 @@
 import redisClient from '../init/redis.js';
 
-const HIGHSCORE_KEY_PREFIX = 'highscore:';
 const RANK_KEY_PREFIX = 'ranks:';
 const TTL = 60 * 60 * 24 * 7; // 7일
-
-/**
- * 유저별 최고 점수 조회
- * @param {*} userId
- * @returns highScore
- */
-export const getHighScore = async (userId) => {
-  const highScore = await redisClient.get(HIGHSCORE_KEY_PREFIX + userId);
-  return +highScore;
-};
-
-/**
- * 유저별 최고 점수 저장
- * @param {*} userId
- * @returns
- */
-export const setHighScore = async (userId, score) => {
-  await redisClient.set(HIGHSCORE_KEY_PREFIX + userId, score, { EX: TTL });
-};
 
 /**
  * 유저 랭킹 저장
@@ -41,6 +21,17 @@ export const getUserRank = async (userId) => {
   const rank = await redisClient.zRevRank(RANK_KEY_PREFIX, userId + '');
   console.log('rank =>>> ', rank);
   return rank + 1;
+};
+
+/**
+ * 유저 최고 점수 조회
+ * @param {*} userId
+ * @returns
+ */
+export const getUserHighScore = async (userKey) => {
+  const highScore = await redisClient.zScore(RANK_KEY_PREFIX, userKey);
+  console.log('getUserHighScore =>>> ', highScore);
+  return highScore;
 };
 
 /**

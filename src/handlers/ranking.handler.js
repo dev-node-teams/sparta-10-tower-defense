@@ -1,10 +1,4 @@
-import {
-  getHighScore,
-  getUserRank,
-  setHighScore,
-  setUserRank,
-  getAllRanks,
-} from '../models/rank.model.js';
+import { getUserRank, setUserRank, getAllRanks, getUserHighScore } from '../models/rank.model.js';
 import { UsersService } from '../services/users.service.js';
 
 const userService = new UsersService();
@@ -24,11 +18,10 @@ export const userBestRecord = async (userId, payload) => {
   console.log('userName =>>>>', userName);
 
   // 유저 최대 점수 조회 및 저장
-  const highScore = await getHighScore(userId);
-  //   if (payload.score > highScore) {
-  await setHighScore(userKey, payload.score);
-  await setUserRank(userKey, payload.score);
-  //   }
+  const highScore = await getUserHighScore(userKey);
+  if (payload.score > highScore) {
+    await setUserRank(userKey, payload.score);
+  }
 
   const userRank = await getUserRank(userKey);
   console.log('userRank =>>> ', userRank);

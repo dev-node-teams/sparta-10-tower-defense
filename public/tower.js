@@ -1,5 +1,5 @@
 export class Tower {
-  constructor(x, y, attackPower, attackRange, attackSpeed, cost, image, type) {
+  constructor(x, y, attackPower, attackRange, attackSpeed, cost, image, type, name) {
     // 생성자 안에서 타워들의 속성을 정의한다고 생각하시면 됩니다!
     this.x = x; // 타워 이미지 x 좌표
     this.y = y; // 타워 이미지 y 좌표
@@ -7,7 +7,7 @@ export class Tower {
     this.height = 150; // 타워 이미지 세로 길이
     this.attackPower = attackPower; // 타워 공격력
     this.attackRange = attackRange; // 타워 사거리
-    this.attackSpeed = attackSpeed * 3; // 타워 공격속도
+    this.attackSpeed = attackSpeed; // 타워 공격속도
     this.cost = cost; // 타워 구입 비용
     this.beamDuration = 0; // 타워 광선 지속 시간
     this.target = null; // 타워 광선의 목표
@@ -15,6 +15,7 @@ export class Tower {
     this.image = image;
     this.type = type;
     this.enhanceLevel = 0;
+    this.name = name;
   }
 
   draw(ctx) {
@@ -30,7 +31,7 @@ export class Tower {
       this.beamDuration--;
     }
 
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
     ctx.fillRect(this.x - 22, this.y + 155, 120, 27);
 
     ctx.fillStyle = 'yellow';
