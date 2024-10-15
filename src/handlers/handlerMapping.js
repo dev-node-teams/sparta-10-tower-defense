@@ -1,6 +1,6 @@
 import { gameEnd, gameStart } from './game.handler.js';
 import { towerBuy, towerSell, towerEnhance } from './tower.handler.js';
-import { monsterKill, specialMonsterKill } from './monsterKill.handler.js';
+import { monsterKill, specialMonsterKill } from './monster.handler.js';
 import { moveStage } from './stage.handler.js';
 import { userBestRecord } from './ranking.handler.js';
 
