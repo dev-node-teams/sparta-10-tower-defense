@@ -17,33 +17,31 @@
 
 ## 시연영상
 
-- YOUTUBE LINK
+[![시연영상_YOUTUBE](./docs/thumnail.png)](https://youtu.be/Zs2deBwlfOc)
 
 ## 프로젝트 소개
 
 ### 필수기능
 
-- [ ] 회원가입 / 로그인 기능
-- [ ] 유저 별 데이터 관리
-- [ ] 클라이언트가 서버로부터 수신하는 이벤트 종류
-  - [ ] 커넥션 성공 이벤트
-  - [ ] 커넥션 실패 이벤트
-  - [ ] 상태 동기화 이벤트
-- [ ] 클라이언트가 서버로 송신하는 이벤트 종류
-  - [ ] 게임 시작 이벤
-  - [ ] 최초 타워 추가 이벤트 (제거, 초기 골드 지급으로 변경)
-  - [ ] 타워 구입 이벤트
-  - [ ] 몬스터 죽이는 이벤트
-  - [ ] 게임 오버 이벤트
-- [ ] 유저 별 최고 기록 스코어 저장
+- [x] 회원가입 / 로그인 기능
+- [x] 유저 별 데이터 관리
+- [x] 클라이언트가 서버로부터 수신하는 이벤트 종류
+  - [x] 커넥션 성공 이벤트
+  - [x] 커넥션 실패 이벤트
+  - [x] 상태 동기화 이벤트
+- [x] 클라이언트가 서버로 송신하는 이벤트 종류
+  - [x] 게임 시작 이벤
+  - [x] 최초 타워 추가 이벤트 (제거, 초기 골드 지급으로 변경)
+  - [x] 타워 구입 이벤트
+  - [x] 몬스터 죽이는 이벤트
+  - [x] 게임 오버 이벤트
+- [x] 유저 별 최고 기록 스코어 저장
 
 ### 도전기능
 
-- [ ] 타워 환불 기능
-- [ ] 타워 강화 기능
-- [ ] 황금 고블린 출연 기능
-
--
+- [x] 타워 환불 기능
+- [x] 타워 강화 기능
+- [x] 황금 고블린 출연 기능
 
 ## ERD
 
@@ -164,16 +162,12 @@
 
 ## 담당 업무
 
-- 전봉준 [(LINK)](<(https://github.com/dev-node-teams/sparta-10-tower-defense/wiki/%F0%9F%91%A8%F0%9F%8F%BB%E2%80%8D%F0%9F%92%BB-%EB%8B%B4%EB%8B%B9-%EC%97%85%EB%AC%B4-%EC%A0%84%EB%B4%89%EC%A4%80)>)
+- 전봉준 [(LINK)](https://github.com/dev-node-teams/sparta-10-tower-defense/wiki/%F0%9F%91%A8%F0%9F%8F%BB%E2%80%8D%F0%9F%92%BB-%EB%8B%B4%EB%8B%B9-%EC%97%85%EB%AC%B4-%EC%A0%84%EB%B4%89%EC%A4%80)
 
-- 조웅상 [(LINK)](<(https://github.com/dev-node-teams/sparta-10-tower-defense/wiki/%F0%9F%91%A8%F0%9F%8F%BB%E2%80%8D%F0%9F%92%BB-%EB%8B%B4%EB%8B%B9-%EC%97%85%EB%AC%B4-%EC%A1%B0%EC%9B%85%EC%83%81)>)
+- 조웅상 [(LINK)](https://github.com/dev-node-teams/sparta-10-tower-defense/wiki/%F0%9F%91%A8%F0%9F%8F%BB%E2%80%8D%F0%9F%92%BB-%EB%8B%B4%EB%8B%B9-%EC%97%85%EB%AC%B4-%EC%A1%B0%EC%9B%85%EC%83%81)
 
-- 성준호 [(LINK)](<(https://github.com/dev-node-teams/sparta-10-tower-defense/wiki/%F0%9F%91%A8%F0%9F%8F%BB%E2%80%8D%F0%9F%92%BB-%EB%8B%B4%EB%8B%B9-%EC%97%85%EB%AC%B4-%EC%84%B1%EC%A4%80%ED%98%B8)>)
+- 성준호 [(LINK)](https://github.com/dev-node-teams/sparta-10-tower-defense/wiki/%F0%9F%91%A8%F0%9F%8F%BB%E2%80%8D%F0%9F%92%BB-%EB%8B%B4%EB%8B%B9-%EC%97%85%EB%AC%B4-%EC%84%B1%EC%A4%80%ED%98%B8)
 
-- 진윤세 [(LINK)](<(https://github.com/dev-node-teams/sparta-10-tower-defense/wiki/%F0%9F%91%A8%F0%9F%8F%BB%E2%80%8D%F0%9F%92%BB-%EB%8B%B4%EB%8B%B9-%EC%97%85%EB%AC%B4-%EC%A7%84%EC%9C%A4%EC%84%B8)>)
+- 진윤세 [(LINK)](https://github.com/dev-node-teams/sparta-10-tower-defense/wiki/%F0%9F%91%A8%F0%9F%8F%BB%E2%80%8D%F0%9F%92%BB-%EB%8B%B4%EB%8B%B9-%EC%97%85%EB%AC%B4-%EC%A7%84%EC%9C%A4%EC%84%B8)
 
-- 윤서진 [(LINK)](<(https://github.com/dev-node-teams/sparta-10-tower-defense/wiki/%F0%9F%91%A8%F0%9F%8F%BB%E2%80%8D%F0%9F%92%BB-%EB%8B%B4%EB%8B%B9-%EC%97%85%EB%AC%B4-%EC%9C%A4%EC%84%9C%EC%A7%84)>)
-
-## 프로젝트 소감
-
-- 이미지
+- 윤서진 [(LINK)](https://github.com/dev-node-teams/sparta-10-tower-defense/wiki/%F0%9F%91%A8%F0%9F%8F%BB%E2%80%8D%F0%9F%92%BB-%EB%8B%B4%EB%8B%B9-%EC%97%85%EB%AC%B4-%EC%9C%A4%EC%84%9C%EC%A7%84)
