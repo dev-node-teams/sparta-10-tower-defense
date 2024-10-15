@@ -43,17 +43,13 @@ export class SpecialMonster {
     // 현재 X 위치 + 본인 가로 크기가 canvasWidth이면,
     // canvas의 오른쪽 끝
     if (this.x <= 0 || this.x + this.width >= canvasWidth) {
-      this.directionX *= -1;
-      // x축 반대 방향으로 변경
-      this.x = Math.max(0, Math.min(this.x, canvasWidth - this.width));
-      // 0과 canvasWidth - this.width(본인 가로 크기) = 본인 가로 크기 내에서 최대한 갈 수 있는 x축 사이 범위
+      this.directionY *= Math.random() < 0.5 ? -1 : 1;
+      this.directionX *= -1; // x축 반대 방향으로 변경
     }
 
     if (this.y <= 0 || this.y + this.height >= canvasHeight) {
-      this.directionY *= -1;
-      // y축 반대 방향으로 변경
-      this.y = Math.max(0, Math.min(this.y, canvasHeight - this.height));
-      // 0과 canvasHeigth - this.height(본인 세로 크기) = 본인 세로 크기 내에서 최대한 갈 수 있는 y축 사이 범위
+      this.directionY *= -1; // y축 반대 방향으로 변경
+      this.directionX *= Math.random() < 0.5 ? -1 : 1;
     }
   }
 

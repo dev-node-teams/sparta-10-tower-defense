@@ -11,7 +11,6 @@ export const getMonsterInfo = (monsterMetaData, monsterId) => {
   return monsterMetaData.find((monster) => monster.monsterId === monsterId);
 };
 
-
 export const addScoreAndGold = async (userId, findMonster, findBonusScore) => {
   await setScore(userId, findMonster.score + findBonusScore.bonusScore);
 

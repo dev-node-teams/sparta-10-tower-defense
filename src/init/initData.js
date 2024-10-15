@@ -26,28 +26,17 @@ const specialMonstersRepository = new SpecialMonstersRepository();
  * 게임 데이터 레디스에 등록
  */
 export async function initData() {
-  /**
-   * Towers +
-   * Monsters
-   * Stage
-   * CreateMonsterPerStage
-   * TowerEnhance
-   */
-
   const DATA_VERSION = '1.0.0';
+
+  // Redis에서 현재 버전 가져오기
   const isVersion = await getDataVersion();
 
-  console.log('is Version =>>> ', isVersion);
-
+  // Redis에 있는 해당 항목의 데이터 가져오기
   let towerRes = await getTowerDatas();
   let monsterRes = await getMonsterDatas();
   let stagesRes = await getStageDatas();
   let enhanceRes = await getEnhanceDatas();
   let specialMonsterRes = await getSpecialMonsterDatas();
-
-  console.log('towerRes =>> ', towerRes);
-  console.log('monsterRes =>> ', monsterRes);
-  console.log('stagesRes =>> ', stagesRes);
 
   if (
     isVersion &&
