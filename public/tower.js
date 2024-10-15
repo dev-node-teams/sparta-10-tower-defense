@@ -7,6 +7,9 @@ export class Tower {
     this.y = y; // 타워 이미지 y 좌표
     this.width = 78; // 타워 이미지 가로 길이 (이미지 파일 길이에 따라 변경 필요하며 세로 길이와 비율을 맞춰주셔야 합니다!)
     this.height = 150; // 타워 이미지 세로 길이
+    this.enhancePower = 0;
+    this.enhanceRange = 0;
+    this.enhanceSpeed = 0;
     this.attackPower = attackPower; // 타워 공격력
     this.attackRange = attackRange; // 타워 사거리
     this.attackSpeed = attackSpeed; // 타워 공격속도
@@ -47,8 +50,8 @@ export class Tower {
   attack(monster) {
     // 타워가 타워 사정거리 내에 있는 몬스터를 공격하는 메소드이며 사정거리에 닿는지 여부는 game.js에서 확인합니다.
     if (this.cooldown <= 0) {
-      monster.hp -= this.attackPower;
-      this.cooldown = this.attackSpeed; // 3초 쿨타임 (초당 60프레임)
+      monster.hp -= this.attackPower + this.enhancePower;
+      this.cooldown = this.attackSpeed - this.enhanceSpeed; // 3초 쿨타임 (초당 60프레임)
       this.beamDuration = 30; // 광선 지속 시간 (0.5초)
       this.target = monster; // 광선의 목표 설정
     }
@@ -61,9 +64,9 @@ export class Tower {
   }
 
   enhance(data) {
-    this.attackPower += data.increasePower;
-    this.attackRange += data.increaseRange;
-    this.attackSpeed -= data.increaseSpeed;
+    this.enhancePower = data.increasePower;
+    this.enhanceRange = data.increaseRange;
+    this.enhanceSpeed = data.increaseSpeed;
     this.enhanceLevel = data.enhanceLevel;
     // this.image = 강화 이미지 계획은 폐기
   }
