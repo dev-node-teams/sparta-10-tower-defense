@@ -71,7 +71,7 @@ export function towerMenu(tower) {
     y += 100;
   }
 
-  const radius = tower.attackRange;
+  const radius = tower.attackRange + tower.enhanceRange;
 
   buttonContainer.innerHTML = '';
   buttonContainer.style.display = 'block';
@@ -145,7 +145,7 @@ export function towerMenu(tower) {
     enhanceTotal += targetMetaData[i].price;
   }
   enhanceTotal = Math.floor((enhanceTotal + towerData[tower.type - 1].price) / 2);
-  buttonContainer.innerHTML = `${tower.name} (+${tower.enhanceLevel})<br>공격력 : ${tower.attackPower}<br>연사력 : ${tower.attackSpeed}<br> 사거리 : ${tower.attackRange}<br><br>강화 비용 : ${enhanceCost.price}<br>판매 금액 : ${enhanceTotal} `;
+  buttonContainer.innerHTML = `${tower.name} (+${tower.enhanceLevel})<br>공격력 : ${tower.attackPower} + (${tower.enhancePower})<br>연사력 : ${tower.attackSpeed} - (${tower.enhanceSpeed})<br> 사거리 : ${tower.attackRange} + (${tower.enhanceRange})<br><br>강화 비용 : ${enhanceCost.price}<br>판매 금액 : ${enhanceTotal} `;
 
   // 판매 버튼 기능 #31
   sellButton.addEventListener('click', () => {

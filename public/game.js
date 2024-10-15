@@ -210,7 +210,7 @@ function getRandomPositionNearPath(maxDistance) {
   const posX = startX + t * (endX - startX);
   const posY = startY + t * (endY - startY);
 
-  const offsetX = (Math.random() - 0.5) * 2 * maxDistance;
+  // const offsetX = (Math.random() - 0.5) * 2 * maxDistance;
   const offsetY = (Math.random() - 0.5) * 2 * maxDistance;
 
   return {
@@ -382,7 +382,7 @@ function gameLoop() {
 function findTargetInRange(tower, enemies) {
   for (let enemy of enemies) {
     const distance = Math.sqrt(Math.pow(tower.x - enemy.x, 2) + Math.pow(tower.y - enemy.y, 2));
-    if (distance < tower.attackRange) {
+    if (distance < tower.attackRange + tower.enhanceRange) {
       return enemy;
     }
   }
