@@ -17,7 +17,7 @@ export class SpecialMonster {
     this.level = level; // 몬스터 레벨
 
     // 초기 랜덤 방향 결정
-    this.directionX = 1;
+    this.directionX = Math.round() < 0.5 ? -1 : 1;
     this.directionY = Math.random() < 0.5 ? -1 : 1;
     this.init(level);
   }
@@ -32,24 +32,19 @@ export class SpecialMonster {
     let canvasWidth = canvas.width;
     let canvasHeight = canvas.height;
 
-    // x축 방향(백터)과 스피드로 이동
+    // x축 방향과 스피드로 이동
     this.x += this.directionX * this.speed;
-    // y축 방향(백터)와 스피드로 이동
+    // y축 방향과 스피드로 이동
     this.y += this.directionY * this.speed;
 
-    //x가 0이면 canvas 기준 왼쪽 끝,
-
-    // this.x + this.width가 >= canvasWidth
-    // 현재 X 위치 + 본인 가로 크기가 canvasWidth이면,
-    // canvas의 오른쪽 끝
+    // x축 경계에 도달한 경우 (왼쪽 또는 오른쪽 벽에 부딪힘)
     if (this.x <= 0 || this.x + this.width >= canvasWidth) {
-      this.directionY *= Math.random() < 0.5 ? -1 : 1;
       this.directionX *= -1; // x축 반대 방향으로 변경
     }
 
+    // y축 경계에 도달한 경우 (위쪽 또는 아래쪽 벽에 부딪힘)
     if (this.y <= 0 || this.y + this.height >= canvasHeight) {
       this.directionY *= -1; // y축 반대 방향으로 변경
-      this.directionX *= Math.random() < 0.5 ? -1 : 1;
     }
   }
 
