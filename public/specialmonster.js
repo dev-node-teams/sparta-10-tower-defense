@@ -16,9 +16,7 @@ export class SpecialMonster {
     this.image = specialMonsterImage; // 몬스터 이미지
     this.level = level; // 몬스터 레벨
 
-    // 초기 랜덤 방향 결정
-    this.directionX = 1;
-    this.directionY = Math.random() < 0.5 ? -1 : 1;
+    this.setRandomDirection();
     this.init(level);
   }
 
@@ -28,32 +26,27 @@ export class SpecialMonster {
     this.attackPower = this.specialMonsterInfo.attackPower + 5 * level; // 몬스터의 공격력 (기지에 가해지는 데미지)
   }
 
+  setRandomDirection() {
+    let randomAngle = Math.random() * 2 * Math.PI; // 0부터 2파이(360) 사이의 랜덤한 각도
+    this.moveX = Math.abs(Math.cos(randomAngle) * this.speed);
+    this.moveY = Math.sin(randomAngle) * this.speed;
+  }
+
   move(canvas) {
     let canvasWidth = canvas.width;
     let canvasHeight = canvas.height;
 
-    // x축 방향(백터)과 스피드로 이동
-    this.x += this.directionX * this.speed;
-    // y축 방향(백터)와 스피드로 이동
-    this.y += this.directionY * this.speed;
+    this.x += this.moveX;
+    this.y += this.moveY;
 
-    //x가 0이면 canvas 기준 왼쪽 끝,
-
-    // this.x + this.width가 >= canvasWidth
-    // 현재 X 위치 + 본인 가로 크기가 canvasWidth이면,
-    // canvas의 오른쪽 끝
     if (this.x <= 0 || this.x + this.width >= canvasWidth) {
-      this.directionX *= -1;
+      this.moveX *= -1;
       // x축 반대 방향으로 변경
-      this.x = Math.max(0, Math.min(this.x, canvasWidth - this.width));
-      // 0과 canvasWidth - this.width(본인 가로 크기) = 본인 가로 크기 내에서 최대한 갈 수 있는 x축 사이 범위
     }
 
     if (this.y <= 0 || this.y + this.height >= canvasHeight) {
-      this.directionY *= -1;
+      this.moveY *= -1;
       // y축 반대 방향으로 변경
-      this.y = Math.max(0, Math.min(this.y, canvasHeight - this.height));
-      // 0과 canvasHeigth - this.height(본인 세로 크기) = 본인 세로 크기 내에서 최대한 갈 수 있는 y축 사이 범위
     }
   }
 
