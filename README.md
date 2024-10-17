@@ -43,6 +43,11 @@
 - [x] 타워 강화 기능
 - [x] 황금 고블린 출연 기능
 
+## 서버 구성
+
+<img width="655" alt="image" src="https://github.com/user-attachments/assets/f3672cce-b1dc-4b0c-a658-4a6977d89186">
+
+
 ## ERD
 
 ### USER DB (MySQL)
