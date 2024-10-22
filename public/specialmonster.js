@@ -27,9 +27,14 @@ export class SpecialMonster {
   }
 
   setRandomDirection() {
-    let randomAngle = Math.random() * 2 * Math.PI; // 0부터 2파이(360) 사이의 랜덤한 각도
-    this.moveX = Math.abs(Math.cos(randomAngle) * this.speed);
-    this.moveY = Math.sin(randomAngle) * this.speed;
+    let randomAngle = Math.random() * 2 * Math.PI;
+    this.moveX = Math.cos(randomAngle);
+    this.moveY = Math.sin(randomAngle);
+
+    // 속도의 일관성을 위해 방향 벡터의 크기를 speed로 조정
+    let magnitude = Math.sqrt(this.moveX * this.moveX + this.moveY * this.moveY);
+    this.moveX = (this.moveX / magnitude) * this.speed;
+    this.moveY = (this.moveY / magnitude) * this.speed;
   }
 
   move(canvas) {
